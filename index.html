@@ -6,13 +6,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#000000">
-  <title>Fight Game v9 Online</title>
+  <meta name="theme-color" content="#05070d">
+  <title>Fight Game v10 Ultimate</title>
 
   <style>
     :root{
-      --bg:#070b14;
-      --panel:rgba(10,14,24,.92);
+      --bg1:#0b1020;
+      --bg2:#121c34;
+      --panel:rgba(8,12,22,.88);
       --line:rgba(255,255,255,.12);
       --text:#eef3ff;
       --muted:#a9b6d8;
@@ -22,8 +23,12 @@
       --blue2:#306eff;
       --gold1:#ffe38a;
       --gold2:#ffb300;
-      --shadow:0 18px 48px rgba(0,0,0,.42);
-      --ok:#4de0a8;
+      --green1:#60ecb3;
+      --green2:#18af7b;
+      --shadow:0 18px 50px rgba(0,0,0,.44);
+      --hudTop:20px;
+      --hudBottom:0px;
+      --controlLift:0px;
     }
 
     *{
@@ -35,10 +40,8 @@
 
     html,body{
       margin:0;
-      padding:0;
       width:100%;
       height:100%;
-      min-height:100%;
       overflow:hidden;
       background:#000;
       color:var(--text);
@@ -63,7 +66,7 @@
       height:100dvh;
       min-height:100svh;
       overflow:hidden;
-      background:linear-gradient(180deg,#10192d,#05070d);
+      background:linear-gradient(180deg,var(--bg2),var(--bg1));
     }
 
     canvas{
@@ -78,16 +81,14 @@
     .screen{
       position:absolute;
       inset:0;
-      width:100%;
-      height:100%;
       display:none;
       align-items:center;
       justify-content:center;
       padding:20px;
       background:
-        radial-gradient(circle at 50% 12%, rgba(255,255,255,.06), transparent 32%),
-        linear-gradient(180deg, rgba(13,20,37,.96), rgba(0,0,0,.96));
-      z-index:40;
+        radial-gradient(circle at 50% 14%, rgba(255,255,255,.06), transparent 34%),
+        linear-gradient(180deg, rgba(14,22,42,.96), rgba(0,0,0,.96));
+      z-index:50;
     }
 
     .screen.show{
@@ -95,7 +96,7 @@
     }
 
     .panel{
-      width:min(94vw,920px);
+      width:min(94vw,980px);
       max-height:92vh;
       overflow:auto;
       background:var(--panel);
@@ -109,12 +110,12 @@
 
     h1{
       margin:0 0 10px;
-      font-size:clamp(34px,6vw,60px);
+      font-size:clamp(34px,6vw,62px);
       letter-spacing:.08em;
     }
 
     h2{
-      margin:0 0 14px;
+      margin:0 0 16px;
       font-size:clamp(24px,4vw,38px);
     }
 
@@ -152,7 +153,7 @@
       padding:16px 20px;
       border-radius:16px;
       font-size:18px;
-      font-weight:800;
+      font-weight:900;
       color:#fff;
       box-shadow:var(--shadow);
     }
@@ -168,11 +169,11 @@
 
     button.gold{
       background:linear-gradient(180deg,var(--gold1),var(--gold2));
-      color:#231500;
+      color:#2a1800;
     }
 
     button.green{
-      background:linear-gradient(180deg,#60ecb3,#18af7b);
+      background:linear-gradient(180deg,var(--green1),var(--green2));
       color:#04261b;
     }
 
@@ -182,9 +183,9 @@
     }
 
     input{
-      text-transform:uppercase;
       text-align:center;
-      letter-spacing:.12em;
+      text-transform:uppercase;
+      letter-spacing:.15em;
     }
 
     .pick-grid{
@@ -197,11 +198,11 @@
     .card{
       background:rgba(255,255,255,.04);
       border:1px solid var(--line);
-      border-radius:20px;
+      border-radius:22px;
       padding:14px;
       text-align:left;
       cursor:pointer;
-      transition:transform .15s ease,border-color .15s ease;
+      transition:transform .15s ease, border-color .15s ease;
     }
 
     .card:hover{
@@ -209,7 +210,7 @@
     }
 
     .card.active{
-      border-color:rgba(255,255,255,.36);
+      border-color:rgba(255,255,255,.38);
       box-shadow:0 0 0 2px rgba(255,255,255,.08) inset;
     }
 
@@ -243,6 +244,14 @@
       margin:16px 0;
     }
 
+    .room-code{
+      font-size:clamp(30px,6vw,54px);
+      font-weight:900;
+      letter-spacing:.18em;
+      color:#fff;
+      margin:12px 0;
+    }
+
     .rank-item{
       display:flex;
       justify-content:space-between;
@@ -256,19 +265,6 @@
       border-bottom:none;
     }
 
-    .room-code{
-      font-size:clamp(28px,6vw,54px);
-      font-weight:900;
-      letter-spacing:.18em;
-      color:#fff;
-      margin:12px 0;
-    }
-
-    .status{
-      color:var(--ok);
-      font-weight:800;
-    }
-
     #hud{
       position:absolute;
       inset:0;
@@ -280,9 +276,9 @@
     .top-ui{
       position:absolute;
       left:0;
-      top:0;
+      top:var(--hudTop);
       width:100%;
-      padding:14px 16px;
+      padding:0 16px;
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
@@ -291,11 +287,12 @@
 
     .fighter-panel{
       width:min(38vw,360px);
-      background:rgba(0,0,0,.34);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:10px 12px;
-      backdrop-filter:blur(6px);
+      background:rgba(0,0,0,.42);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      padding:12px 12px 10px;
+      backdrop-filter:blur(8px);
+      box-shadow:0 8px 30px rgba(0,0,0,.24);
     }
 
     .fighter-name{
@@ -307,10 +304,10 @@
 
     .bar-wrap{
       width:100%;
-      height:18px;
-      overflow:hidden;
+      height:20px;
       border-radius:999px;
-      background:rgba(255,255,255,.1);
+      overflow:hidden;
+      background:rgba(255,255,255,.09);
       border:1px solid rgba(255,255,255,.12);
     }
 
@@ -321,9 +318,17 @@
       transition:width .08s linear;
     }
 
-    .bar.player{ background:linear-gradient(90deg,#ff9860,#ff4d63); }
-    .bar.enemy{ background:linear-gradient(90deg,#72e3ff,#4b7fff); }
-    .bar.super{ background:linear-gradient(90deg,#ffe08a,#ffb300); }
+    .bar.player{
+      background:linear-gradient(90deg,#ff9c66,#ff4d63);
+    }
+
+    .bar.enemy{
+      background:linear-gradient(90deg,#72e3ff,#4b7fff);
+    }
+
+    .bar.super{
+      background:linear-gradient(90deg,#ffe08a,#ffb300);
+    }
 
     .small-info{
       margin-top:6px;
@@ -334,24 +339,31 @@
       color:var(--muted);
     }
 
+    #centerWrap{
+      padding-top:6px;
+      min-width:160px;
+      text-align:center;
+    }
+
     #centerInfo{
       font-weight:900;
       letter-spacing:.08em;
       text-align:center;
       text-shadow:0 4px 18px rgba(0,0,0,.5);
+      font-size:clamp(16px,2vw,22px);
     }
 
     #message{
       position:absolute;
       left:50%;
-      top:16%;
+      top:calc(var(--hudTop) + 90px);
       transform:translateX(-50%);
       min-width:240px;
       max-width:84vw;
+      text-align:center;
       padding:14px 20px;
       border-radius:20px;
-      text-align:center;
-      background:rgba(0,0,0,.5);
+      background:rgba(0,0,0,.55);
       border:1px solid var(--line);
       font-size:clamp(18px,4vw,42px);
       font-weight:900;
@@ -366,7 +378,7 @@
 
     #topButtons{
       position:absolute;
-      top:16px;
+      top:calc(var(--hudTop) + 4px);
       right:16px;
       display:none;
       gap:10px;
@@ -395,17 +407,17 @@
       padding:
         12px
         max(22px, env(safe-area-inset-right))
-        calc(84px + env(safe-area-inset-bottom))
+        calc(110px + env(safe-area-inset-bottom))
         max(22px, env(safe-area-inset-left));
-      z-index:15;
+      z-index:18;
       pointer-events:none;
-      transform:translateY(0);
+      transform:translateY(calc(-1 * var(--controlLift)));
       transition:bottom .12s linear, transform .12s linear;
     }
 
     .pad{
       display:flex;
-      gap:12px;
+      gap:14px;
       align-items:flex-end;
       pointer-events:auto;
     }
@@ -415,17 +427,17 @@
     }
 
     .touch-btn{
-      width:72px;
-      height:72px;
+      width:78px;
+      height:78px;
       border-radius:50%;
       display:flex;
       align-items:center;
       justify-content:center;
       color:#fff;
-      font-size:22px;
+      font-size:24px;
       font-weight:900;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.16);
       backdrop-filter:blur(8px);
       box-shadow:var(--shadow);
       pointer-events:auto;
@@ -433,22 +445,22 @@
     }
 
     .touch-btn.big{
-      width:82px;
-      height:82px;
-      font-size:24px;
+      width:92px;
+      height:92px;
+      font-size:26px;
     }
 
     .touch-btn.active,
     .touch-btn:active{
       transform:scale(.96);
-      background:rgba(255,255,255,.22);
+      background:rgba(255,255,255,.24);
     }
 
     #rotateNotice{
       position:absolute;
       inset:0;
       display:none;
-      z-index:60;
+      z-index:70;
       background:#000;
       align-items:center;
       justify-content:center;
@@ -464,27 +476,43 @@
       color:var(--muted);
     }
 
-    @media (max-width:940px){
-      #mobileControls{ display:flex; }
-      .touch-btn{
-        width:64px;
-        height:64px;
-        font-size:20px;
-      }
-      .touch-btn.big{
-        width:74px;
-        height:74px;
-        font-size:22px;
-      }
+    @media (max-width:1100px){
       .pick-grid{
-        grid-template-columns:1fr;
-      }
-      button,select,input{
-        min-width:200px;
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
-    @media (orientation:portrait) and (max-width:1100px){
+    @media (max-width:940px){
+      #mobileControls{
+        display:flex;
+      }
+
+      .touch-btn{
+        width:70px;
+        height:70px;
+        font-size:22px;
+      }
+
+      .touch-btn.big{
+        width:84px;
+        height:84px;
+        font-size:24px;
+      }
+
+      .pick-grid{
+        grid-template-columns:1fr;
+      }
+
+      button,select,input{
+        min-width:200px;
+      }
+
+      .fighter-panel{
+        width:min(39vw,320px);
+      }
+    }
+
+    @media (orientation:portrait) and (max-width:1200px){
       #rotateNotice{
         display:flex;
       }
@@ -495,8 +523,8 @@
 <div id="app">
   <div id="menuScreen" class="screen show">
     <div class="panel">
-      <h1>FIGHT GAME v9</h1>
-      <div class="sub">オンライン対戦 / CPU対戦 / Firebase対応 完成版</div>
+      <h1>FIGHT GAME v10</h1>
+      <div class="sub">見やすさ強化 / スマホ横画面最適化 / キャラ品質向上 / オンライン対戦</div>
       <div class="stack">
         <button id="startCpuBtn">CPU対戦</button>
         <button id="openOnlineBtn" class="green">オンライン対戦</button>
@@ -512,6 +540,7 @@
           <option value="dojo" selected>ステージ: DOJO</option>
           <option value="ruins">ステージ: RUINS</option>
           <option value="neon">ステージ: NEON CITY</option>
+          <option value="moon">ステージ: MOON BASE</option>
         </select>
 
         <button id="characterBtn" class="secondary">キャラクター選択</button>
@@ -524,7 +553,7 @@
   <div id="onlineScreen" class="screen">
     <div class="panel">
       <h2>オンライン対戦</h2>
-      <p>ルームを作成するか、ルームコードを入力して参加します。</p>
+      <p>ルームを作るか、6文字のルームコードで参加します。</p>
       <div class="row">
         <button id="createRoomBtn" class="green">ルーム作成</button>
       </div>
@@ -544,16 +573,16 @@
   <div id="lobbyScreen" class="screen">
     <div class="panel">
       <h2>オンラインロビー</h2>
-      <p>相手にこのルームコードを教えてください。</p>
+      <p>相手にこのルームコードを送ってください。</p>
       <div class="room-code" id="roomCodeLabel">------</div>
-      <p id="lobbyStatus" class="status">接続待ち...</p>
+      <p id="lobbyStatus">接続待ち...</p>
       <div class="box">
         <p id="lobbyPlayers">ホスト: 未接続 / ゲスト: 未接続</p>
-        <p class="tiny">相手が入室すると自動で開始可能になります。</p>
+        <p class="tiny">両方の開始ボタンが押されると開始します。</p>
       </div>
       <div class="row">
         <button id="readyOnlineBtn" class="green">開始</button>
-        <button id="leaveRoomBtn" class="secondary">ルーム退出</button>
+        <button id="leaveRoomBtn" class="secondary">退出</button>
       </div>
     </div>
   </div>
@@ -571,7 +600,7 @@
   <div id="characterScreen" class="screen">
     <div class="panel">
       <h2>キャラクター選択</h2>
-      <p>プレイヤーキャラを選んでください。</p>
+      <p>性能だけでなく見た目とモーションも差が出るようにしてあります。</p>
       <div class="pick-grid" id="characterGrid"></div>
       <div class="row">
         <button id="characterBackBtn" class="secondary">戻る</button>
@@ -582,7 +611,6 @@
   <div id="rankingScreen" class="screen">
     <div class="panel">
       <h2>ランキング</h2>
-      <p>Firebaseに保存されたスコア上位一覧です。</p>
       <div class="box" id="rankingList">読み込み中...</div>
       <div class="row">
         <button id="rankingReloadBtn">再読み込み</button>
@@ -605,7 +633,7 @@
         </div>
       </div>
 
-      <div>
+      <div id="centerWrap">
         <div id="centerInfo">READY</div>
       </div>
 
@@ -700,80 +728,139 @@ try {
 }
 
 /* =========================
-   Data
+   Character / Stage data
 ========================= */
 const CHARACTERS = {
   ryu: {
-    key: "ryu",
-    name: "RYU",
-    style: "バランス",
-    color: "#ff5566",
-    accent: "#ffd2d6",
-    speed: 4.6,
-    jump: 16,
-    atk: 1.00,
-    def: 1.00,
-    superGain: 1.00,
-    specialName: "波動閃"
+    key:"ryu",
+    name:"RYU",
+    style:"バランス",
+    color:"#ff5566",
+    accent:"#ffd2d6",
+    hair:"#2a2030",
+    aura:"#ff7b89",
+    scarf:"#ffffff",
+    speed:4.6,
+    jump:16,
+    atk:1.00,
+    def:1.00,
+    superGain:1.00,
+    specialName:"波動閃",
+    silhouette:"martial"
   },
   blade: {
-    key: "blade",
-    name: "BLADE",
-    style: "スピード",
-    color: "#4fa7ff",
-    accent: "#d4e7ff",
-    speed: 5.3,
-    jump: 17,
-    atk: 0.92,
-    def: 0.95,
-    superGain: 1.15,
-    specialName: "ソニックラッシュ"
+    key:"blade",
+    name:"BLADE",
+    style:"スピード",
+    color:"#4fa7ff",
+    accent:"#d4e7ff",
+    hair:"#d0f0ff",
+    aura:"#74c3ff",
+    scarf:"#79d2ff",
+    speed:5.35,
+    jump:17,
+    atk:0.92,
+    def:0.95,
+    superGain:1.16,
+    specialName:"ソニックラッシュ",
+    silhouette:"ninja"
   },
   titan: {
-    key: "titan",
-    name: "TITAN",
-    style: "パワー",
-    color: "#ffb14d",
-    accent: "#ffe0b2",
-    speed: 4.0,
-    jump: 14.5,
-    atk: 1.16,
-    def: 1.12,
-    superGain: 0.90,
-    specialName: "グランドブレイク"
+    key:"titan",
+    name:"TITAN",
+    style:"パワー",
+    color:"#ffb14d",
+    accent:"#ffe0b2",
+    hair:"#3d220f",
+    aura:"#ffcf69",
+    scarf:"#8b4e19",
+    speed:4.0,
+    jump:14.5,
+    atk:1.18,
+    def:1.12,
+    superGain:0.9,
+    specialName:"グランドブレイク",
+    silhouette:"heavy"
+  },
+  shadow: {
+    key:"shadow",
+    name:"SHADOW",
+    style:"トリッキー",
+    color:"#7d65ff",
+    accent:"#e2d9ff",
+    hair:"#111119",
+    aura:"#b39cff",
+    scarf:"#9d88ff",
+    speed:4.9,
+    jump:16.4,
+    atk:1.02,
+    def:0.96,
+    superGain:1.08,
+    specialName:"ナイトファントム",
+    silhouette:"assassin"
+  },
+  valkyrie: {
+    key:"valkyrie",
+    name:"VALKYRIE",
+    style:"空中型",
+    color:"#3fe0c7",
+    accent:"#d7fff7",
+    hair:"#f7f4ff",
+    aura:"#79ffe7",
+    scarf:"#6ff0d5",
+    speed:4.75,
+    jump:18,
+    atk:0.98,
+    def:0.98,
+    superGain:1.05,
+    specialName:"スカイランサー",
+    silhouette:"lancer"
   }
 };
 
 const STAGES = {
   dojo: {
-    label: "DOJO",
-    skyTop: "#2b3752",
-    skyBottom: "#10141f",
-    floor: "#2d1d17",
-    line: "#6e4c3b",
-    buff: { ryu:{ atk:1.1 }, blade:{ atk:0.97 }, titan:{ atk:1.0 } }
+    label:"DOJO",
+    skyTop:"#32405f",
+    skyBottom:"#121822",
+    floor:"#34221b",
+    line:"#6e4c3b",
+    glow:"rgba(255,204,170,.08)",
+    buff:{ ryu:{atk:1.08}, blade:{atk:0.98}, titan:{atk:1.0}, shadow:{atk:1.0}, valkyrie:{atk:1.0} }
   },
   ruins: {
-    label: "RUINS",
-    skyTop: "#4b3a2f",
-    skyBottom: "#16110f",
-    floor: "#4e4035",
-    line: "#8d7765",
-    buff: { ryu:{ atk:0.98 }, blade:{ atk:1.0 }, titan:{ atk:1.12 } }
+    label:"RUINS",
+    skyTop:"#4d3f34",
+    skyBottom:"#17110f",
+    floor:"#53453a",
+    line:"#917c69",
+    glow:"rgba(255,224,170,.08)",
+    buff:{ ryu:{atk:0.98}, blade:{atk:1.0}, titan:{atk:1.12}, shadow:{atk:1.0}, valkyrie:{atk:0.98} }
   },
   neon: {
-    label: "NEON CITY",
-    skyTop: "#231f55",
-    skyBottom: "#060710",
-    floor: "#19243d",
-    line: "#3a6ba1",
-    buff: { ryu:{ atk:1.0 }, blade:{ atk:1.1 }, titan:{ atk:0.98 } }
+    label:"NEON CITY",
+    skyTop:"#251f5f",
+    skyBottom:"#060813",
+    floor:"#1d2747",
+    line:"#4e77b9",
+    glow:"rgba(116,196,255,.12)",
+    buff:{ ryu:{atk:1.0}, blade:{atk:1.08}, titan:{atk:0.98}, shadow:{atk:1.06}, valkyrie:{atk:1.02} }
+  },
+  moon: {
+    label:"MOON BASE",
+    skyTop:"#455167",
+    skyBottom:"#0c1018",
+    floor:"#57606c",
+    line:"#b0c0d6",
+    glow:"rgba(220,240,255,.10)",
+    buff:{ ryu:{atk:1.0}, blade:{atk:1.0}, titan:{atk:1.0}, shadow:{atk:1.04}, valkyrie:{atk:1.08} }
   }
 };
 
 /* =========================
    DOM
 ========================= */
+const root = document.documentElement;
 const menuScreen = document.getElementById("menuScreen");
 const onlineScreen = document.getElementById("onlineScreen");
 const lobbyScreen = document.getElementById("lobbyScreen");
@@ -846,7 +933,7 @@ const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 const isMobile = matchMedia("(max-width: 940px)").matches || isTouch;
 
 /* =========================
-   Layout
+   Layout / safe area
 ========================= */
 function fitCanvas() {
   const vv = window.visualViewport;
@@ -858,44 +945,42 @@ function fitCanvas() {
   canvas.style.height = h + "px";
 }
 
-function adjustMobileControlsForViewport() {
+function applyViewportSafeLayout() {
   const vv = window.visualViewport;
-  const topUi = document.querySelector(".top-ui");
-
   if (!vv) {
+    root.style.setProperty("--hudTop", "16px");
+    root.style.setProperty("--controlLift", "24px");
     mobileControls.style.bottom = "0px";
-    mobileControls.style.transform = "translateY(-18px)";
-    if (topUi) topUi.style.top = "0px";
     return;
   }
 
   const hiddenBottom = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
   const hiddenTop = Math.max(0, vv.offsetTop);
-  const baseLift = 18;
-  const extraLift = hiddenBottom > 0 ? Math.min(120, hiddenBottom + 28) : baseLift;
 
+  const extraHudTop = Math.min(54, hiddenTop + 10);
+  const controlLift = hiddenBottom > 0 ? Math.min(140, hiddenBottom + 34) : 24;
+
+  root.style.setProperty("--hudTop", `${16 + extraHudTop}px`);
+  root.style.setProperty("--controlLift", `${controlLift}px`);
   mobileControls.style.bottom = `${hiddenBottom}px`;
-  mobileControls.style.transform = `translateY(-${extraLift}px)`;
-
-  if (topUi) topUi.style.top = `${Math.max(0, hiddenTop)}px`;
 }
 
 fitCanvas();
-adjustMobileControlsForViewport();
+applyViewportSafeLayout();
 
 window.addEventListener("resize", () => {
   fitCanvas();
-  adjustMobileControlsForViewport();
+  applyViewportSafeLayout();
 });
 window.addEventListener("orientationchange", () => {
   setTimeout(() => {
     fitCanvas();
-    adjustMobileControlsForViewport();
+    applyViewportSafeLayout();
   }, 250);
 });
 if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", adjustMobileControlsForViewport);
-  window.visualViewport.addEventListener("scroll", adjustMobileControlsForViewport);
+  window.visualViewport.addEventListener("resize", applyViewportSafeLayout);
+  window.visualViewport.addEventListener("scroll", applyViewportSafeLayout);
 }
 
 document.addEventListener("gesturestart", (e) => e.preventDefault());
@@ -906,28 +991,12 @@ document.addEventListener("selectstart", (e) => e.preventDefault());
 document.addEventListener("dragstart", (e) => e.preventDefault());
 
 /* =========================
-   Fullscreen
+   Helper
 ========================= */
-async function enterFullscreenIfPossible() {
-  try {
-    const el = document.documentElement;
-    if (document.fullscreenElement) return;
-
-    if (el.requestFullscreen) {
-      await el.requestFullscreen({ navigationUI: "hide" });
-      return;
-    }
-    if (el.webkitRequestFullscreen) {
-      el.webkitRequestFullscreen();
-    }
-  } catch (e) {
-    console.log("fullscreen unavailable", e);
-  }
+function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
 }
 
-/* =========================
-   UI helpers
-========================= */
 function clearScreens() {
   menuScreen.classList.remove("show");
   onlineScreen.classList.remove("show");
@@ -943,7 +1012,7 @@ function showMenu() {
   menuScreen.classList.add("show");
 }
 
-function showMessage(text, ms=1200) {
+function showMessage(text, ms = 1200) {
   messageEl.textContent = text;
   messageEl.classList.add("show");
   clearTimeout(showMessage.timer);
@@ -952,6 +1021,77 @@ function showMessage(text, ms=1200) {
   }, ms);
 }
 
+function randomRoomCode() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+function sanitizeRoomCode(v) {
+  return (v || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
+}
+
+function groundY() {
+  return canvas.height - 142;
+}
+
+function distX(a,b) {
+  return Math.abs((a.x + a.w/2) - (b.x + b.w/2));
+}
+
+function facingUpdate(a,b) {
+  a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1;
+}
+
+function getBodyRect(f) {
+  return { x:f.x, y:f.y, w:f.w, h:f.h };
+}
+
+function rectsOverlap(a,b) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+function difficultyConfig() {
+  const v = difficultySelect.value;
+  if (v === "hard") return { label:"HARD", speed:4.2, react:0.78, defend:0.22 };
+  if (v === "god") return { label:"GOD", speed:4.9, react:0.92, defend:0.35 };
+  return { label:"NORMAL", speed:3.6, react:0.62, defend:0.14 };
+}
+
+function stageBuff(characterKey) {
+  const st = STAGES[stageSelect.value];
+  return st.buff[characterKey] || { atk:1.0 };
+}
+
+function baseStatsFromCharacter(characterKey) {
+  const ch = CHARACTERS[characterKey];
+  const sb = stageBuff(characterKey);
+  return {
+    speed: ch.speed,
+    jump: ch.jump,
+    atk: ch.atk * (sb.atk || 1),
+    def: ch.def,
+    superGain: ch.superGain,
+    color: ch.color,
+    accent: ch.accent,
+    hair: ch.hair,
+    aura: ch.aura,
+    scarf: ch.scarf,
+    name: ch.name,
+    specialName: ch.specialName,
+    silhouette: ch.silhouette
+  };
+}
+
+function pickEnemyCharacter() {
+  const keys = Object.keys(CHARACTERS).filter(k => k !== selectedCharacter);
+  return keys[Math.floor(Math.random() * keys.length)];
+}
+
+/* =========================
+   Help / character UI
+========================= */
 function setHelpText() {
   if (isMobile) {
     helpContent.innerHTML = `
@@ -963,8 +1103,8 @@ function setHelpText() {
       <p>S : 必殺技（ゲージ50以上）</p>
       <p style="margin-top:12px;"><strong>ダッシュ</strong></p>
       <p>→ → + P : ダッシュパンチ</p>
-      <p style="margin-top:12px;"><strong>オンライン対戦</strong></p>
-      <p>ホストがゲーム状態を同期します。通信状況で少し遅延する場合があります。</p>
+      <p style="margin-top:12px;"><strong>見やすさ改善</strong></p>
+      <p>上部HUDと下部操作はスマホのブラウザバーに被りにくいように自動で逃がします。</p>
     `;
   } else {
     helpContent.innerHTML = `
@@ -976,8 +1116,6 @@ function setHelpText() {
       <p>C : 必殺技（ゲージ50以上）</p>
       <p style="margin-top:12px;"><strong>ダッシュ</strong></p>
       <p>→ → + Z : ダッシュパンチ</p>
-      <p style="margin-top:12px;"><strong>オンライン対戦</strong></p>
-      <p>ホストがゲーム状態を同期します。通信状況で少し遅延する場合があります。</p>
     `;
   }
 }
@@ -995,6 +1133,7 @@ function renderCharacterCards() {
       <p>${ch.style}</p>
       <p>速度 ${ch.speed.toFixed(1)} / 攻撃 ${ch.atk.toFixed(2)} / 防御 ${ch.def.toFixed(2)}</p>
       <span class="tag">${ch.specialName}</span>
+      <span class="tag">${ch.silhouette}</span>
     `;
     el.addEventListener("click", () => {
       selectedCharacter = ch.key;
@@ -1005,6 +1144,9 @@ function renderCharacterCards() {
 }
 renderCharacterCards();
 
+/* =========================
+   Ranking
+========================= */
 async function loadRanking() {
   rankingList.innerHTML = "読み込み中...";
   try {
@@ -1054,6 +1196,25 @@ async function saveRanking(score) {
 }
 
 /* =========================
+   Fullscreen
+========================= */
+async function enterFullscreenIfPossible() {
+  try {
+    const el = document.documentElement;
+    if (document.fullscreenElement) return;
+    if (el.requestFullscreen) {
+      await el.requestFullscreen({ navigationUI:"hide" });
+      return;
+    }
+    if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+    }
+  } catch (e) {
+    console.log("fullscreen unavailable", e);
+  }
+}
+
+/* =========================
    Game core
 ========================= */
 const keys = {
@@ -1080,77 +1241,8 @@ let roundTimer = 99;
 let resultSaved = false;
 let gameMode = "cpu"; // cpu / online-host / online-guest
 let onlineGameStarted = false;
-let onlineInfo = {
-  roomCode: "",
-  role: "", // host / guest
-  roomUnsub: null,
-  stateUnsub: null,
-  inputUnsub: null,
-  remoteInput: null,
-  roomRef: null
-};
 
 const gravity = 0.9;
-const groundOffset = 120;
-
-function groundY() {
-  return canvas.height - groundOffset;
-}
-
-function clamp(v, min, max) {
-  return Math.max(min, Math.min(max, v));
-}
-
-function distX(a,b) {
-  return Math.abs((a.x + a.w/2) - (b.x + b.w/2));
-}
-
-function facingUpdate(a,b) {
-  a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1;
-}
-
-function getBodyRect(f) {
-  return { x:f.x, y:f.y, w:f.w, h:f.h };
-}
-
-function rectsOverlap(a,b) {
-  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-}
-
-function difficultyConfig() {
-  const v = difficultySelect.value;
-  if (v === "hard") return { label:"HARD", speed:4.2, react:0.78, attackRate:0.032, defend:0.22 };
-  if (v === "god") return { label:"GOD", speed:4.8, react:0.92, attackRate:0.05, defend:0.35 };
-  return { label:"NORMAL", speed:3.6, react:0.62, attackRate:0.022, defend:0.14 };
-}
-
-function stageBuff(characterKey) {
-  const st = STAGES[stageSelect.value];
-  return st.buff[characterKey] || { atk:1.0 };
-}
-
-function baseStatsFromCharacter(characterKey) {
-  const ch = CHARACTERS[characterKey];
-  const sb = stageBuff(characterKey);
-  return {
-    speed: ch.speed,
-    jump: ch.jump,
-    atk: ch.atk * (sb.atk || 1),
-    def: ch.def,
-    superGain: ch.superGain,
-    color: ch.color,
-    accent: ch.accent,
-    name: ch.name,
-    specialName: ch.specialName
-  };
-}
-
-function pickEnemyCharacter() {
-  const stage = stageSelect.value;
-  if (stage === "dojo") return "ryu";
-  if (stage === "ruins") return "titan";
-  return "blade";
-}
 
 function createFighter(characterKey, isPlayer) {
   const st = baseStatsFromCharacter(characterKey);
@@ -1159,9 +1251,9 @@ function createFighter(characterKey, isPlayer) {
     name: st.name,
     specialName: st.specialName,
     x: isPlayer ? 180 : canvas.width - 260,
-    y: groundY() - 130,
-    w: 78,
-    h: 130,
+    y: groundY() - 154,
+    w: 86,
+    h: 154,
     vx: 0,
     vy: 0,
     dir: isPlayer ? 1 : -1,
@@ -1176,6 +1268,10 @@ function createFighter(characterKey, isPlayer) {
     superGain: st.superGain,
     color: st.color,
     accent: st.accent,
+    hair: st.hair,
+    aura: st.aura,
+    scarf: st.scarf,
+    silhouette: st.silhouette,
     onGround: true,
     dead: false,
     state: "idle",
@@ -1187,7 +1283,9 @@ function createFighter(characterKey, isPlayer) {
     guardTimer: 0,
     hurtFlash: 0,
     hasHitCurrentAttack: false,
-    isPlayer
+    isPlayer,
+    animPhase: Math.random() * Math.PI * 2,
+    runPhase: 0
   };
 }
 
@@ -1195,24 +1293,7 @@ let player = createFighter(selectedCharacter, true);
 let enemy = createFighter(pickEnemyCharacter(), false);
 
 function fighterToPlain(f) {
-  return {
-    characterKey: f.characterKey,
-    name: f.name,
-    specialName: f.specialName,
-    x: f.x, y: f.y, w: f.w, h: f.h,
-    vx: f.vx, vy: f.vy, dir: f.dir,
-    speed: f.speed, jumpPower: f.jumpPower,
-    hp: f.hp, maxHp: f.maxHp,
-    super: f.super, maxSuper: f.maxSuper,
-    atkMul: f.atkMul, defMul: f.defMul, superGain: f.superGain,
-    color: f.color, accent: f.accent,
-    onGround: f.onGround, dead: f.dead,
-    state: f.state, attackType: f.attackType,
-    attackTimer: f.attackTimer, attackCooldown: f.attackCooldown,
-    hitstun: f.hitstun, invuln: f.invuln, guardTimer: f.guardTimer,
-    hurtFlash: f.hurtFlash, hasHitCurrentAttack: f.hasHitCurrentAttack,
-    isPlayer: f.isPlayer
-  };
+  return { ...f };
 }
 
 function applyRemoteState(state) {
@@ -1223,7 +1304,7 @@ function applyRemoteState(state) {
   if (typeof state.combo === "number") combo = state.combo;
   if (typeof state.gameOver === "boolean") gameOver = state.gameOver;
   if (typeof state.resultSaved === "boolean") resultSaved = state.resultSaved;
-  centerInfo.textContent = state.centerInfo || centerInfo.textContent;
+  if (state.centerInfo) centerInfo.textContent = state.centerInfo;
   comboText.textContent = "COMBO " + combo;
 }
 
@@ -1274,21 +1355,13 @@ async function startCpuGame() {
   fitCanvas();
   cancelAnimationFrame(animationId);
   animationId = requestAnimationFrame(loop);
-  adjustMobileControlsForViewport();
+  applyViewportSafeLayout();
 }
 
 async function startOnlineGameAsRole(role, remoteCharacterKey) {
   gameMode = role === "host" ? "online-host" : "online-guest";
   await enterFullscreenIfPossible();
-
   resetBattle(remoteCharacterKey || pickEnemyCharacter());
-
-  if (role === "guest") {
-    // guest view should show own fighter on left and remote on right
-    // shared state is already in left/right order from host perspective
-    // so we keep local rendering as provided by shared state after sync starts
-  }
-
   clearScreens();
   canvas.style.display = "block";
   hud.style.display = "block";
@@ -1299,9 +1372,8 @@ async function startOnlineGameAsRole(role, remoteCharacterKey) {
   fitCanvas();
   cancelAnimationFrame(animationId);
   animationId = requestAnimationFrame(loop);
-  adjustMobileControlsForViewport();
-
-  showMessage("FIGHT", 1000);
+  applyViewportSafeLayout();
+  showMessage("FIGHT", 900);
 }
 
 function resetInput() {
@@ -1325,10 +1397,10 @@ function commandMatched(sequence) {
 
 function getAttackRect(f) {
   let range = 0, height = 0, yOffset = 0;
-  if (f.attackType === "punch") { range = 34; height = 24; yOffset = 36; }
-  if (f.attackType === "kick") { range = 54; height = 34; yOffset = 68; }
-  if (f.attackType === "dashPunch") { range = 72; height = 30; yOffset = 36; }
-  if (f.attackType === "special") { range = 110; height = 48; yOffset = 32; }
+  if (f.attackType === "punch") { range = 40; height = 28; yOffset = 44; }
+  if (f.attackType === "kick") { range = 66; height = 38; yOffset = 86; }
+  if (f.attackType === "dashPunch") { range = 84; height = 34; yOffset = 42; }
+  if (f.attackType === "special") { range = 132; height = 56; yOffset = 34; }
 
   if (f.dir === 1) {
     return { x:f.x + f.w - 4, y:f.y + yOffset, w:range, h:height };
@@ -1340,7 +1412,7 @@ function attackData(type) {
   if (type === "punch") return { timer:11, cooldown:12, damage:6, kb:10, superGain:8 };
   if (type === "kick") return { timer:16, cooldown:18, damage:10, kb:15, superGain:11 };
   if (type === "dashPunch") return { timer:14, cooldown:18, damage:12, kb:18, superGain:14 };
-  if (type === "special") return { timer:26, cooldown:34, damage:18, kb:26, superGain:0, cost:50 };
+  if (type === "special") return { timer:28, cooldown:36, damage:18, kb:26, superGain:0, cost:50 };
   return { timer:0, cooldown:0, damage:0, kb:0, superGain:0 };
 }
 
@@ -1348,18 +1420,31 @@ function attackActiveFrame(type, timer) {
   if (type === "punch") return timer >= 5 && timer <= 7;
   if (type === "kick") return timer >= 8 && timer <= 12;
   if (type === "dashPunch") return timer >= 6 && timer <= 10;
-  if (type === "special") return timer >= 10 && timer <= 18;
+  if (type === "special") return timer >= 10 && timer <= 20;
   return false;
 }
 
 function spawnImpact(x, y, color, count=8) {
-  for (let i=0;i<count;i++) {
+  for (let i = 0; i < count; i++) {
     particles.push({
       x, y,
       vx:(Math.random()-0.5)*6,
       vy:(Math.random()-0.5)*6 - 1,
-      life:18 + Math.random()*10,
+      life:18 + Math.random()*12,
       size:3 + Math.random()*4,
+      color
+    });
+  }
+}
+
+function spawnAuraBurst(x, y, color) {
+  for (let i = 0; i < 16; i++) {
+    particles.push({
+      x, y,
+      vx:(Math.random()-0.5)*10,
+      vy:(Math.random()-0.5)*8 - 1,
+      life:22 + Math.random()*12,
+      size:4 + Math.random()*5,
       color
     });
   }
@@ -1374,6 +1459,7 @@ function tryStartAttack(f, type) {
 
   if (type === "special") {
     f.super = clamp(f.super - data.cost, 0, f.maxSuper);
+    spawnAuraBurst(f.x + f.w/2, f.y + 60, f.aura);
   }
 
   f.attackType = type;
@@ -1383,12 +1469,12 @@ function tryStartAttack(f, type) {
   f.hasHitCurrentAttack = false;
 
   if (type === "dashPunch") {
-    f.vx = 7 * f.dir;
+    f.vx = 7.2 * f.dir;
   }
 
   if (f.isPlayer) {
     if (type === "special") showMessage(f.specialName, 500);
-    if (type === "dashPunch") showMessage("DASH PUNCH", 350);
+    if (type === "dashPunch") showMessage("DASH PUNCH", 300);
   }
 
   return true;
@@ -1399,7 +1485,7 @@ function gainSuper(f, value) {
 }
 
 function facingProperForGuard(target, attacker) {
-  return (target.dir === -attacker.dir);
+  return target.dir === -attacker.dir;
 }
 
 function maybeSaveWinRanking() {
@@ -1420,24 +1506,24 @@ function applyDamage(attacker, target) {
     kb *= 0.5;
     target.hitstun = 6;
     target.invuln = 6;
-    spawnImpact(target.x + target.w/2, target.y + 40, "#aee1ff", 6);
+    spawnImpact(target.x + target.w/2, target.y + 48, "#aee1ff", 6);
   } else {
     target.hitstun = attacker.attackType === "special" ? 18 : 11;
     target.invuln = attacker.attackType === "special" ? 14 : 9;
-    spawnImpact(target.x + target.w/2, target.y + 36, "#ffffff", attacker.attackType === "special" ? 12 : 8);
+    spawnImpact(target.x + target.w/2, target.y + 42, "#ffffff", attacker.attackType === "special" ? 14 : 8);
   }
 
   target.hp = clamp(target.hp - damage, 0, target.maxHp);
   target.hurtFlash = 8;
   target.x += kb * (attacker.dir === 1 ? 1 : -1);
   target.vx = kb * 0.18 * (attacker.dir === 1 ? 1 : -1);
-  if (attacker.attackType === "special") target.vy = -4;
+  if (attacker.attackType === "special") target.vy = -4.6;
 
   gainSuper(attacker, data.superGain);
   gainSuper(target, 4);
 
   attacker.hasHitCurrentAttack = true;
-  cameraShake = attacker.attackType === "special" ? 10 : 4;
+  cameraShake = attacker.attackType === "special" ? 11 : 4.5;
 
   if (attacker.isPlayer) {
     const now = performance.now();
@@ -1488,47 +1574,22 @@ function updateCommandInputsForFighter(fighter, pressedFrame) {
     }
     tryStartAttack(fighter, "punch");
   }
-
-  if (pressedFrame.kick) {
-    tryStartAttack(fighter, "kick");
-  }
-
-  if (pressedFrame.special) {
-    tryStartAttack(fighter, "special");
-  }
+  if (pressedFrame.kick) tryStartAttack(fighter, "kick");
+  if (pressedFrame.special) tryStartAttack(fighter, "special");
 }
 
-function getOnlineLocalInput() {
-  return {
-    left: !!keys.left,
-    right: !!keys.right,
-    jump: !!keys.jump,
-    punch: !!pressedThisFrame.punch,
-    kick: !!pressedThisFrame.kick,
-    special: !!pressedThisFrame.special,
-    ts: Date.now()
-  };
+function animateCommon(f, dt) {
+  f.animPhase += dt * 0.006;
+  const moving = Math.abs(f.vx) > 0.5;
+  if (moving && f.onGround) f.runPhase += dt * 0.018;
 }
 
-async function pushOnlineInput() {
-  if (!onlineInfo.roomCode || !onlineInfo.role) return;
-  const slot = onlineInfo.role === "host" ? "host" : "guest";
-  const inputRef = ref(rtdb, `fight_game_v9/rooms/${onlineInfo.roomCode}/players/${slot}/input`);
-  try {
-    await set(inputRef, getOnlineLocalInput());
-  } catch (e) {
-    console.error("push input failed", e);
-  }
-}
-
-function consumePressedThisFrame() {
-  Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
-}
-
-function updateFighterByInput(f, input) {
+function updateFighterByInput(f, input, dt) {
   if (!input) input = {};
-
   if (f.dead) return;
+
+  facingUpdate(f, f === player ? enemy : player);
+  animateCommon(f, dt);
 
   if (f.invuln > 0) f.invuln--;
   if (f.hitstun > 0) f.hitstun--;
@@ -1539,7 +1600,7 @@ function updateFighterByInput(f, input) {
   if (f.attackTimer > 0) {
     f.attackTimer--;
     if (f.attackType === "dashPunch") {
-      f.vx = 5 * f.dir;
+      f.vx = 5.2 * f.dir;
     }
     if (f.attackTimer === 0) {
       f.attackType = "";
@@ -1582,57 +1643,15 @@ function updateFighterByInput(f, input) {
   f.x = clamp(f.x, 20, canvas.width - f.w - 20);
 }
 
-function updatePlayerOffline() {
-  if (player.dead) return;
-
-  facingUpdate(player, enemy);
-
-  if (player.invuln > 0) player.invuln--;
-  if (player.hitstun > 0) player.hitstun--;
-  if (player.guardTimer > 0) player.guardTimer--;
-  if (player.attackCooldown > 0) player.attackCooldown--;
-  if (player.hurtFlash > 0) player.hurtFlash--;
-
-  if (player.attackTimer > 0) {
-    player.attackTimer--;
-    if (player.attackType === "dashPunch") {
-      player.vx = 5 * player.dir;
-    }
-    if (player.attackTimer === 0) {
-      player.attackType = "";
-      player.state = "idle";
-      player.hasHitCurrentAttack = false;
-    }
-  }
-
-  if (player.hitstun <= 0 && player.attackTimer <= 0) {
-    if (keys.left && !keys.right) player.vx = -player.speed;
-    else if (keys.right && !keys.left) player.vx = player.speed;
-    else player.vx *= 0.72;
-
-    if (keys.jump && player.onGround) {
-      player.vy = -player.jumpPower;
-      player.onGround = false;
-    }
-
-    updateCommandInputsForFighter(player, pressedThisFrame);
-  } else if (player.hitstun > 0) {
-    player.vx *= 0.9;
-  }
-
-  player.vy += gravity;
-  player.x += player.vx;
-  player.y += player.vy;
-
-  if (player.y >= groundY() - player.h) {
-    player.y = groundY() - player.h;
-    player.vy = 0;
-    player.onGround = true;
-  } else {
-    player.onGround = false;
-  }
-
-  player.x = clamp(player.x, 20, canvas.width - player.w - 20);
+function updatePlayerOffline(dt) {
+  updateFighterByInput(player, {
+    left:keys.left,
+    right:keys.right,
+    jump:keys.jump,
+    punch:pressedThisFrame.punch,
+    kick:pressedThisFrame.kick,
+    special:pressedThisFrame.special
+  }, dt);
 }
 
 function aiWantsGuard() {
@@ -1640,10 +1659,11 @@ function aiWantsGuard() {
   return d < 88 && Math.random() < difficultyConfig().defend;
 }
 
-function updateEnemyAI() {
+function updateEnemyAI(dt) {
   if (enemy.dead) return;
 
   facingUpdate(enemy, player);
+  animateCommon(enemy, dt);
 
   if (enemy.invuln > 0) enemy.invuln--;
   if (enemy.hitstun > 0) enemy.hitstun--;
@@ -1667,34 +1687,29 @@ function updateEnemyAI() {
     const d = distX(enemy, player);
     const cfg = difficultyConfig();
 
-    if (aiWantsGuard()) {
-      enemy.guardTimer = 2;
-    } else {
-      enemy.guardTimer = 0;
-    }
+    enemy.guardTimer = aiWantsGuard() ? 2 : 0;
 
-    if (d > 135) {
+    if (d > 145) {
       enemy.vx = enemy.dir === 1 ? cfg.speed : -cfg.speed;
-    } else if (d < 78) {
+    } else if (d < 84) {
       enemy.vx = enemy.dir === 1 ? -cfg.speed * 0.75 : cfg.speed * 0.75;
     } else {
       enemy.vx *= 0.65;
     }
 
-    if (enemy.onGround && Math.random() < 0.0025 && d > 120 && d < 230) {
+    if (enemy.onGround && Math.random() < 0.0025 && d > 120 && d < 240) {
       enemy.vy = -enemy.jumpPower * 0.94;
       enemy.onGround = false;
     }
 
     const react = cfg.react;
-
     if (d < 82 && Math.random() < 0.025 * react) {
       tryStartAttack(enemy, "punch");
-    } else if (d < 105 && Math.random() < 0.02 * react) {
+    } else if (d < 110 && Math.random() < 0.02 * react) {
       tryStartAttack(enemy, "kick");
-    } else if (d < 130 && enemy.super >= 50 && Math.random() < 0.013 * react) {
+    } else if (d < 132 && enemy.super >= 50 && Math.random() < 0.013 * react) {
       tryStartAttack(enemy, "special");
-    } else if (d > 90 && d < 150 && Math.random() < 0.012 * react) {
+    } else if (d > 92 && d < 154 && Math.random() < 0.012 * react) {
       tryStartAttack(enemy, "dashPunch");
     }
   } else if (enemy.hitstun > 0) {
@@ -1740,9 +1755,25 @@ function updateParticles() {
   particles = particles.filter(p => p.life > 0);
 }
 
+function getOnlineLocalInput() {
+  return {
+    left: !!keys.left,
+    right: !!keys.right,
+    jump: !!keys.jump,
+    punch: !!pressedThisFrame.punch,
+    kick: !!pressedThisFrame.kick,
+    special: !!pressedThisFrame.special,
+    ts: Date.now()
+  };
+}
+
+function consumePressedThisFrame() {
+  Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
+}
+
 async function pushSharedOnlineState() {
   if (!onlineInfo.roomCode || gameMode !== "online-host") return;
-  const stateRef = ref(rtdb, `fight_game_v9/rooms/${onlineInfo.roomCode}/state`);
+  const stateRef = ref(rtdb, `fight_game_v10/rooms/${onlineInfo.roomCode}/state`);
   try {
     await update(stateRef, {
       player: fighterToPlain(player),
@@ -1759,6 +1790,17 @@ async function pushSharedOnlineState() {
   }
 }
 
+async function pushOnlineInput() {
+  if (!onlineInfo.roomCode || !onlineInfo.role) return;
+  const slot = onlineInfo.role === "host" ? "host" : "guest";
+  const inputRef = ref(rtdb, `fight_game_v10/rooms/${onlineInfo.roomCode}/players/${slot}/input`);
+  try {
+    await set(inputRef, getOnlineLocalInput());
+  } catch (e) {
+    console.error("push input failed", e);
+  }
+}
+
 function updateOnlineHost(dt) {
   if (gameOver) return;
 
@@ -1769,11 +1811,8 @@ function updateOnlineHost(dt) {
   const hostInput = getOnlineLocalInput();
   const guestInput = onlineInfo.remoteInput || {};
 
-  facingUpdate(player, enemy);
-  facingUpdate(enemy, player);
-
-  updateFighterByInput(player, hostInput);
-  updateFighterByInput(enemy, guestInput);
+  updateFighterByInput(player, hostInput, dt);
+  updateFighterByInput(enemy, guestInput, dt);
 
   resolvePush();
   resolveAttackHit(player, enemy);
@@ -1812,7 +1851,6 @@ function updateGame(dt) {
   }
 
   if (gameMode === "online-guest") {
-    // guest only sends input and renders shared state
     pushOnlineInput();
     updateParticles();
     consumePressedThisFrame();
@@ -1825,8 +1863,8 @@ function updateGame(dt) {
   if (roundTimer < 0) roundTimer = 0;
   centerInfo.textContent = `${STAGES[stageSelect.value].label} / ${Math.ceil(roundTimer)}`;
 
-  updatePlayerOffline();
-  updateEnemyAI();
+  updatePlayerOffline(dt);
+  updateEnemyAI(dt);
 
   resolvePush();
   resolveAttackHit(player, enemy);
@@ -1854,9 +1892,12 @@ function updateGame(dt) {
   consumePressedThisFrame();
 }
 
+/* =========================
+   Drawing
+========================= */
 function drawBackground() {
   const st = STAGES[stageSelect.value];
-  const horizon = canvas.height * 0.62;
+  const horizon = canvas.height * 0.6;
 
   const grad = ctx.createLinearGradient(0, 0, 0, horizon);
   grad.addColorStop(0, st.skyTop);
@@ -1864,111 +1905,216 @@ function drawBackground() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, canvas.width, horizon);
 
+  ctx.fillStyle = st.glow;
+  ctx.fillRect(0, 0, canvas.width, horizon);
+
+  if (stageSelect.value === "neon") {
+    for (let i = 0; i < 10; i++) {
+      ctx.fillStyle = i % 2 ? "rgba(116,196,255,.12)" : "rgba(255,90,180,.08)";
+      ctx.fillRect(i * (canvas.width/10), 40 + (i%3)*16, 60, horizon - 90 - (i%4)*20);
+    }
+  } else if (stageSelect.value === "moon") {
+    ctx.fillStyle = "rgba(255,255,255,.12)";
+    ctx.beginPath();
+    ctx.arc(canvas.width * 0.82, 90, 42, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    ctx.fillStyle = "rgba(255,255,255,.04)";
+    for (let i = 0; i < 8; i++) {
+      const bw = 90 + (i % 3) * 44;
+      const bh = 100 + (i % 4) * 28;
+      const bx = i * (canvas.width / 8);
+      const by = horizon - bh;
+      ctx.fillRect(bx, by, bw, bh);
+    }
+  }
+
   ctx.fillStyle = st.floor;
   ctx.fillRect(0, horizon, canvas.width, canvas.height - horizon);
 
-  ctx.fillStyle = "rgba(255,255,255,.04)";
-  for (let i = 0; i < 7; i++) {
-    const bw = 80 + (i % 3) * 50;
-    const bh = 120 + (i % 4) * 24;
-    const bx = i * (canvas.width / 7);
-    const by = horizon - bh;
-    ctx.fillRect(bx, by, bw, bh);
+  ctx.fillStyle = st.line;
+  for (let i = 0; i < canvas.width; i += 76) {
+    ctx.fillRect(i, horizon + 38, 44, 3);
   }
 
-  ctx.fillStyle = st.line;
-  for (let i = 0; i < canvas.width; i += 80) {
-    ctx.fillRect(i, horizon + 42, 46, 3);
-  }
+  ctx.fillStyle = "rgba(0,0,0,.14)";
+  ctx.fillRect(0, horizon, canvas.width, 28);
+}
+
+function drawAura(f, x, y) {
+  if (f.super < 50) return;
+  const pulse = 0.65 + Math.sin(performance.now() * 0.01 + f.animPhase) * 0.08;
+
+  ctx.save();
+  ctx.globalAlpha = 0.14;
+  ctx.fillStyle = f.aura;
+  ctx.beginPath();
+  ctx.ellipse(x + f.w/2, y + f.h/2, 42 * pulse, 76 * pulse, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 function drawFighter(f) {
   const x = Math.round(f.x);
   const y = Math.round(f.y);
+  const t = performance.now() * 0.01 + f.animPhase;
+  const breathe = Math.sin(t) * 1.8;
+  const runSwing = Math.sin(f.runPhase) * 14;
+  const runSwing2 = Math.sin(f.runPhase + Math.PI) * 14;
+  const attackStretch = f.attackTimer > 0 ? 1 + 0.04 * Math.sin(f.attackTimer) : 1;
+  const crouch = f.onGround ? 0 : -4;
 
   ctx.save();
 
+  drawAura(f, x, y);
+
   if (f.hurtFlash > 0) ctx.globalAlpha = 0.82;
 
-  ctx.fillStyle = "rgba(0,0,0,.28)";
+  ctx.fillStyle = "rgba(0,0,0,.32)";
   ctx.beginPath();
-  ctx.ellipse(x + f.w / 2, groundY() - 2, 34, 10, 0, 0, Math.PI * 2);
+  ctx.ellipse(x + f.w/2, groundY() - 4, 38, 12, 0, 0, Math.PI * 2);
   ctx.fill();
 
+  const bodyX = x + 14;
+  const bodyY = y + 22 + breathe + crouch;
+  const bodyW = f.w - 28;
+  const bodyH = f.h - 42;
+
+  // cape / scarf
+  ctx.fillStyle = f.scarf;
+  ctx.globalAlpha = 0.28;
+  ctx.beginPath();
+  ctx.moveTo(bodyX + bodyW/2, bodyY + 24);
+  ctx.quadraticCurveTo(bodyX + bodyW/2 - 18 * f.dir, bodyY + 40, bodyX + bodyW/2 - 6 * f.dir, bodyY + 72 + runSwing * 0.15);
+  ctx.lineTo(bodyX + bodyW/2 + 12 * f.dir, bodyY + 32);
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // body core
   ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
   ctx.strokeStyle = f.accent;
   ctx.lineWidth = 3;
-
   ctx.beginPath();
-  ctx.roundRect(x + 10, y + 18, f.w - 20, f.h - 28, 18);
+  ctx.roundRect(bodyX, bodyY, bodyW, bodyH * attackStretch, 20);
   ctx.fill();
   ctx.stroke();
 
-  ctx.beginPath();
-  ctx.arc(x + f.w / 2, y + 10, 19, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.stroke();
-
+  // chest plate / belt
   ctx.fillStyle = "rgba(255,255,255,.18)";
-  ctx.fillRect(x + 18, y + 54, f.w - 36, 8);
+  ctx.fillRect(bodyX + 10, bodyY + 34, bodyW - 20, 8);
+  ctx.fillStyle = "rgba(0,0,0,.16)";
+  ctx.fillRect(bodyX + 8, bodyY + 78, bodyW - 16, 10);
 
-  const cx = x + f.w / 2;
-  const armY = y + 48;
-  const legBase = y + f.h - 26;
+  // head
+  ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
+  ctx.beginPath();
+  ctx.arc(x + f.w/2, y + 14 + breathe, 20, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // hair / helm
+  ctx.fillStyle = f.hair;
+  ctx.beginPath();
+  if (f.silhouette === "heavy") {
+    ctx.ellipse(x + f.w/2, y + 8 + breathe, 22, 12, 0, Math.PI, 0, true);
+  } else if (f.silhouette === "ninja") {
+    ctx.moveTo(x + f.w/2 - 18, y + 14 + breathe);
+    ctx.lineTo(x + f.w/2 + 8, y - 6 + breathe);
+    ctx.lineTo(x + f.w/2 + 18, y + 14 + breathe);
+    ctx.closePath();
+  } else if (f.silhouette === "assassin") {
+    ctx.moveTo(x + f.w/2 - 18, y + 10 + breathe);
+    ctx.lineTo(x + f.w/2, y - 10 + breathe);
+    ctx.lineTo(x + f.w/2 + 18, y + 10 + breathe);
+    ctx.closePath();
+  } else if (f.silhouette === "lancer") {
+    ctx.ellipse(x + f.w/2, y + 7 + breathe, 18, 11, 0, Math.PI, 0, true);
+  } else {
+    ctx.ellipse(x + f.w/2, y + 9 + breathe, 19, 10, 0, Math.PI, 0, true);
+  }
+  ctx.fill();
+
+  // eyes
+  ctx.fillStyle = "#0b1020";
+  ctx.fillRect(x + f.w/2 - 8, y + 14 + breathe, 4, 2);
+  ctx.fillRect(x + f.w/2 + 4, y + 14 + breathe, 4, 2);
+
+  const cx = x + f.w/2;
+  const armY = y + 54 + breathe;
+  const legY = y + f.h - 28;
   const footY = y + f.h - 2;
   const forward = f.dir === 1 ? 1 : -1;
+  const moving = Math.abs(f.vx) > 0.5 && f.onGround;
+
+  const backArmOffset = moving ? runSwing2 * 0.45 : 6;
+  const frontArmOffset = moving ? runSwing * 0.45 : 8;
+  const frontLegOffset = moving ? runSwing : 0;
+  const backLegOffset = moving ? runSwing2 : 0;
 
   ctx.strokeStyle = f.accent;
-  ctx.lineWidth = 8;
+  ctx.lineWidth = 9;
   ctx.lineCap = "round";
 
+  // front arm
   ctx.beginPath();
   ctx.moveTo(cx, armY);
   if (f.attackTimer > 0) {
-    const len = f.attackType === "punch" ? 40 : f.attackType === "kick" ? 22 : f.attackType === "dashPunch" ? 52 : 62;
-    ctx.lineTo(cx + len * forward, armY - (f.attackType === "special" ? 6 : 0));
+    const len = f.attackType === "punch" ? 44 : f.attackType === "kick" ? 20 : f.attackType === "dashPunch" ? 56 : 70;
+    const rise = f.attackType === "special" ? -10 : -2;
+    ctx.lineTo(cx + len * forward, armY + rise);
   } else {
-    ctx.lineTo(cx + 18 * forward, armY + 12);
+    ctx.lineTo(cx + (18 + frontArmOffset) * forward, armY + 12);
   }
   ctx.stroke();
 
+  // back arm
   ctx.beginPath();
   ctx.moveTo(cx, armY);
-  ctx.lineTo(cx - 18 * forward, armY + 12);
+  ctx.lineTo(cx - (18 + backArmOffset) * forward, armY + 12);
   ctx.stroke();
 
+  // front leg
   ctx.beginPath();
-  ctx.moveTo(cx, legBase);
+  ctx.moveTo(cx, legY);
   if (f.attackTimer > 0 && f.attackType === "kick") {
-    ctx.lineTo(cx + 46 * forward, legBase + 6);
+    ctx.lineTo(cx + 54 * forward, legY + 4);
   } else {
-    ctx.lineTo(cx + 16, footY);
+    ctx.lineTo(cx + 14 + frontLegOffset * 0.35, footY);
   }
   ctx.stroke();
 
+  // back leg
   ctx.beginPath();
-  ctx.moveTo(cx, legBase);
-  ctx.lineTo(cx - 16, footY);
+  ctx.moveTo(cx, legY);
+  ctx.lineTo(cx - 14 + backLegOffset * 0.35, footY);
   ctx.stroke();
 
   if (f.guardTimer > 0) {
-    ctx.strokeStyle = "rgba(165,220,255,.65)";
+    ctx.strokeStyle = "rgba(165,220,255,.72)";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.arc(cx, y + 45, 36, 0, Math.PI * 2);
+    ctx.arc(cx, y + 50, 40, 0, Math.PI * 2);
     ctx.stroke();
   }
 
   if (f.attackTimer > 0) {
     const atk = getAttackRect(f);
     if (f.attackType === "special") {
-      ctx.fillStyle = "rgba(255,210,77,.3)";
-      ctx.strokeStyle = "rgba(255,230,166,.8)";
+      ctx.fillStyle = "rgba(255,210,77,.22)";
+      ctx.strokeStyle = "rgba(255,230,166,.82)";
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.roundRect(atk.x, atk.y, atk.w, atk.h, 16);
+      ctx.roundRect(atk.x, atk.y, atk.w, atk.h, 18);
       ctx.fill();
       ctx.stroke();
+
+      ctx.globalAlpha = 0.4;
+      ctx.fillStyle = f.aura;
+      ctx.beginPath();
+      ctx.ellipse(atk.x + atk.w/2, atk.y + atk.h/2, atk.w * 0.45, atk.h * 0.55, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
     } else if (attackActiveFrame(f.attackType, f.attackTimer)) {
       ctx.fillStyle = "rgba(255,255,255,.12)";
       ctx.beginPath();
@@ -1982,7 +2128,7 @@ function drawFighter(f) {
 
 function drawParticles() {
   particles.forEach(p => {
-    ctx.globalAlpha = Math.max(0, p.life / 28);
+    ctx.globalAlpha = Math.max(0, p.life / 32);
     ctx.fillStyle = p.color;
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -2104,18 +2250,17 @@ bindTouchButton(touchButtons.kick, "kick");
 bindTouchButton(touchButtons.special, "special");
 
 /* =========================
-   Online mode
+   Online
 ========================= */
-function randomRoomCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let s = "";
-  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
-  return s;
-}
-
-function sanitizeRoomCode(v) {
-  return (v || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
-}
+let onlineInfo = {
+  roomCode:"",
+  role:"",
+  roomRef:null,
+  roomUnsub:null,
+  stateUnsub:null,
+  inputUnsub:null,
+  remoteInput:null
+};
 
 function cleanupRoomListeners() {
   if (onlineInfo.roomUnsub) onlineInfo.roomUnsub();
@@ -2128,17 +2273,17 @@ function cleanupRoomListeners() {
 
 async function createOnlineRoom() {
   if (!firebaseReady) {
-    alert("Firebase匿名認証が完了していません。少し待って再度試してください。");
+    alert("Firebase匿名認証がまだ完了していません。少し待ってから試してください。");
     return;
   }
 
   const roomCode = randomRoomCode();
-  const roomRef = ref(rtdb, `fight_game_v9/rooms/${roomCode}`);
+  const roomRef = ref(rtdb, `fight_game_v10/rooms/${roomCode}`);
   onlineInfo.roomCode = roomCode;
   onlineInfo.role = "host";
   onlineInfo.roomRef = roomRef;
 
-  const roomData = {
+  await set(roomRef, {
     createdAt: Date.now(),
     status: "lobby",
     stage: stageSelect.value,
@@ -2161,10 +2306,9 @@ async function createOnlineRoom() {
         character: ""
       }
     }
-  };
+  });
 
-  await set(roomRef, roomData);
-  onDisconnect(ref(rtdb, `fight_game_v9/rooms/${roomCode}/players/host/connected`)).set(false);
+  onDisconnect(ref(rtdb, `fight_game_v10/rooms/${roomCode}/players/host/connected`)).set(false);
 
   watchRoom(roomCode);
   clearScreens();
@@ -2174,31 +2318,32 @@ async function createOnlineRoom() {
   lobbyPlayers.textContent = "ホスト: 接続 / ゲスト: 未接続";
 }
 
-async function joinOnlineRoom(roomCodeRaw) {
+async function joinOnlineRoom(codeRaw) {
   if (!firebaseReady) {
-    alert("Firebase匿名認証が完了していません。少し待って再度試してください。");
+    alert("Firebase匿名認証がまだ完了していません。少し待ってから試してください。");
     return;
   }
 
-  const roomCode = sanitizeRoomCode(roomCodeRaw);
+  const roomCode = sanitizeRoomCode(codeRaw);
   if (roomCode.length !== 6) {
     alert("6文字のルームコードを入力してください。");
     return;
   }
 
-  const roomRef = ref(rtdb, `fight_game_v9/rooms/${roomCode}`);
+  const roomRef = ref(rtdb, `fight_game_v10/rooms/${roomCode}`);
   const snap = await get(roomRef);
+
   if (!snap.exists()) {
     alert("ルームが見つかりません。");
     return;
   }
 
-  const data = snap.val();
-  if (data.status !== "lobby") {
-    alert("このルームはすでに開始済みです。");
+  const room = snap.val();
+  if (room.status !== "lobby") {
+    alert("このルームは開始済みです。");
     return;
   }
-  if (data.players?.guest?.connected) {
+  if (room.players?.guest?.connected) {
     alert("このルームは満員です。");
     return;
   }
@@ -2212,7 +2357,7 @@ async function joinOnlineRoom(roomCodeRaw) {
     "players/guest/character": selectedCharacter
   });
 
-  onDisconnect(ref(rtdb, `fight_game_v9/rooms/${roomCode}/players/guest/connected`)).set(false);
+  onDisconnect(ref(rtdb, `fight_game_v10/rooms/${roomCode}/players/guest/connected`)).set(false);
 
   onlineInfo.roomCode = roomCode;
   onlineInfo.role = "guest";
@@ -2227,15 +2372,15 @@ async function joinOnlineRoom(roomCodeRaw) {
 function watchRoom(roomCode) {
   cleanupRoomListeners();
 
-  const roomRef = ref(rtdb, `fight_game_v9/rooms/${roomCode}`);
-  const stateRef = ref(rtdb, `fight_game_v9/rooms/${roomCode}/state`);
-  const guestInputRef = ref(rtdb, `fight_game_v9/rooms/${roomCode}/players/guest/input`);
+  const roomRef = ref(rtdb, `fight_game_v10/rooms/${roomCode}`);
+  const stateRef = ref(rtdb, `fight_game_v10/rooms/${roomCode}/state`);
+  const guestInputRef = ref(rtdb, `fight_game_v10/rooms/${roomCode}/players/guest/input`);
 
   const roomCb = onValue(roomRef, async (snap) => {
     const room = snap.val();
     if (!room) {
       if (gameMode.startsWith("online")) {
-        showMessage("ROOM CLOSED", 1600);
+        showMessage("ROOM CLOSED", 1500);
         await leaveOnlineRoom(false);
         showMenu();
       }
@@ -2249,14 +2394,9 @@ function watchRoom(roomCode) {
 
     roomCodeLabel.textContent = roomCode;
     lobbyPlayers.textContent = `ホスト: ${hostConnected ? "接続" : "未接続"} / ゲスト: ${guestConnected ? "接続" : "未接続"}`;
-
-    if (!guestConnected) {
-      lobbyStatus.textContent = "接続待ち...";
-    } else if (!hostReady || !guestReady) {
-      lobbyStatus.textContent = "両者の開始待ち...";
-    } else {
-      lobbyStatus.textContent = "開始準備完了";
-    }
+    if (!guestConnected) lobbyStatus.textContent = "接続待ち...";
+    else if (!hostReady || !guestReady) lobbyStatus.textContent = "両者の開始待ち...";
+    else lobbyStatus.textContent = "開始準備完了";
 
     if (room.status === "playing" && !onlineGameStarted) {
       stageSelect.value = room.stage || stageSelect.value;
@@ -2300,7 +2440,8 @@ async function markReadyAndStartIfPossible() {
   if (!onlineInfo.roomCode || !onlineInfo.role) return;
 
   const slot = onlineInfo.role === "host" ? "host" : "guest";
-  const roomRef = ref(rtdb, `fight_game_v9/rooms/${onlineInfo.roomCode}`);
+  const roomRef = ref(rtdb, `fight_game_v10/rooms/${onlineInfo.roomCode}`);
+
   await update(roomRef, {
     [`players/${slot}/ready`]: true
   });
@@ -2323,7 +2464,7 @@ async function markReadyAndStartIfPossible() {
     player = createFighter(room.players.host.character || selectedCharacter, true);
     enemy = createFighter(room.players.guest.character || "blade", false);
 
-    await update(ref(rtdb, `fight_game_v9/rooms/${onlineInfo.roomCode}/state`), {
+    await update(ref(rtdb, `fight_game_v10/rooms/${onlineInfo.roomCode}/state`), {
       player: fighterToPlain(player),
       enemy: fighterToPlain(enemy),
       roundTimer: 99,
@@ -2341,7 +2482,7 @@ async function leaveOnlineRoom(removeAll = true) {
     cleanupRoomListeners();
 
     if (onlineInfo.roomCode && onlineInfo.role) {
-      const roomPath = `fight_game_v9/rooms/${onlineInfo.roomCode}`;
+      const roomPath = `fight_game_v10/rooms/${onlineInfo.roomCode}`;
       const roomRef = ref(rtdb, roomPath);
 
       if (removeAll && onlineInfo.role === "host") {
