@@ -2,45 +2,44 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#000000">
-  <title>Fight Game Engine Advanced Mobile Safe</title>
+  <title>Fight Game v8</title>
 
   <style>
     :root{
-      --bg1:#090d18;
-      --bg2:#17213a;
-      --panel:rgba(7,10,18,.84);
+      --bg:#070b14;
+      --panel:rgba(10,14,24,.88);
       --line:rgba(255,255,255,.12);
       --text:#eef3ff;
-      --muted:#aab6d5;
-      --accent:#ff596c;
-      --accent2:#5fb0ff;
-      --accent3:#ffd24d;
-      --good:#49d68b;
-      --shadow:0 18px 50px rgba(0,0,0,.45);
+      --muted:#a9b6d8;
+      --red1:#ff6b7a;
+      --red2:#c9344f;
+      --blue1:#67b7ff;
+      --blue2:#306eff;
+      --gold1:#ffe38a;
+      --gold2:#ffb300;
+      --shadow:0 18px 48px rgba(0,0,0,.42);
     }
 
     *{
       box-sizing:border-box;
       -webkit-user-select:none;
       user-select:none;
-      -webkit-touch-callout:none;
       -webkit-tap-highlight-color:transparent;
     }
 
     html,body{
       margin:0;
+      padding:0;
       width:100%;
       height:100%;
+      min-height:100%;
       overflow:hidden;
-      background:linear-gradient(180deg,var(--bg2),var(--bg1));
+      background:#000;
       color:var(--text);
       font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       touch-action:none;
@@ -50,34 +49,44 @@
     body{
       position:fixed;
       inset:0;
+      width:100vw;
+      height:100vh;
+      height:100dvh;
     }
 
     #app{
-      position:relative;
+      position:fixed;
+      inset:0;
       width:100vw;
       height:100vh;
+      height:100dvh;
+      min-height:100svh;
       overflow:hidden;
-      background:#0b1020;
+      background:linear-gradient(180deg,#10192d,#05070d);
     }
 
     canvas{
-      display:none;
+      position:absolute;
+      inset:0;
       width:100%;
       height:100%;
-      background:#0b1020;
+      display:none;
+      background:#000;
     }
 
     .screen{
       position:absolute;
       inset:0;
+      width:100%;
+      height:100%;
       display:none;
       align-items:center;
       justify-content:center;
       padding:20px;
       background:
-        radial-gradient(circle at 50% 15%, rgba(255,255,255,.06), transparent 35%),
-        linear-gradient(180deg, rgba(17,25,45,.96), rgba(0,0,0,.96));
-      z-index:20;
+        radial-gradient(circle at 50% 12%, rgba(255,255,255,.06), transparent 32%),
+        linear-gradient(180deg, rgba(13,20,37,.96), rgba(0,0,0,.96));
+      z-index:30;
     }
 
     .screen.show{
@@ -85,7 +94,7 @@
     }
 
     .panel{
-      width:min(94vw,840px);
+      width:min(92vw,860px);
       max-height:92vh;
       overflow:auto;
       background:var(--panel);
@@ -99,7 +108,7 @@
 
     h1{
       margin:0 0 10px;
-      font-size:clamp(34px,6vw,62px);
+      font-size:clamp(34px,6vw,60px);
       letter-spacing:.08em;
     }
 
@@ -114,46 +123,51 @@
       line-height:1.7;
     }
 
-    .row{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:center;
-      margin-top:12px;
+    .sub{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:18px;
     }
 
     .stack{
       display:flex;
       flex-direction:column;
-      gap:14px;
+      gap:12px;
       align-items:center;
+    }
+
+    .row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      margin-top:12px;
     }
 
     button,select{
       border:none;
       outline:none;
-      border-radius:16px;
-      color:#fff;
-      font-size:18px;
-      font-weight:800;
       min-width:220px;
       padding:16px 20px;
+      border-radius:16px;
+      font-size:18px;
+      font-weight:800;
+      color:#fff;
       box-shadow:var(--shadow);
     }
 
     button{
-      background:linear-gradient(180deg,#ff6677,#c92f46);
+      background:linear-gradient(180deg,var(--red1),var(--red2));
       cursor:pointer;
     }
 
     button.secondary{
-      background:linear-gradient(180deg,#62718f,#33405a);
+      background:linear-gradient(180deg,#61718f,#32405c);
     }
 
-    .sub{
-      font-size:13px;
-      color:var(--muted);
-      margin-bottom:18px;
+    button.gold{
+      background:linear-gradient(180deg,var(--gold1),var(--gold2));
+      color:#231500;
     }
 
     select{
@@ -175,7 +189,7 @@
       padding:14px;
       text-align:left;
       cursor:pointer;
-      transition:transform .15s ease, border-color .15s ease;
+      transition:transform .15s ease,border-color .15s ease;
     }
 
     .card:hover{
@@ -183,7 +197,7 @@
     }
 
     .card.active{
-      border-color:rgba(255,255,255,.35);
+      border-color:rgba(255,255,255,.36);
       box-shadow:0 0 0 2px rgba(255,255,255,.08) inset;
     }
 
@@ -199,16 +213,16 @@
 
     .tag{
       display:inline-block;
+      margin-right:6px;
+      margin-top:6px;
       padding:4px 10px;
       border-radius:999px;
       background:rgba(255,255,255,.08);
       font-size:11px;
       font-weight:700;
-      margin-right:6px;
-      margin-top:6px;
     }
 
-    .help-box{
+    .help-box,.rank-box{
       background:rgba(255,255,255,.04);
       border:1px solid var(--line);
       border-radius:18px;
@@ -217,11 +231,24 @@
       margin:16px 0;
     }
 
+    .rank-item{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      font-size:14px;
+    }
+
+    .rank-item:last-child{
+      border-bottom:none;
+    }
+
     #hud{
       position:absolute;
       inset:0;
       display:none;
-      z-index:5;
+      z-index:10;
       pointer-events:none;
     }
 
@@ -256,22 +283,30 @@
     .bar-wrap{
       width:100%;
       height:18px;
-      border-radius:999px;
       overflow:hidden;
+      border-radius:999px;
       background:rgba(255,255,255,.1);
       border:1px solid rgba(255,255,255,.12);
     }
 
     .bar{
-      height:100%;
       width:100%;
+      height:100%;
       border-radius:999px;
       transition:width .08s linear;
     }
 
-    .bar.player{ background:linear-gradient(90deg,#ff9860,#ff4d63); }
-    .bar.enemy{ background:linear-gradient(90deg,#72e3ff,#4b7fff); }
-    .bar.super{ background:linear-gradient(90deg,#ffe08a,#ffb300); }
+    .bar.player{
+      background:linear-gradient(90deg,#ff9860,#ff4d63);
+    }
+
+    .bar.enemy{
+      background:linear-gradient(90deg,#72e3ff,#4b7fff);
+    }
+
+    .bar.super{
+      background:linear-gradient(90deg,#ffe08a,#ffb300);
+    }
 
     .small-info{
       margin-top:6px;
@@ -296,9 +331,9 @@
       transform:translateX(-50%);
       min-width:240px;
       max-width:84vw;
-      text-align:center;
       padding:14px 20px;
       border-radius:20px;
+      text-align:center;
       background:rgba(0,0,0,.5);
       border:1px solid var(--line);
       font-size:clamp(18px,4vw,42px);
@@ -312,26 +347,26 @@
       opacity:1;
     }
 
-    #pauseWrap{
+    #topButtons{
       position:absolute;
       top:16px;
       right:16px;
       display:none;
-      z-index:11;
+      gap:10px;
+      z-index:20;
+      pointer-events:auto;
     }
 
-    #pauseBtn{
+    .mini-btn{
       min-width:auto;
-      width:54px;
-      height:54px;
+      width:56px;
+      height:56px;
       padding:0;
       border-radius:50%;
       font-size:18px;
-      pointer-events:auto;
       background:linear-gradient(180deg,#5b6885,#2a3246);
     }
 
-    /* ここがスマホ検索欄対策の中心 */
     #mobileControls{
       position:absolute;
       left:0;
@@ -343,9 +378,9 @@
       padding:
         12px
         max(22px, env(safe-area-inset-right))
-        calc(42px + env(safe-area-inset-bottom))
+        calc(84px + env(safe-area-inset-bottom))
         max(22px, env(safe-area-inset-left));
-      z-index:10;
+      z-index:15;
       pointer-events:none;
       transform:translateY(0);
       transition:bottom .12s linear, transform .12s linear;
@@ -396,7 +431,7 @@
       position:absolute;
       inset:0;
       display:none;
-      z-index:50;
+      z-index:60;
       background:#000;
       align-items:center;
       justify-content:center;
@@ -424,12 +459,12 @@
         font-size:22px;
       }
 
-      button,select{
-        min-width:200px;
-      }
-
       .pick-grid{
         grid-template-columns:1fr;
+      }
+
+      button,select{
+        min-width:200px;
       }
     }
 
@@ -444,11 +479,12 @@
 <div id="app">
   <div id="menuScreen" class="screen show">
     <div class="panel">
-      <h1>FIGHT GAME</h1>
-      <div class="sub">スマホ検索欄にかぶりにくい操作パッド対応版</div>
+      <h1>FIGHT GAME v8</h1>
+      <div class="sub">スマホ横画面 / 全画面 / Firebaseランキング対応 完成版</div>
 
       <div class="stack">
         <button id="startBtn">START</button>
+        <button id="fullscreenBtn" class="gold">全画面</button>
 
         <select id="difficultySelect">
           <option value="normal" selected>CPU強さ: NORMAL</option>
@@ -463,6 +499,7 @@
         </select>
 
         <button id="characterBtn" class="secondary">キャラクター選択</button>
+        <button id="rankingBtn" class="secondary">ランキング</button>
         <button id="helpBtn" class="secondary">操作説明</button>
       </div>
     </div>
@@ -481,10 +518,22 @@
   <div id="characterScreen" class="screen">
     <div class="panel">
       <h2>キャラクター選択</h2>
-      <p>プレイヤーキャラを選んでください。ステージによって相性補正があります。</p>
+      <p>プレイヤーキャラを選んでください。</p>
       <div class="pick-grid" id="characterGrid"></div>
       <div class="row">
         <button id="characterBackBtn" class="secondary">戻る</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="rankingScreen" class="screen">
+    <div class="panel">
+      <h2>ランキング</h2>
+      <p>Firebaseに保存されたスコア上位一覧です。</p>
+      <div class="rank-box" id="rankingList">読み込み中...</div>
+      <div class="row">
+        <button id="rankingReloadBtn">再読み込み</button>
+        <button id="rankingBackBtn" class="secondary">戻る</button>
       </div>
     </div>
   </div>
@@ -521,8 +570,9 @@
     <div id="message"></div>
   </div>
 
-  <div id="pauseWrap">
-    <button id="pauseBtn">≡</button>
+  <div id="topButtons">
+    <button id="backMenuBtn" class="mini-btn">≡</button>
+    <button id="gameFullscreenBtn" class="mini-btn">⛶</button>
   </div>
 
   <div id="mobileControls">
@@ -541,8 +591,53 @@
   <div id="rotateNotice">横画面でプレイしてください</div>
 </div>
 
-<script>
+<script type="module">
 (() => {
+  /* =========================
+     Firebase
+  ========================= */
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    orderBy,
+    limit,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBkY-kHndDPPZjqr7F52oPyvg5gAJs3Ipk",
+    authDomain: "fight-game-5abcb.firebaseapp.com",
+    projectId: "fight-game-5abcb",
+    storageBucket: "fight-game-5abcb.firebasestorage.app",
+    messagingSenderId: "875972972511",
+    appId: "1:875972972511:web:c78d67bcd5a31010f1be6a"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
+  const db = getFirestore(firebaseApp);
+
+  let firebaseReady = false;
+  let firebaseUserId = "guest";
+
+  signInAnonymously(auth)
+    .then((cred) => {
+      firebaseReady = true;
+      firebaseUserId = cred.user?.uid || "guest";
+      console.log("Firebase anonymous login OK");
+    })
+    .catch((err) => {
+      console.error("Firebase anonymous login NG", err);
+    });
+
+  /* =========================
+     Data
+  ========================= */
   const CHARACTERS = {
     ryu: {
       key: "ryu",
@@ -552,10 +647,10 @@
       accent: "#ffd2d6",
       speed: 4.6,
       jump: 16,
-      atk: 1.0,
-      def: 1.0,
-      superGain: 1.0,
-      specialName: "波動拳"
+      atk: 1.00,
+      def: 1.00,
+      superGain: 1.00,
+      specialName: "波動閃"
     },
     blade: {
       key: "blade",
@@ -580,7 +675,7 @@
       jump: 14.5,
       atk: 1.16,
       def: 1.12,
-      superGain: 0.9,
+      superGain: 0.90,
       specialName: "グランドブレイク"
     }
   };
@@ -592,7 +687,7 @@
       skyBottom: "#10141f",
       floor: "#2d1d17",
       line: "#6e4c3b",
-      buff: { ryu: { atk: 1.1 }, blade: { atk: 0.97 }, titan: { atk: 1.0 } }
+      buff: { ryu:{ atk:1.1 }, blade:{ atk:0.97 }, titan:{ atk:1.0 } }
     },
     ruins: {
       label: "RUINS",
@@ -600,7 +695,7 @@
       skyBottom: "#16110f",
       floor: "#4e4035",
       line: "#8d7765",
-      buff: { ryu: { atk: 0.98 }, blade: { atk: 1.0 }, titan: { atk: 1.12 } }
+      buff: { ryu:{ atk:0.98 }, blade:{ atk:1.0 }, titan:{ atk:1.12 } }
     },
     neon: {
       label: "NEON CITY",
@@ -608,28 +703,37 @@
       skyBottom: "#060710",
       floor: "#19243d",
       line: "#3a6ba1",
-      buff: { ryu: { atk: 1.0 }, blade: { atk: 1.1 }, titan: { atk: 0.98 } }
+      buff: { ryu:{ atk:1.0 }, blade:{ atk:1.1 }, titan:{ atk:0.98 } }
     }
   };
 
+  /* =========================
+     DOM
+  ========================= */
   const menuScreen = document.getElementById("menuScreen");
   const helpScreen = document.getElementById("helpScreen");
   const characterScreen = document.getElementById("characterScreen");
-  const helpContent = document.getElementById("helpContent");
-  const characterGrid = document.getElementById("characterGrid");
+  const rankingScreen = document.getElementById("rankingScreen");
 
   const startBtn = document.getElementById("startBtn");
+  const fullscreenBtn = document.getElementById("fullscreenBtn");
   const helpBtn = document.getElementById("helpBtn");
   const helpBackBtn = document.getElementById("helpBackBtn");
   const characterBtn = document.getElementById("characterBtn");
   const characterBackBtn = document.getElementById("characterBackBtn");
-  const pauseBtn = document.getElementById("pauseBtn");
-  const pauseWrap = document.getElementById("pauseWrap");
+  const rankingBtn = document.getElementById("rankingBtn");
+  const rankingBackBtn = document.getElementById("rankingBackBtn");
+  const rankingReloadBtn = document.getElementById("rankingReloadBtn");
+
   const difficultySelect = document.getElementById("difficultySelect");
   const stageSelect = document.getElementById("stageSelect");
+  const helpContent = document.getElementById("helpContent");
+  const characterGrid = document.getElementById("characterGrid");
+  const rankingList = document.getElementById("rankingList");
 
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
+
   const hud = document.getElementById("hud");
   const messageEl = document.getElementById("message");
 
@@ -637,6 +741,7 @@
   const enemyHpBar = document.getElementById("enemyHpBar");
   const playerSuperBar = document.getElementById("playerSuperBar");
   const enemySuperBar = document.getElementById("enemySuperBar");
+
   const playerHpText = document.getElementById("playerHpText");
   const enemyHpText = document.getElementById("enemyHpText");
   const comboText = document.getElementById("comboText");
@@ -644,7 +749,11 @@
   const difficultyText = document.getElementById("difficultyText");
   const leftName = document.getElementById("leftName");
   const rightName = document.getElementById("rightName");
+
   const mobileControls = document.getElementById("mobileControls");
+  const topButtons = document.getElementById("topButtons");
+  const backMenuBtn = document.getElementById("backMenuBtn");
+  const gameFullscreenBtn = document.getElementById("gameFullscreenBtn");
 
   const touchButtons = {
     left: document.getElementById("leftBtn"),
@@ -658,30 +767,38 @@
   const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
   const isMobile = matchMedia("(max-width: 940px)").matches || isTouch;
 
+  /* =========================
+     Layout
+  ========================= */
   function fitCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const vv = window.visualViewport;
+    const w = vv ? Math.round(vv.width) : window.innerWidth;
+    const h = vv ? Math.round(vv.height) : window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
   }
 
   function adjustMobileControlsForViewport() {
-    if (!mobileControls) return;
-
     const vv = window.visualViewport;
+    const topUi = document.querySelector(".top-ui");
+
     if (!vv) {
       mobileControls.style.bottom = "0px";
-      mobileControls.style.transform = "translateY(0)";
+      mobileControls.style.transform = "translateY(-18px)";
+      if (topUi) topUi.style.top = "0px";
       return;
     }
 
     const hiddenBottom = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
     const hiddenTop = Math.max(0, vv.offsetTop);
-    const extraLift = hiddenBottom > 0 ? Math.min(70, hiddenBottom + 10) : 0;
+    const baseLift = 18;
+    const extraLift = hiddenBottom > 0 ? Math.min(120, hiddenBottom + 28) : baseLift;
 
     mobileControls.style.bottom = `${hiddenBottom}px`;
-    mobileControls.style.transform = `translateY(${-extraLift}px)`;
+    mobileControls.style.transform = `translateY(-${extraLift}px)`;
 
-    // 検索欄が大きく出ているときはHUD上端も少し下げる
-    const topUi = document.querySelector(".top-ui");
     if (topUi) {
       topUi.style.top = `${Math.max(0, hiddenTop)}px`;
     }
@@ -707,6 +824,58 @@
     window.visualViewport.addEventListener("scroll", adjustMobileControlsForViewport);
   }
 
+  document.addEventListener("gesturestart", (e) => e.preventDefault());
+  document.addEventListener("gesturechange", (e) => e.preventDefault());
+  document.addEventListener("gestureend", (e) => e.preventDefault());
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
+  document.addEventListener("selectstart", (e) => e.preventDefault());
+  document.addEventListener("dragstart", (e) => e.preventDefault());
+
+  /* =========================
+     Fullscreen
+  ========================= */
+  async function enterFullscreenIfPossible() {
+    try {
+      const el = document.documentElement;
+      if (document.fullscreenElement) return;
+
+      if (el.requestFullscreen) {
+        await el.requestFullscreen({ navigationUI: "hide" });
+        return;
+      }
+      if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      }
+    } catch (e) {
+      console.log("fullscreen unavailable", e);
+    }
+  }
+
+  /* =========================
+     UI helpers
+  ========================= */
+  function clearScreens() {
+    menuScreen.classList.remove("show");
+    helpScreen.classList.remove("show");
+    characterScreen.classList.remove("show");
+    rankingScreen.classList.remove("show");
+  }
+
+  function showMenu() {
+    stopGame();
+    clearScreens();
+    menuScreen.classList.add("show");
+  }
+
+  function showMessage(text, ms=1200) {
+    messageEl.textContent = text;
+    messageEl.classList.add("show");
+    clearTimeout(showMessage.timer);
+    showMessage.timer = setTimeout(() => {
+      messageEl.classList.remove("show");
+    }, ms);
+  }
+
   function setHelpText() {
     if (isMobile) {
       helpContent.innerHTML = `
@@ -715,10 +884,9 @@
         <p>↑ : ジャンプ</p>
         <p>P : パンチ</p>
         <p>K : キック</p>
-        <p>S : コマンド完成後に必殺技</p>
+        <p>S : 必殺技（ゲージ50以上）</p>
         <p style="margin-top:12px;"><strong>コマンド</strong></p>
         <p>→ → + P : ダッシュパンチ</p>
-        <p>必殺技ゲージが 50 以上で S を押すと必殺技</p>
       `;
     } else {
       helpContent.innerHTML = `
@@ -727,10 +895,9 @@
         <p>↑ : ジャンプ</p>
         <p>Z : パンチ</p>
         <p>X : キック</p>
-        <p>C : 必殺技</p>
+        <p>C : 必殺技（ゲージ50以上）</p>
         <p style="margin-top:12px;"><strong>コマンド</strong></p>
         <p>→ → + Z : ダッシュパンチ</p>
-        <p>必殺技ゲージが 50 以上で C を押すと必殺技</p>
       `;
     }
   }
@@ -758,6 +925,58 @@
   }
   renderCharacterCards();
 
+  async function loadRanking() {
+    rankingList.innerHTML = "読み込み中...";
+    try {
+      const q = query(collection(db, "fight_game_ranking"), orderBy("score", "desc"), limit(10));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        rankingList.innerHTML = "<p>まだランキングがありません。</p>";
+        return;
+      }
+
+      const rows = [];
+      let rank = 1;
+      snap.forEach((docSnap) => {
+        const data = docSnap.data();
+        rows.push(`
+          <div class="rank-item">
+            <span>${rank}位</span>
+            <span>${data.name || "PLAYER"}</span>
+            <span>${data.score ?? 0}</span>
+            <span>${data.stage || "-"}</span>
+          </div>
+        `);
+        rank++;
+      });
+      rankingList.innerHTML = rows.join("");
+    } catch (e) {
+      console.error(e);
+      rankingList.innerHTML = "<p>ランキングの読み込みに失敗しました。Firestoreルールを確認してください。</p>";
+    }
+  }
+
+  async function saveRanking(score) {
+    if (!firebaseReady) return;
+    try {
+      await addDoc(collection(db, "fight_game_ranking"), {
+        uid: firebaseUserId,
+        name: CHARACTERS[selectedCharacter].name,
+        score,
+        stage: STAGES[stageSelect.value].label,
+        difficulty: difficultySelect.value,
+        createdAt: serverTimestamp()
+      });
+      console.log("ranking saved");
+    } catch (e) {
+      console.error("ranking save failed", e);
+    }
+  }
+
+  /* =========================
+     Game core
+  ========================= */
   const keys = {
     left:false,
     right:false,
@@ -766,6 +985,8 @@
     kick:false,
     special:false
   };
+
+  let pressedThisFrame = { punch:false, kick:false, special:false };
 
   let gameRunning = false;
   let gameOver = false;
@@ -776,14 +997,34 @@
   let cameraShake = 0;
   let particles = [];
   let commandBuffer = [];
-  let pressedThisFrame = { punch:false, kick:false, special:false };
   let roundTimer = 99;
+  let resultSaved = false;
 
   const gravity = 0.9;
   const groundOffset = 120;
 
   function groundY() {
     return canvas.height - groundOffset;
+  }
+
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  }
+
+  function distX(a,b) {
+    return Math.abs((a.x + a.w/2) - (b.x + b.w/2));
+  }
+
+  function facingUpdate(a,b) {
+    a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1;
+  }
+
+  function getBodyRect(f) {
+    return { x:f.x, y:f.y, w:f.w, h:f.h };
+  }
+
+  function rectsOverlap(a,b) {
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   }
 
   function difficultyConfig() {
@@ -864,6 +1105,7 @@
   let enemy = createFighter(pickEnemyCharacter(), false);
 
   function resetBattle() {
+    fitCanvas();
     player = createFighter(selectedCharacter, true);
     enemy = createFighter(pickEnemyCharacter(), false);
     combo = 0;
@@ -873,6 +1115,8 @@
     commandBuffer = [];
     roundTimer = 99;
     gameOver = false;
+    resultSaved = false;
+
     leftName.textContent = player.name;
     rightName.textContent = enemy.name;
     difficultyText.textContent = difficultyConfig().label + " / " + STAGES[stageSelect.value].label;
@@ -881,38 +1125,28 @@
     showMessage("READY", 900);
   }
 
-  function clearScreens() {
-    menuScreen.classList.remove("show");
-    helpScreen.classList.remove("show");
-    characterScreen.classList.remove("show");
-  }
-
-  function showMenu() {
-    stopGame();
-    clearScreens();
-    menuScreen.classList.add("show");
-  }
-
-  function startGame() {
-    resetBattle();
-    clearScreens();
-    canvas.style.display = "block";
-    hud.style.display = "block";
-    pauseWrap.style.display = "block";
-    gameRunning = true;
-    lastTime = performance.now();
-    cancelAnimationFrame(animationId);
-    animationId = requestAnimationFrame(loop);
-    adjustMobileControlsForViewport();
-  }
-
   function stopGame() {
     gameRunning = false;
     cancelAnimationFrame(animationId);
     canvas.style.display = "none";
     hud.style.display = "none";
-    pauseWrap.style.display = "none";
+    topButtons.style.display = "none";
     resetInput();
+  }
+
+  async function startGame() {
+    await enterFullscreenIfPossible();
+    resetBattle();
+    clearScreens();
+    canvas.style.display = "block";
+    hud.style.display = "block";
+    topButtons.style.display = "flex";
+    gameRunning = true;
+    lastTime = performance.now();
+    fitCanvas();
+    cancelAnimationFrame(animationId);
+    animationId = requestAnimationFrame(loop);
+    adjustMobileControlsForViewport();
   }
 
   function resetInput() {
@@ -921,33 +1155,17 @@
     Object.values(touchButtons).forEach(btn => btn.classList.remove("active"));
   }
 
-  function showMessage(text, ms=1200) {
-    messageEl.textContent = text;
-    messageEl.classList.add("show");
-    clearTimeout(showMessage.timer);
-    showMessage.timer = setTimeout(() => {
-      messageEl.classList.remove("show");
-    }, ms);
+  function recordCommand(dir) {
+    const now = performance.now();
+    commandBuffer.push({ dir, time: now });
+    commandBuffer = commandBuffer.filter(v => now - v.time < 500);
   }
 
-  function clamp(v, min, max) {
-    return Math.max(min, Math.min(max, v));
-  }
-
-  function distX(a,b) {
-    return Math.abs((a.x + a.w/2) - (b.x + b.w/2));
-  }
-
-  function facingUpdate(a,b) {
-    a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1;
-  }
-
-  function getBodyRect(f) {
-    return { x:f.x, y:f.y, w:f.w, h:f.h };
-  }
-
-  function rectsOverlap(a,b) {
-    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  function commandMatched(sequence) {
+    if (commandBuffer.length < sequence.length) return false;
+    const arr = commandBuffer.map(v => v.dir);
+    const tail = arr.slice(-sequence.length).join(",");
+    return tail === sequence.join(",");
   }
 
   function getAttackRect(f) {
@@ -956,6 +1174,7 @@
     if (f.attackType === "kick") { range = 54; height = 34; yOffset = 68; }
     if (f.attackType === "dashPunch") { range = 72; height = 30; yOffset = 36; }
     if (f.attackType === "special") { range = 110; height = 48; yOffset = 32; }
+
     if (f.dir === 1) {
       return { x:f.x + f.w - 4, y:f.y + yOffset, w:range, h:height };
     }
@@ -989,19 +1208,6 @@
         color
       });
     }
-  }
-
-  function recordCommand(dir) {
-    const now = performance.now();
-    commandBuffer.push({ dir, time: now });
-    commandBuffer = commandBuffer.filter(v => now - v.time < 500);
-  }
-
-  function commandMatched(sequence) {
-    if (commandBuffer.length < sequence.length) return false;
-    const arr = commandBuffer.map(v => v.dir);
-    const tail = arr.slice(-sequence.length).join(",");
-    return tail === sequence.join(",");
   }
 
   function tryStartAttack(f, type) {
@@ -1080,6 +1286,11 @@
     if (target.hp <= 0) {
       target.dead = true;
       gameOver = true;
+      if (!resultSaved && attacker.isPlayer) {
+        resultSaved = true;
+        const score = Math.max(0, Math.floor(player.hp * 100 + roundTimer * 10));
+        saveRanking(score);
+      }
       showMessage(attacker.isPlayer ? "YOU WIN" : "YOU LOSE", 2200);
       setTimeout(showMenu, 2300);
     }
@@ -1299,9 +1510,18 @@
 
     if (!gameOver && roundTimer <= 0) {
       gameOver = true;
-      if (player.hp > enemy.hp) showMessage("TIME UP - YOU WIN", 2000);
-      else if (enemy.hp > player.hp) showMessage("TIME UP - YOU LOSE", 2000);
-      else showMessage("DRAW", 2000);
+      if (player.hp > enemy.hp) {
+        if (!resultSaved) {
+          resultSaved = true;
+          const score = Math.max(0, Math.floor(player.hp * 100 + roundTimer * 10));
+          saveRanking(score);
+        }
+        showMessage("TIME UP - YOU WIN", 2000);
+      } else if (enemy.hp > player.hp) {
+        showMessage("TIME UP - YOU LOSE", 2000);
+      } else {
+        showMessage("DRAW", 2000);
+      }
       setTimeout(showMenu, 2100);
     }
 
@@ -1488,6 +1708,9 @@
     animationId = requestAnimationFrame(loop);
   }
 
+  /* =========================
+     Input
+  ========================= */
   function setKeyFromCode(code, pressed) {
     if (code === "ArrowLeft") {
       if (pressed && !keys.left) recordCommand("L");
@@ -1554,11 +1777,13 @@
   bindTouchButton(touchButtons.kick, "kick");
   bindTouchButton(touchButtons.special, "special");
 
-  document.addEventListener("contextmenu", (e) => e.preventDefault());
-  document.addEventListener("selectstart", (e) => e.preventDefault());
-  document.addEventListener("dragstart", (e) => e.preventDefault());
-
+  /* =========================
+     Events
+  ========================= */
   startBtn.addEventListener("click", startGame);
+  fullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
+  gameFullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
+  backMenuBtn.addEventListener("click", showMenu);
 
   helpBtn.addEventListener("click", () => {
     clearScreens();
@@ -1582,7 +1807,18 @@
     menuScreen.classList.add("show");
   });
 
-  pauseBtn.addEventListener("click", showMenu);
+  rankingBtn.addEventListener("click", async () => {
+    clearScreens();
+    rankingScreen.classList.add("show");
+    await loadRanking();
+  });
+
+  rankingReloadBtn.addEventListener("click", loadRanking);
+
+  rankingBackBtn.addEventListener("click", () => {
+    clearScreens();
+    menuScreen.classList.add("show");
+  });
 
   showMenu();
 })();
