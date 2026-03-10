@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#05070d">
-  <title>Fight Game v100.改 Hyper Ultimate Boss Form</title>
+  <meta name="theme-color" content="#05070d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Fight Game v100.神</title>
   <style>
     :root{
       --bg1:#09101d;
@@ -19,27 +19,31 @@
       --muted:#a9b6d8;
       --red1:#ff6b7a;
       --red2:#c9344f;
+      --blue1:#67b7ff;
+      --blue2:#306eff;
       --gold1:#ffe38a;
       --gold2:#ffb300;
       --green1:#60ecb3;
       --green2:#18af7b;
       --vio1:#c58cff;
       --vio2:#7f47ff;
-      --cyan1:#72ebff;
-      --cyan2:#2fa8ff;
       --shadow:0 18px 50px rgba(0,0,0,.44);
+
+      --gameScale:.90;
       --hudTop:6px;
-      --controlLift:0px;
-      --gameScale:.84;
-      --mobileBtn:26px;
-      --mobileBtnBig:31px;
-      --mobileGap:4px;
+
+      /* スマホ向け最終調整 */
+      --moveBtn:72px;
+      --actionBtn:84px;
+      --specialBtn:94px;
+      --mobileGap:8px;
     }
 
     *{
       box-sizing:border-box;
       -webkit-user-select:none;
       user-select:none;
+      -webkit-touch-callout:none;
       -webkit-tap-highlight-color:transparent;
     }
 
@@ -63,13 +67,16 @@
       height:100dvh;
     }
 
+    button, canvas, .touch-btn{
+      touch-action:manipulation;
+    }
+
     #app{
       position:fixed;
       inset:0;
       width:100vw;
       height:100vh;
       height:100dvh;
-      min-height:100svh;
       overflow:hidden;
       background:
         radial-gradient(circle at 20% 15%, rgba(99,145,255,.16), transparent 22%),
@@ -102,7 +109,7 @@
     .screen.show{ display:flex; }
 
     .panel{
-      width:min(96vw,1200px);
+      width:min(96vw,1120px);
       max-height:95dvh;
       overflow:auto;
       background:var(--panel);
@@ -124,37 +131,12 @@
         radial-gradient(circle at 82% 12%, rgba(90,180,255,.20), transparent 24%),
         radial-gradient(circle at 50% 85%, rgba(120,255,210,.10), transparent 28%),
         linear-gradient(180deg, rgba(18,28,56,.96), rgba(5,8,18,.96));
-      box-shadow:
-        0 30px 80px rgba(0,0,0,.56),
-        inset 0 1px 0 rgba(255,255,255,.08);
-    }
-
-    .menu-panel::before{
-      content:"";
-      position:absolute;
-      inset:-30% -10%;
-      background:
-        linear-gradient(115deg,
-          transparent 0%,
-          rgba(255,255,255,.03) 35%,
-          rgba(255,255,255,.06) 50%,
-          rgba(255,255,255,.03) 65%,
-          transparent 100%);
-      animation:menuShine 7s linear infinite;
-      pointer-events:none;
-    }
-
-    @keyframes menuShine{
-      0%{ transform:translateX(-20%) skewX(-15deg); opacity:.6; }
-      50%{ transform:translateX(10%) skewX(-15deg); opacity:1; }
-      100%{ transform:translateX(30%) skewX(-15deg); opacity:.6; }
     }
 
     .menu-head{
       position:relative;
-      margin-bottom:10px;
-      padding:8px 8px 2px;
       z-index:1;
+      margin-bottom:10px;
     }
 
     .menu-kicker{
@@ -166,32 +148,31 @@
       letter-spacing:.16em;
       color:#06131d;
       background:linear-gradient(180deg,#c3f7ff,#67dfff);
-      box-shadow:0 8px 24px rgba(103,223,255,.25);
       margin-bottom:8px;
     }
 
     .hero-title{
-      font-size:clamp(32px,7vw,80px);
+      font-size:clamp(30px,7vw,76px);
       font-weight:1000;
-      letter-spacing:.10em;
+      letter-spacing:.08em;
       margin:6px 0 2px;
       line-height:1;
-      text-shadow:0 0 18px rgba(103,183,255,.22), 0 8px 22px rgba(0,0,0,.45);
       background:linear-gradient(90deg,#fff,#9dd8ff,#ffd8df,#fff0a3);
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
+      text-shadow:0 8px 22px rgba(0,0,0,.35);
     }
 
     .hero-sub{
-      max-width:860px;
-      margin:0 auto 8px;
+      max-width:820px;
+      margin:0 auto 10px;
       font-size:13px;
       color:#d0dbf6;
       line-height:1.5;
     }
 
-    .hero-badge-row{
+    .hero-badges{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
@@ -204,7 +185,7 @@
       border-radius:999px;
       font-size:11px;
       font-weight:900;
-      letter-spacing:.06em;
+      letter-spacing:.04em;
       border:1px solid rgba(255,255,255,.10);
       background:rgba(255,255,255,.06);
     }
@@ -232,24 +213,14 @@
       margin-top:10px;
     }
 
-    .main-big-btn{
+    .main-btn{
       min-width:0;
       width:100%;
-      min-height:58px;
+      min-height:60px;
       border-radius:18px;
       font-size:16px;
       font-weight:1000;
       letter-spacing:.04em;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .main-big-btn::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(180deg, rgba(255,255,255,.14), transparent 45%);
-      pointer-events:none;
     }
 
     .mode-showcase{
@@ -270,6 +241,34 @@
     .mode-tile h4{ margin:0 0 4px; font-size:13px; }
     .mode-tile p{ margin:0; font-size:11px; color:#c8d4f2; }
 
+    .row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:center;
+      margin-top:8px;
+    }
+
+    .stack{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .info-card{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.035);
+      border-radius:18px;
+      padding:12px;
+      text-align:left;
+      margin-top:10px;
+    }
+
+    .info-card h3{
+      margin:0 0 8px;
+      font-size:15px;
+    }
+
     .command-preview{
       display:grid;
       gap:8px;
@@ -288,59 +287,8 @@
       border:1px solid rgba(255,255,255,.08);
     }
 
-    .command-row strong{ font-size:12px; color:#fff; }
+    .command-row strong{ font-size:12px; }
     .command-row span{ font-size:11px; color:#c8d5f2; text-align:right; }
-
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:8px;
-      margin-top:10px;
-    }
-
-    .mini-tile{
-      padding:10px;
-      border-radius:14px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      font-size:11px;
-      font-weight:800;
-    }
-
-    h2{
-      margin:0 0 10px;
-      font-size:clamp(20px,4vw,34px);
-    }
-
-    p{
-      margin:5px 0;
-      color:var(--muted);
-      line-height:1.45;
-      font-size:13px;
-    }
-
-    .row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:center;
-      margin-top:8px;
-    }
-
-    .info-card{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.035);
-      border-radius:18px;
-      padding:12px;
-      text-align:left;
-      min-height:0;
-      margin-top:10px;
-    }
-
-    .info-card h3{
-      margin:0 0 8px;
-      font-size:15px;
-    }
 
     button,select,input{
       border:none;
@@ -358,16 +306,12 @@
       background:linear-gradient(180deg,var(--red1),var(--red2));
       cursor:pointer;
     }
-    button:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-    }
 
     button.secondary{ background:linear-gradient(180deg,#61718f,#32405c); }
-    button.gold{ background:linear-gradient(180deg,#ffe38a,#ffb300); color:#2a1800; }
-    button.green{ background:linear-gradient(180deg,#60ecb3,#18af7b); color:#04261b; }
-    button.violet{ background:linear-gradient(180deg,#c58cff,#7f47ff); }
-    button.cyan{ background:linear-gradient(180deg,var(--cyan1),var(--cyan2)); color:#001b2e; }
+    button.gold{ background:linear-gradient(180deg,var(--gold1),var(--gold2)); color:#2a1800; }
+    button.green{ background:linear-gradient(180deg,var(--green1),var(--green2)); color:#04261b; }
+    button.violet{ background:linear-gradient(180deg,var(--vio1),var(--vio2)); }
+    button.cyan{ background:linear-gradient(180deg,var(--blue1),var(--blue2)); }
 
     select,input{
       appearance:none;
@@ -378,8 +322,6 @@
       text-align:center;
       text-transform:uppercase;
       letter-spacing:.18em;
-      min-width:220px;
-      width:min(72vw,320px);
     }
 
     .pick-grid{
@@ -398,14 +340,14 @@
       cursor:pointer;
       transition:transform .15s ease, border-color .15s ease;
     }
-
     .card:hover{ transform:translateY(-2px); }
     .card.active{
       border-color:rgba(255,255,255,.38);
       box-shadow:0 0 0 2px rgba(255,255,255,.08) inset;
     }
+
     .card h3{ margin:0 0 6px; font-size:16px; }
-    .card p{ margin:4px 0; font-size:12px; }
+    .card p{ margin:4px 0; font-size:12px; color:var(--muted); }
 
     .tag{
       display:inline-block;
@@ -427,26 +369,9 @@
       margin:10px 0;
     }
 
-    .room-code{
-      font-size:clamp(22px,6vw,44px);
-      font-weight:900;
-      letter-spacing:.18em;
-      color:#fff;
-      margin:8px 0;
-      text-align:center;
-    }
-
-    .rank-filter{
-      display:flex;
-      gap:8px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin-bottom:8px;
-    }
-
     .rank-item{
       display:grid;
-      grid-template-columns:56px 1fr 72px 84px;
+      grid-template-columns:56px 1fr 84px 84px;
       align-items:center;
       gap:8px;
       padding:9px 0;
@@ -476,13 +401,12 @@
     }
 
     .fighter-panel{
-      width:min(28vw,152px);
+      width:min(28vw,154px);
       background:rgba(0,0,0,.42);
       border:1px solid rgba(255,255,255,.12);
       border-radius:14px;
       padding:5px 5px 4px;
       backdrop-filter:blur(8px);
-      box-shadow:0 8px 30px rgba(0,0,0,.24);
     }
 
     .fighter-name{
@@ -507,7 +431,6 @@
       border-radius:999px;
       transition:width .08s linear;
     }
-
     .bar.player{ background:linear-gradient(90deg,#ff9c66,#ff4d63); }
     .bar.enemy{ background:linear-gradient(90deg,#72e3ff,#4b7fff); }
     .bar.super{ background:linear-gradient(90deg,#ffe08a,#ffb300); }
@@ -524,7 +447,7 @@
 
     #centerWrap{
       padding-top:2px;
-      min-width:54px;
+      min-width:52px;
       text-align:center;
     }
 
@@ -539,10 +462,10 @@
     #message{
       position:absolute;
       left:50%;
-      top:calc(var(--hudTop) + 30px);
+      top:calc(var(--hudTop) + 28px);
       transform:translateX(-50%);
       min-width:90px;
-      max-width:80vw;
+      max-width:78vw;
       text-align:center;
       padding:4px 8px;
       border-radius:14px;
@@ -586,13 +509,11 @@
       align-items:flex-end;
       padding:
         2px
-        max(6px, env(safe-area-inset-right))
-        calc(4px + env(safe-area-inset-bottom))
-        max(6px, env(safe-area-inset-left));
+        max(8px, env(safe-area-inset-right))
+        calc(8px + env(safe-area-inset-bottom))
+        max(8px, env(safe-area-inset-left));
       z-index:18;
       pointer-events:none;
-      transform:translateY(calc(-1 * var(--controlLift)));
-      transition:bottom .12s linear, transform .12s linear;
     }
 
     .pad{
@@ -601,43 +522,55 @@
       align-items:flex-end;
       pointer-events:auto;
     }
-    .pad.right{ align-items:center; }
+
+    .pad.right{
+      align-items:center;
+    }
 
     .touch-btn{
-      width:var(--mobileBtn);
-      height:var(--mobileBtn);
-      border-radius:50%;
       display:flex;
       align-items:center;
       justify-content:center;
       color:#fff;
-      font-size:10px;
-      font-weight:900;
+      font-weight:1000;
       border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.14);
+      background:rgba(255,255,255,.16);
       backdrop-filter:blur(8px);
       box-shadow:var(--shadow);
       pointer-events:auto;
+      border-radius:20px;
       touch-action:none;
     }
 
-    .touch-btn.big{
-      width:var(--mobileBtnBig);
-      height:var(--mobileBtnBig);
-      font-size:11px;
+    .touch-btn.move{
+      width:var(--moveBtn);
+      height:var(--moveBtn);
+      font-size:20px;
+    }
+
+    .touch-btn.action{
+      width:var(--actionBtn);
+      height:var(--actionBtn);
+      font-size:20px;
+    }
+
+    .touch-btn.special{
+      width:var(--specialBtn);
+      height:var(--specialBtn);
+      font-size:23px;
     }
 
     .touch-btn.active,
     .touch-btn:active{
       transform:scale(.96);
-      background:rgba(255,255,255,.24);
+      background:rgba(255,255,255,.26);
     }
 
     #rotateNotice{
       position:absolute;
       inset:0;
       display:none;
-      z-index:80;
+      z-index:90;
       background:rgba(0,0,0,.92);
       align-items:center;
       justify-content:center;
@@ -657,14 +590,14 @@
       justify-content:center;
       z-index:65;
       pointer-events:none;
-      background:radial-gradient(circle at center, rgba(255,255,255,.18), rgba(0,0,0,.35) 40%, rgba(0,0,0,.0) 70%);
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.18), rgba(0,0,0,.35) 40%, rgba(0,0,0,0) 70%);
       text-align:center;
     }
-
     #transformOverlay.show{ display:flex; }
 
     #transformText{
-      font-size:clamp(28px,7vw,72px);
+      font-size:clamp(28px,7vw,70px);
       font-weight:1000;
       letter-spacing:.10em;
       text-shadow:0 0 24px rgba(255,255,255,.38), 0 8px 24px rgba(0,0,0,.55);
@@ -682,7 +615,6 @@
       pointer-events:none;
       overflow:hidden;
     }
-
     #cutinOverlay.show{ display:block; }
 
     .cutin-bg{
@@ -762,33 +694,14 @@
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
-      text-shadow:0 8px 22px rgba(0,0,0,.35);
     }
 
     .tiny{ font-size:11px; color:var(--muted); }
-    #resultScreen .panel{ max-width:860px; }
-    #resultTitle{
-      font-size:clamp(28px,7vw,54px);
-      font-weight:900;
-      letter-spacing:.08em;
-      margin-bottom:8px;
-    }
 
-    @media (max-width:1100px){
-      .pick-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-    }
-
-    @media (max-width:940px){
+    @media (max-width: 940px){
       #mobileControls{ display:flex; }
 
-      .panel{
-        width:min(96vw,1000px);
-        max-height:95dvh;
-        padding:10px;
-        border-radius:18px;
-      }
-
-      .menu-grid{ grid-template-columns:1fr; gap:10px; }
+      .menu-grid{ grid-template-columns:1fr; }
       .menu-btn-grid{ grid-template-columns:1fr; }
       .mode-showcase{ grid-template-columns:1fr; }
       .pick-grid{ grid-template-columns:1fr; }
@@ -801,19 +714,9 @@
         border-radius:12px;
       }
 
-      .main-big-btn{
-        min-height:46px;
+      .main-btn{
+        min-height:50px;
         font-size:14px;
-      }
-
-      .room-code{
-        font-size:clamp(18px,7vw,30px);
-        margin:4px 0;
-      }
-
-      .rank-item{
-        grid-template-columns:42px 1fr 58px 70px;
-        font-size:11px;
       }
 
       .cutin-body{
@@ -827,50 +730,45 @@
 
       .cutin-art{
         width:100%;
-        min-height:26vh;
+        min-height:24vh;
       }
     }
 
     @media (max-width:700px){
       :root{
-        --gameScale:.52;
-        --mobileBtn:22px;
-        --mobileBtnBig:27px;
-        --mobileGap:3px;
+        --gameScale:.50;
+        --moveBtn:64px;
+        --actionBtn:76px;
+        --specialBtn:84px;
+        --mobileGap:6px;
       }
 
-      .hero-badge-row{ display:none; }
+      .hero-badges{ display:none; }
       .hero-title{ font-size:clamp(24px,8vw,36px); letter-spacing:.05em; }
       .hero-sub{ font-size:10px; }
-      .menu-head{ margin-bottom:6px; }
-      .menu-col{ padding:9px; border-radius:18px; }
+      .menu-col{ padding:10px; }
       .mode-showcase{ display:none; }
-      .mini-grid{ grid-template-columns:1fr 1fr; }
-      .command-preview{ gap:6px; }
-      .command-row{ padding:8px 10px; border-radius:12px; }
+      .command-row{ padding:8px 10px; }
       .command-row strong{ font-size:10px; }
       .command-row span{ font-size:9px; }
-      .fighter-panel{ width:min(30vw,92px); }
+      .fighter-panel{ width:min(30vw,96px); }
       .fighter-name{ font-size:6.5px; }
       .small-info{ font-size:5px; }
       .bar-wrap{ height:6px; }
       #centerInfo{ font-size:9px; }
-      #message{ font-size:9px; top:calc(var(--hudTop) + 26px); }
-      .touch-btn{ font-size:9px; }
-      .touch-btn.big{ font-size:10px; }
+      #message{ font-size:9px; top:calc(var(--hudTop) + 24px); }
     }
 
     @media (max-width:480px){
       :root{
-        --gameScale:.45;
-        --mobileBtn:20px;
-        --mobileBtnBig:24px;
-        --mobileGap:3px;
+        --gameScale:.43;
+        --moveBtn:58px;
+        --actionBtn:68px;
+        --specialBtn:76px;
+        --mobileGap:5px;
       }
 
       .hero-sub{ display:none; }
-      .mini-grid{ gap:6px; }
-      .mini-tile{ font-size:9px; padding:7px; }
       .fighter-panel{ width:min(31vw,82px); }
       .small-info{ font-size:4.5px; }
       #centerWrap{ min-width:42px; }
@@ -884,17 +782,18 @@
   <div id="menuScreen" class="screen show">
     <div class="panel menu-panel">
       <div class="menu-head">
-        <div class="menu-kicker">HYPER ULTIMATE BATTLE SYSTEM KAI</div>
-        <div class="hero-badge-row">
-          <div class="hero-badge">TRANSFORM</div>
-          <div class="hero-badge">WIN CUT-IN</div>
+        <div class="menu-kicker">SMARTPHONE FIGHTER COMPLETE</div>
+        <div class="hero-badges">
+          <div class="hero-badge">AWAKENING</div>
+          <div class="hero-badge">BURST</div>
+          <div class="hero-badge">PROJECTILE CLASH</div>
+          <div class="hero-badge">MUSOU</div>
+          <div class="hero-badge">BOSS FORM II</div>
           <div class="hero-badge">STAGE GIMMICK</div>
-          <div class="hero-badge">BOSS 2ND FORM</div>
-          <div class="hero-badge">MOBILE MINI</div>
         </div>
-        <div class="hero-title">FIGHT GAME v100.改</div>
+        <div class="hero-title">FIGHT GAME v100.神</div>
         <div class="hero-sub">
-          変身演出、勝利カットイン、ステージギミック、BOSS専用第2形態、さらにスマホ版を小型化した超強化版です。
+          スマホで本当に遊べることを優先した完成版。オフラインCPU戦、無双、ローカルランキング、覚醒、バースト、変身演出、勝利カットイン、ステージギミック対応。
         </div>
       </div>
 
@@ -903,10 +802,10 @@
           <h2 style="margin:0 0 8px;">バトル開始</h2>
 
           <div class="menu-btn-grid">
-            <button id="startCpuBtn" class="main-big-btn">CPU対戦</button>
-            <button id="startMusouBtn" class="main-big-btn violet">無双モード</button>
-            <button id="openOnlineBtn" class="main-big-btn green">オンライン対戦</button>
-            <button id="fullscreenBtn" class="main-big-btn gold">全画面</button>
+            <button id="startCpuBtn" class="main-btn">CPU対戦</button>
+            <button id="startMusouBtn" class="main-btn violet">無双モード</button>
+            <button id="rankingBtn" class="main-btn cyan">ランキング</button>
+            <button id="helpBtn" class="main-btn gold">操作説明</button>
           </div>
 
           <div class="row" style="margin-top:10px;">
@@ -927,86 +826,44 @@
 
           <div class="mode-showcase">
             <div class="mode-tile">
-              <h4>変身演出</h4>
-              <p>覚醒時に全画面変身カット演出が発生。</p>
+              <h4>スマホ最適化</h4>
+              <p>コピー誤作動防止、操作ボタン大型化、画面縮小調整済み。</p>
             </div>
             <div class="mode-tile">
-              <h4>勝利カットイン</h4>
-              <p>勝者決定時に専用カットインを表示。</p>
+              <h4>覚醒＆変身</h4>
+              <p>HP35%以下で覚醒。BOSS難度の敵は第2形態まで変化。</p>
+            </div>
+            <div class="mode-tile">
+              <h4>飛び道具相殺</h4>
+              <p>ショット同士がぶつかると爆発して消える。</p>
             </div>
             <div class="mode-tile">
               <h4>ステージギミック</h4>
-              <p>NEON雷撃、RUINS落石、MOON低重力など。</p>
+              <p>雷撃、落石、霊気、低重力で毎試合変化。</p>
             </div>
-            <div class="mode-tile">
-              <h4>Boss第2形態</h4>
-              <p>BOSS難度の敵が瀕死で超強化変身。</p>
-            </div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="mini-tile">TRANSFORMATION</div>
-            <div class="mini-tile">VICTORY CUT-IN</div>
-            <div class="mini-tile">STAGE GIMMICKS</div>
-            <div class="mini-tile">BOSS FORM II</div>
           </div>
         </div>
 
         <div class="menu-col">
           <div class="row" style="margin-top:0;">
             <button id="characterBtn" class="secondary">キャラクター選択</button>
-            <button id="rankingBtn" class="secondary">ランキング</button>
-            <button id="helpBtn" class="secondary">操作説明</button>
+            <button id="fullscreenBtn" class="secondary">全画面</button>
           </div>
 
           <div class="info-card">
-            <h3>現在の主なコマンド</h3>
+            <h3>現在のコマンド</h3>
             <div class="command-preview" id="menuCommandList"></div>
           </div>
 
           <div class="info-card">
-            <h3>Firebase状態</h3>
-            <p id="firebaseStatus" class="tiny">Firebase接続確認中...</p>
+            <h3>この版の特徴</h3>
+            <p>・外部サーバー不要</p>
+            <p>・そのまま GitHub Pages でも動く</p>
+            <p>・スマホで押しやすい大型ボタン</p>
+            <p>・ローカル保存ランキング対応</p>
+            <p class="tiny">完全静的HTML版</p>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="onlineScreen" class="screen">
-    <div class="panel">
-      <h2>オンライン対戦</h2>
-      <p>ルームを作成するか、6文字のルームコードで参加します。</p>
-      <div class="row">
-        <button id="createRoomBtn" class="green">ルーム作成</button>
-      </div>
-      <div class="box">
-        <p>ルーム参加 / 観戦参加</p>
-        <div class="row">
-          <input id="roomCodeInput" maxlength="6" inputmode="latin" autocomplete="off" spellcheck="false" placeholder="ABC123" />
-          <button id="joinRoomBtn">参加</button>
-        </div>
-        <p class="tiny">プレイヤーが2人埋まっている場合は観戦で入ります。</p>
-      </div>
-      <div class="row">
-        <button id="onlineBackBtn" class="secondary">戻る</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="lobbyScreen" class="screen">
-    <div class="panel">
-      <h2>オンラインロビー</h2>
-      <p>相手にこのルームコードを送ってください。</p>
-      <div class="room-code" id="roomCodeLabel">------</div>
-      <p id="lobbyStatus">接続待ち...</p>
-      <div class="box">
-        <p id="lobbyPlayers">ホスト: 未接続 / ゲスト: 未接続 / 観戦: 0人</p>
-        <p class="tiny">両プレイヤーが開始すると試合開始です。</p>
-      </div>
-      <div class="row" id="lobbyActionRow">
-        <button id="readyOnlineBtn" class="green">開始</button>
-        <button id="leaveRoomBtn" class="secondary">退出</button>
       </div>
     </div>
   </div>
@@ -1036,13 +893,13 @@
   <div id="rankingScreen" class="screen">
     <div class="panel">
       <h2>ランキング</h2>
-      <div class="rank-filter">
+      <div class="row">
         <button id="rankBattleBtn" class="secondary">通常戦</button>
         <button id="rankMusouBtn" class="violet">無双</button>
+        <button id="rankingResetBtn" class="gold">リセット</button>
       </div>
       <div class="box" id="rankingList">読み込み中...</div>
       <div class="row">
-        <button id="rankingReloadBtn">再読み込み</button>
         <button id="rankingBackBtn" class="secondary">戻る</button>
       </div>
     </div>
@@ -1050,11 +907,10 @@
 
   <div id="resultScreen" class="screen">
     <div class="panel">
-      <div id="resultTitle">YOU WIN</div>
+      <div id="resultTitle" style="font-size:clamp(28px,7vw,54px);font-weight:900;letter-spacing:.08em;margin-bottom:8px;">YOU WIN</div>
       <div id="resultSub">試合終了</div>
       <div class="row">
         <button id="rematchBtn" class="green">再戦</button>
-        <button id="onlineRematchBtn" class="gold">オンライン再戦申請</button>
         <button id="resultMenuBtn" class="secondary">メニューへ戻る</button>
       </div>
     </div>
@@ -1065,7 +921,7 @@
   <div id="hud">
     <div class="top-ui">
       <div class="fighter-panel">
-        <div class="fighter-name" id="leftName">PLAYER 1</div>
+        <div class="fighter-name" id="leftName">PLAYER</div>
         <div class="bar-wrap"><div id="playerHpBar" class="bar player"></div></div>
         <div class="bar-wrap" style="margin-top:4px;height:6px;"><div id="playerSuperBar" class="bar super"></div></div>
         <div class="bar-wrap" style="margin-top:4px;height:5px;"><div id="playerAwakenBar" class="bar awaken"></div></div>
@@ -1080,12 +936,12 @@
       </div>
 
       <div class="fighter-panel">
-        <div class="fighter-name" id="rightName" style="text-align:right;">PLAYER 2</div>
+        <div class="fighter-name" id="rightName" style="text-align:right;">CPU</div>
         <div class="bar-wrap"><div id="enemyHpBar" class="bar enemy"></div></div>
         <div class="bar-wrap" style="margin-top:4px;height:6px;"><div id="enemySuperBar" class="bar super"></div></div>
         <div class="bar-wrap" style="margin-top:4px;height:5px;"><div id="enemyAwakenBar" class="bar awaken"></div></div>
         <div class="small-info">
-          <span id="difficultyText">CPU / ONLINE</span>
+          <span id="difficultyText">CPU</span>
           <span id="enemyHpText">HP 100 / 100</span>
         </div>
       </div>
@@ -1100,14 +956,14 @@
 
   <div id="mobileControls">
     <div class="pad left">
-      <div class="touch-btn" id="leftBtn">←</div>
-      <div class="touch-btn big" id="jumpBtn">↑</div>
-      <div class="touch-btn" id="rightBtn">→</div>
+      <div class="touch-btn move" id="leftBtn">←</div>
+      <div class="touch-btn move" id="jumpBtn">↑</div>
+      <div class="touch-btn move" id="rightBtn">→</div>
     </div>
     <div class="pad right">
-      <div class="touch-btn" id="punchBtn">P</div>
-      <div class="touch-btn" id="kickBtn">K</div>
-      <div class="touch-btn big" id="specialBtn">S</div>
+      <div class="touch-btn action" id="punchBtn">P</div>
+      <div class="touch-btn action" id="kickBtn">K</div>
+      <div class="touch-btn special" id="specialBtn">S</div>
     </div>
   </div>
 
@@ -1128,2429 +984,1789 @@
   <div id="rotateNotice">横画面でプレイしてください</div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  limit,
-  serverTimestamp,
-  where
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import {
-  getDatabase,
-  ref,
-  set,
-  get,
-  update,
-  onValue,
-  off,
-  remove,
-  onDisconnect
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+<script>
+(() => {
+  "use strict";
 
-/* =========================
-   Firebase
-========================= */
-const firebaseConfig = {
-  apiKey: "AIzaSyBkY-kHndDPPZjqr7F52oPyvg5gAJs3Ipk",
-  authDomain: "fight-game-5abcb.firebaseapp.com",
-  databaseURL: "https://fight-game-5abcb-default-rtdb.firebaseio.com",
-  projectId: "fight-game-5abcb",
-  storageBucket: "fight-game-5abcb.firebasestorage.app",
-  messagingSenderId: "875972972511",
-  appId: "1:875972972511:web:c78d67bcd5a31010f1be6a"
-};
+  const CHARACTERS = {
+    ryu:{ key:"ryu", name:"RYU", style:"王道バランス", color:"#ff5a62", accent:"#ffd3d7", hair:"#2a2030", aura:"#ff7b89", scarf:"#ffffff", speed:4.8, jump:16.5, atk:1.00, def:1.00, superGain:1.00, specialName:"波動閃", burstName:"真・神龍波", silhouette:"martial", commands:[["→→ + P","ダッシュパンチ"],["↓→ + P","波動弾"],["→↓ + K","昇龍脚"],["S","波動閃"]]},
+    blade:{ key:"blade", name:"BLADE", style:"高速足技", color:"#4fa7ff", accent:"#d4e7ff", hair:"#d0f0ff", aura:"#74c3ff", scarf:"#79d2ff", speed:5.45, jump:17.2, atk:0.95, def:0.94, superGain:1.14, specialName:"ソニックラッシュ", burstName:"ゼロシフト", silhouette:"ninja", commands:[["→→ + K","フラッシュキック"],["←→ + P","シャドウステップ"],["↓↓ + P","スプリットバースト"],["S","ソニックラッシュ"]]},
+    titan:{ key:"titan", name:"TITAN", style:"重量打撃", color:"#ffb14d", accent:"#ffe0b2", hair:"#3d220f", aura:"#ffcf69", scarf:"#8b4e19", speed:4.1, jump:14.7, atk:1.20, def:1.12, superGain:0.92, specialName:"グランドブレイク", burstName:"大地轟壊", silhouette:"heavy", commands:[["↓↓ + P","グランドバースト"],["←ため→ + K","ヘビーチャージ"],["→→ + P","ハンマーダッシュ"],["S","グランドブレイク"]]},
+    shadow:{ key:"shadow", name:"SHADOW", style:"幻惑奇襲", color:"#7d65ff", accent:"#e2d9ff", hair:"#111119", aura:"#b39cff", scarf:"#9d88ff", speed:5.0, jump:16.6, atk:1.03, def:0.96, superGain:1.10, specialName:"ナイトファントム", burstName:"黒影絶界", silhouette:"assassin", commands:[["←→ + P","シャドウステップ"],["→→ + K","ダークスライド"],["↓→ + P","ナイトショット"],["S","ナイトファントム"]]},
+    valkyrie:{ key:"valkyrie", name:"VALKYRIE", style:"対空制圧", color:"#3fe0c7", accent:"#d7fff7", hair:"#f7f4ff", aura:"#79ffe7", scarf:"#6ff0d5", speed:4.9, jump:18.2, atk:0.99, def:0.99, superGain:1.04, specialName:"スカイランサー", burstName:"天槍終断", silhouette:"lancer", commands:[["→↓ + K","スカイランス"],["↓→ + P","ランサーショット"],["→→ + P","ランスダッシュ"],["S","スカイランサー"]]},
+    phoenix:{ key:"phoenix", name:"PHOENIX", style:"炎圧ラッシュ", color:"#ff7a3d", accent:"#ffe0c8", hair:"#7a1600", aura:"#ffb066", scarf:"#ffd27a", speed:5.1, jump:17.0, atk:1.07, def:0.95, superGain:1.08, specialName:"クリムゾンバースト", burstName:"焔皇爆界", silhouette:"martial", commands:[["↓→ + P","フレイムショット"],["↓↓ + P","フレアバースト"],["→→ + K","ブレイズキック"],["S","クリムゾンバースト"]]},
+    frost:{ key:"frost", name:"FROST", style:"氷結牽制", color:"#7ce6ff", accent:"#e4fbff", hair:"#dff8ff", aura:"#bdf7ff", scarf:"#b8efff", speed:4.7, jump:16.8, atk:1.02, def:1.02, superGain:1.06, specialName:"アイスノヴァ", burstName:"絶氷界", silhouette:"lancer", commands:[["↓→ + P","アイスショット"],["↓↓ + P","フリーズバースト"],["→↓ + K","フロストアッパー"],["S","アイスノヴァ"]]},
+    oni:{ key:"oni", name:"ONI", style:"豪腕爆発", color:"#9f4dff", accent:"#efe0ff", hair:"#1e0d33", aura:"#cf8cff", scarf:"#7d54d9", speed:4.4, jump:15.2, atk:1.18, def:1.05, superGain:0.96, specialName:"滅鬼震", burstName:"鬼神滅界", silhouette:"heavy", commands:[["↓↓ + P","鬼震"],["←ため→ + K","鬼突進"],["→→ + P","鬼砕き"],["S","滅鬼震"]]}
+  };
 
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
-const rtdb = getDatabase(firebaseApp);
+  const STAGES = {
+    dojo:{ label:"DOJO", skyTop:"#32405f", skyBottom:"#121822", floor:"#34221b", line:"#6e4c3b", glow:"rgba(255,204,170,.08)", gimmick:"spirit" },
+    ruins:{ label:"RUINS", skyTop:"#4d3f34", skyBottom:"#17110f", floor:"#53453a", line:"#917c69", glow:"rgba(255,224,170,.08)", gimmick:"rock" },
+    neon:{ label:"NEON CITY", skyTop:"#251f5f", skyBottom:"#060813", floor:"#1d2747", line:"#4e77b9", glow:"rgba(116,196,255,.12)", gimmick:"lightning" },
+    moon:{ label:"MOON BASE", skyTop:"#455167", skyBottom:"#0c1018", floor:"#57606c", line:"#b0c0d6", glow:"rgba(220,240,255,.10)", gimmick:"gravity" }
+  };
 
-let firebaseReady = false;
-let firebaseUserId = "guest";
+  const PROJECTILE_STYLE = {
+    fire:{ fill:"rgba(255,150,90,.85)", glow:"rgba(255,190,130,.28)" },
+    ice:{ fill:"rgba(160,235,255,.90)", glow:"rgba(170,240,255,.25)" },
+    dark:{ fill:"rgba(182,140,255,.88)", glow:"rgba(200,160,255,.24)" },
+    wind:{ fill:"rgba(140,255,220,.88)", glow:"rgba(140,255,220,.22)" },
+    gold:{ fill:"rgba(255,212,110,.88)", glow:"rgba(255,220,150,.24)" }
+  };
 
-/* =========================
-   Data
-========================= */
-const CHARACTERS = {
-  ryu:{ key:"ryu", name:"RYU", style:"王道バランス", color:"#ff5a62", accent:"#ffd3d7", hair:"#2a2030", aura:"#ff7b89", scarf:"#ffffff", speed:4.8, jump:16.5, atk:1.00, def:1.00, superGain:1.00, specialName:"波動閃", burstName:"真・神龍波", silhouette:"martial", commands:[{input:"→→ + P",name:"ダッシュパンチ"},{input:"↓→ + P",name:"波動弾"},{input:"→↓ + K",name:"昇龍脚"},{input:"S",name:"波動閃"}] },
-  blade:{ key:"blade", name:"BLADE", style:"高速足技", color:"#4fa7ff", accent:"#d4e7ff", hair:"#d0f0ff", aura:"#74c3ff", scarf:"#79d2ff", speed:5.45, jump:17.2, atk:0.95, def:0.94, superGain:1.14, specialName:"ソニックラッシュ", burstName:"ゼロシフト", silhouette:"ninja", commands:[{input:"→→ + K",name:"フラッシュキック"},{input:"←→ + P",name:"シャドウステップ"},{input:"↓↓ + P",name:"スプリットバースト"},{input:"S",name:"ソニックラッシュ"}] },
-  titan:{ key:"titan", name:"TITAN", style:"重量打撃", color:"#ffb14d", accent:"#ffe0b2", hair:"#3d220f", aura:"#ffcf69", scarf:"#8b4e19", speed:4.1, jump:14.7, atk:1.20, def:1.12, superGain:0.92, specialName:"グランドブレイク", burstName:"大地轟壊", silhouette:"heavy", commands:[{input:"↓↓ + P",name:"グランドバースト"},{input:"←ため→ + K",name:"ヘビーチャージ"},{input:"→→ + P",name:"ハンマーダッシュ"},{input:"S",name:"グランドブレイク"}] },
-  shadow:{ key:"shadow", name:"SHADOW", style:"幻惑奇襲", color:"#7d65ff", accent:"#e2d9ff", hair:"#111119", aura:"#b39cff", scarf:"#9d88ff", speed:5.0, jump:16.6, atk:1.03, def:0.96, superGain:1.10, specialName:"ナイトファントム", burstName:"黒影絶界", silhouette:"assassin", commands:[{input:"←→ + P",name:"シャドウステップ"},{input:"→→ + K",name:"ダークスライド"},{input:"↓→ + P",name:"ナイトショット"},{input:"S",name:"ナイトファントム"}] },
-  valkyrie:{ key:"valkyrie", name:"VALKYRIE", style:"対空制圧", color:"#3fe0c7", accent:"#d7fff7", hair:"#f7f4ff", aura:"#79ffe7", scarf:"#6ff0d5", speed:4.9, jump:18.2, atk:0.99, def:0.99, superGain:1.04, specialName:"スカイランサー", burstName:"天槍終断", silhouette:"lancer", commands:[{input:"→↓ + K",name:"スカイランス"},{input:"↓→ + P",name:"ランサーショット"},{input:"→→ + P",name:"ランスダッシュ"},{input:"S",name:"スカイランサー"}] },
-  phoenix:{ key:"phoenix", name:"PHOENIX", style:"炎圧ラッシュ", color:"#ff7a3d", accent:"#ffe0c8", hair:"#7a1600", aura:"#ffb066", scarf:"#ffd27a", speed:5.1, jump:17.0, atk:1.07, def:0.95, superGain:1.08, specialName:"クリムゾンバースト", burstName:"焔皇爆界", silhouette:"martial", commands:[{input:"↓→ + P",name:"フレイムショット"},{input:"↓↓ + P",name:"フレアバースト"},{input:"→→ + K",name:"ブレイズキック"},{input:"S",name:"クリムゾンバースト"}] },
-  frost:{ key:"frost", name:"FROST", style:"氷結牽制", color:"#7ce6ff", accent:"#e4fbff", hair:"#dff8ff", aura:"#bdf7ff", scarf:"#b8efff", speed:4.7, jump:16.8, atk:1.02, def:1.02, superGain:1.06, specialName:"アイスノヴァ", burstName:"絶氷界", silhouette:"lancer", commands:[{input:"↓→ + P",name:"アイスショット"},{input:"↓↓ + P",name:"フリーズバースト"},{input:"→↓ + K",name:"フロストアッパー"},{input:"S",name:"アイスノヴァ"}] },
-  oni:{ key:"oni", name:"ONI", style:"豪腕爆発", color:"#9f4dff", accent:"#efe0ff", hair:"#1e0d33", aura:"#cf8cff", scarf:"#7d54d9", speed:4.4, jump:15.2, atk:1.18, def:1.05, superGain:0.96, specialName:"滅鬼震", burstName:"鬼神滅界", silhouette:"heavy", commands:[{input:"↓↓ + P",name:"鬼震"},{input:"←ため→ + K",name:"鬼突進"},{input:"→→ + P",name:"鬼砕き"},{input:"S",name:"滅鬼震"}] }
-};
+  const $ = (id) => document.getElementById(id);
+  const root = document.documentElement;
+  const canvas = $("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-const STAGES = {
-  dojo:{ label:"DOJO", skyTop:"#32405f", skyBottom:"#121822", floor:"#34221b", line:"#6e4c3b", glow:"rgba(255,204,170,.08)", gimmick:"spirit", buff:{ ryu:{atk:1.08}, blade:{atk:0.98}, titan:{atk:1.0}, shadow:{atk:1.0}, valkyrie:{atk:1.0}, phoenix:{atk:1.06}, frost:{atk:0.98}, oni:{atk:1.04} } },
-  ruins:{ label:"RUINS", skyTop:"#4d3f34", skyBottom:"#17110f", floor:"#53453a", line:"#917c69", glow:"rgba(255,224,170,.08)", gimmick:"rock", buff:{ ryu:{atk:0.98}, blade:{atk:1.0}, titan:{atk:1.12}, shadow:{atk:1.0}, valkyrie:{atk:0.98}, phoenix:{atk:1.0}, frost:{atk:1.0}, oni:{atk:1.10} } },
-  neon:{ label:"NEON CITY", skyTop:"#251f5f", skyBottom:"#060813", floor:"#1d2747", line:"#4e77b9", glow:"rgba(116,196,255,.12)", gimmick:"lightning", buff:{ ryu:{atk:1.0}, blade:{atk:1.08}, titan:{atk:0.98}, shadow:{atk:1.06}, valkyrie:{atk:1.02}, phoenix:{atk:1.03}, frost:{atk:1.04}, oni:{atk:0.98} } },
-  moon:{ label:"MOON BASE", skyTop:"#455167", skyBottom:"#0c1018", floor:"#57606c", line:"#b0c0d6", glow:"rgba(220,240,255,.10)", gimmick:"gravity", buff:{ ryu:{atk:1.0}, blade:{atk:1.0}, titan:{atk:1.0}, shadow:{atk:1.04}, valkyrie:{atk:1.08}, phoenix:{atk:0.98}, frost:{atk:1.08}, oni:{atk:1.02} } }
-};
+  const menuScreen = $("menuScreen");
+  const helpScreen = $("helpScreen");
+  const characterScreen = $("characterScreen");
+  const rankingScreen = $("rankingScreen");
+  const resultScreen = $("resultScreen");
 
-const PROJECTILE_STYLE = {
-  fire:{ fill:"rgba(255,150,90,.85)", glow:"rgba(255,190,130,.28)" },
-  ice:{ fill:"rgba(160,235,255,.90)", glow:"rgba(170,240,255,.25)" },
-  dark:{ fill:"rgba(182,140,255,.88)", glow:"rgba(200,160,255,.24)" },
-  wind:{ fill:"rgba(140,255,220,.88)", glow:"rgba(140,255,220,.22)" },
-  gold:{ fill:"rgba(255,212,110,.88)", glow:"rgba(255,220,150,.24)" }
-};
+  const startCpuBtn = $("startCpuBtn");
+  const startMusouBtn = $("startMusouBtn");
+  const rankingBtn = $("rankingBtn");
+  const helpBtn = $("helpBtn");
+  const helpBackBtn = $("helpBackBtn");
+  const characterBtn = $("characterBtn");
+  const characterBackBtn = $("characterBackBtn");
+  const rankingBackBtn = $("rankingBackBtn");
+  const rankBattleBtn = $("rankBattleBtn");
+  const rankMusouBtn = $("rankMusouBtn");
+  const rankingResetBtn = $("rankingResetBtn");
+  const rematchBtn = $("rematchBtn");
+  const resultMenuBtn = $("resultMenuBtn");
+  const fullscreenBtn = $("fullscreenBtn");
+  const gameFullscreenBtn = $("gameFullscreenBtn");
+  const backMenuBtn = $("backMenuBtn");
 
-/* =========================
-   DOM
-========================= */
-const root = document.documentElement;
-const menuScreen = document.getElementById("menuScreen");
-const onlineScreen = document.getElementById("onlineScreen");
-const lobbyScreen = document.getElementById("lobbyScreen");
-const helpScreen = document.getElementById("helpScreen");
-const characterScreen = document.getElementById("characterScreen");
-const rankingScreen = document.getElementById("rankingScreen");
-const resultScreen = document.getElementById("resultScreen");
+  const difficultySelect = $("difficultySelect");
+  const stageSelect = $("stageSelect");
+  const helpContent = $("helpContent");
+  const characterGrid = $("characterGrid");
+  const characterCommandBox = $("characterCommandBox");
+  const rankingList = $("rankingList");
+  const menuCommandList = $("menuCommandList");
 
-const startCpuBtn = document.getElementById("startCpuBtn");
-const startMusouBtn = document.getElementById("startMusouBtn");
-const openOnlineBtn = document.getElementById("openOnlineBtn");
-const fullscreenBtn = document.getElementById("fullscreenBtn");
-const createRoomBtn = document.getElementById("createRoomBtn");
-const joinRoomBtn = document.getElementById("joinRoomBtn");
-const roomCodeInput = document.getElementById("roomCodeInput");
-const onlineBackBtn = document.getElementById("onlineBackBtn");
-const readyOnlineBtn = document.getElementById("readyOnlineBtn");
-const leaveRoomBtn = document.getElementById("leaveRoomBtn");
-const helpBtn = document.getElementById("helpBtn");
-const helpBackBtn = document.getElementById("helpBackBtn");
-const characterBtn = document.getElementById("characterBtn");
-const characterBackBtn = document.getElementById("characterBackBtn");
-const rankingBtn = document.getElementById("rankingBtn");
-const rankingBackBtn = document.getElementById("rankingBackBtn");
-const rankingReloadBtn = document.getElementById("rankingReloadBtn");
-const rankBattleBtn = document.getElementById("rankBattleBtn");
-const rankMusouBtn = document.getElementById("rankMusouBtn");
-const rematchBtn = document.getElementById("rematchBtn");
-const onlineRematchBtn = document.getElementById("onlineRematchBtn");
-const resultMenuBtn = document.getElementById("resultMenuBtn");
+  const hud = $("hud");
+  const messageEl = $("message");
+  const playerHpBar = $("playerHpBar");
+  const enemyHpBar = $("enemyHpBar");
+  const playerSuperBar = $("playerSuperBar");
+  const enemySuperBar = $("enemySuperBar");
+  const playerAwakenBar = $("playerAwakenBar");
+  const enemyAwakenBar = $("enemyAwakenBar");
+  const playerHpText = $("playerHpText");
+  const enemyHpText = $("enemyHpText");
+  const comboText = $("comboText");
+  const centerInfo = $("centerInfo");
+  const difficultyText = $("difficultyText");
+  const leftName = $("leftName");
+  const rightName = $("rightName");
+  const mobileControls = $("mobileControls");
+  const topButtons = $("topButtons");
+  const rotateNotice = $("rotateNotice");
+  const transformOverlay = $("transformOverlay");
+  const transformText = $("transformText");
+  const cutinOverlay = $("cutinOverlay");
+  const cutinArt = $("cutinArt");
+  const cutinName = $("cutinName");
+  const resultTitle = $("resultTitle");
+  const resultSub = $("resultSub");
 
-const difficultySelect = document.getElementById("difficultySelect");
-const stageSelect = document.getElementById("stageSelect");
-const helpContent = document.getElementById("helpContent");
-const characterGrid = document.getElementById("characterGrid");
-const characterCommandBox = document.getElementById("characterCommandBox");
-const rankingList = document.getElementById("rankingList");
-const roomCodeLabel = document.getElementById("roomCodeLabel");
-const lobbyStatus = document.getElementById("lobbyStatus");
-const lobbyPlayers = document.getElementById("lobbyPlayers");
-const resultTitle = document.getElementById("resultTitle");
-const resultSub = document.getElementById("resultSub");
-const lobbyActionRow = document.getElementById("lobbyActionRow");
-const firebaseStatus = document.getElementById("firebaseStatus");
-const menuCommandList = document.getElementById("menuCommandList");
+  const touchButtons = {
+    left: $("leftBtn"),
+    right: $("rightBtn"),
+    jump: $("jumpBtn"),
+    punch: $("punchBtn"),
+    kick: $("kickBtn"),
+    special: $("specialBtn")
+  };
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+  let selectedCharacter = "ryu";
+  let rankingModeFilter = "battle";
 
-const hud = document.getElementById("hud");
-const messageEl = document.getElementById("message");
-const playerHpBar = document.getElementById("playerHpBar");
-const enemyHpBar = document.getElementById("enemyHpBar");
-const playerSuperBar = document.getElementById("playerSuperBar");
-const enemySuperBar = document.getElementById("enemySuperBar");
-const playerAwakenBar = document.getElementById("playerAwakenBar");
-const enemyAwakenBar = document.getElementById("enemyAwakenBar");
-const playerHpText = document.getElementById("playerHpText");
-const enemyHpText = document.getElementById("enemyHpText");
-const comboText = document.getElementById("comboText");
-const centerInfo = document.getElementById("centerInfo");
-const difficultyText = document.getElementById("difficultyText");
-const leftName = document.getElementById("leftName");
-const rightName = document.getElementById("rightName");
-const mobileControls = document.getElementById("mobileControls");
-const topButtons = document.getElementById("topButtons");
-const backMenuBtn = document.getElementById("backMenuBtn");
-const gameFullscreenBtn = document.getElementById("gameFullscreenBtn");
-const rotateNotice = document.getElementById("rotateNotice");
-const transformOverlay = document.getElementById("transformOverlay");
-const transformText = document.getElementById("transformText");
-const cutinOverlay = document.getElementById("cutinOverlay");
-const cutinName = document.getElementById("cutinName");
-const cutinArt = document.getElementById("cutinArt");
+  const keys = { left:false, right:false, jump:false, punch:false, kick:false, special:false };
+  let pressedThisFrame = { punch:false, kick:false, special:false };
 
-const touchButtons = {
-  left: document.getElementById("leftBtn"),
-  right: document.getElementById("rightBtn"),
-  jump: document.getElementById("jumpBtn"),
-  punch: document.getElementById("punchBtn"),
-  kick: document.getElementById("kickBtn"),
-  special: document.getElementById("specialBtn")
-};
+  let gameRunning = false;
+  let gameOver = false;
+  let animationId = 0;
+  let lastTime = performance.now();
+  let combo = 0;
+  let lastHitTime = 0;
+  let cameraShake = 0;
+  let particles = [];
+  let guardRings = [];
+  let projectiles = [];
+  let hazards = [];
+  let commandBuffer = [];
+  let roundTimer = 99;
+  let resultSaved = false;
+  let lastBattleMode = "cpu";
+  let musou = { active:false, score:0, wins:0, wave:1 };
+  let transformLock = false;
+  let cutinPlaying = false;
+  let stageGimmickTimer = 0;
+  const gravity = 0.9;
 
-const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-const isMobile = matchMedia("(max-width: 940px)").matches || isTouch;
-
-/* =========================
-   Firebase status
-========================= */
-function setOnlineAvailability(enabled, text) {
-  openOnlineBtn.disabled = !enabled;
-  createRoomBtn.disabled = !enabled;
-  joinRoomBtn.disabled = !enabled;
-  firebaseStatus.textContent = text;
-}
-
-/* =========================
-   Layout
-========================= */
-function fitCanvas() {
-  const vv = window.visualViewport;
-  const w = vv ? Math.round(vv.width) : window.innerWidth;
-  const h = vv ? Math.round(vv.height) : window.innerHeight;
-  canvas.width = w;
-  canvas.height = h;
-  canvas.style.width = w + "px";
-  canvas.style.height = h + "px";
-}
-
-function applyViewportSafeLayout() {
-  const vv = window.visualViewport;
-  const w = vv ? vv.width : window.innerWidth;
-  const h = vv ? vv.height : window.innerHeight;
-  const shortSide = Math.min(w, h);
-  const verySmall = shortSide <= 430;
-
-  const hiddenBottom = vv ? Math.max(0, window.innerHeight - (vv.height + vv.offsetTop)) : 0;
-  const hiddenTop = vv ? Math.max(0, vv.offsetTop) : 0;
-  const hudTop = (verySmall ? 4 : 5) + Math.min(10, hiddenTop + 1);
-  const controlLift = hiddenBottom > 0 ? Math.min(12, hiddenBottom + 2) : 0;
-
-  let scaleDesktop = 0.90;
-  let scaleMobile = 0.66;
-  if (window.innerWidth <= 700) scaleMobile = 0.52;
-  if (window.innerWidth <= 480) scaleMobile = 0.45;
-
-  root.style.setProperty("--hudTop", `${hudTop}px`);
-  root.style.setProperty("--controlLift", `${controlLift}px`);
-  root.style.setProperty("--gameScale", isMobile ? `${scaleMobile}` : `${scaleDesktop}`);
-  mobileControls.style.bottom = `${hiddenBottom}px`;
-}
-
-function updateRotateNotice() {
-  const portrait = window.matchMedia("(orientation: portrait)").matches;
-  rotateNotice.style.display = (isMobile && portrait && gameRunning) ? "flex" : "none";
-}
-
-/* =========================
-   Helpers
-========================= */
-function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-function clearScreens() {
-  menuScreen.classList.remove("show");
-  onlineScreen.classList.remove("show");
-  lobbyScreen.classList.remove("show");
-  helpScreen.classList.remove("show");
-  characterScreen.classList.remove("show");
-  rankingScreen.classList.remove("show");
-  resultScreen.classList.remove("show");
-}
-function showMenu() {
-  stopGame();
-  clearScreens();
-  menuScreen.classList.add("show");
-  renderMenuCommands();
-}
-function showMessage(text, ms=1200) {
-  messageEl.textContent = text;
-  messageEl.classList.add("show");
-  clearTimeout(showMessage.timer);
-  showMessage.timer = setTimeout(() => messageEl.classList.remove("show"), ms);
-}
-function sanitizeRoomCode(v) {
-  return (v || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6);
-}
-function randomRoomCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let s = "";
-  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
-  return s;
-}
-function groundY() { return canvas.height - 126; }
-function distX(a,b) { return Math.abs((a.x + a.w/2) - (b.x + b.w/2)); }
-function facingUpdate(a,b) { a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1; }
-function getBodyRect(f) { return { x:f.x, y:f.y, w:f.w, h:f.h }; }
-function rectsOverlap(a,b) {
-  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-}
-function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
-
-/* =========================
-   Fullscreen
-========================= */
-function fullscreenSupported() {
-  const el = document.documentElement;
-  return !!(el.requestFullscreen || el.webkitRequestFullscreen);
-}
-function refreshFullscreenButtons() {
-  const ok = fullscreenSupported();
-  fullscreenBtn.style.display = ok ? "inline-block" : "none";
-  gameFullscreenBtn.style.display = ok ? "inline-flex" : "none";
-}
-async function enterFullscreenIfPossible() {
-  try {
-    const el = document.documentElement;
-    if (!fullscreenSupported()) return false;
-    if (document.fullscreenElement) return true;
-    if (el.requestFullscreen) {
-      await el.requestFullscreen({ navigationUI:"hide" });
-      return true;
-    }
-    if (el.webkitRequestFullscreen) {
-      el.webkitRequestFullscreen();
-      return true;
-    }
-    return false;
-  } catch (e) {
-    console.log("fullscreen unavailable", e);
-    return false;
+  function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+  function clearScreens(){
+    menuScreen.classList.remove("show");
+    helpScreen.classList.remove("show");
+    characterScreen.classList.remove("show");
+    rankingScreen.classList.remove("show");
+    resultScreen.classList.remove("show");
   }
-}
+  function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
+  function groundY(){ return canvas.height - 126; }
+  function distX(a,b){ return Math.abs((a.x+a.w/2) - (b.x+b.w/2)); }
+  function rectsOverlap(a,b){
+    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  }
+  function getBodyRect(f){ return { x:f.x, y:f.y, w:f.w, h:f.h }; }
+  function facingUpdate(a,b){ a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1; }
 
-/* =========================
-   UI / Help
-========================= */
-let selectedCharacter = "ryu";
-let rankingModeFilter = "battle";
+  function fitCanvas(){
+    const vv = window.visualViewport;
+    const w = vv ? Math.round(vv.width) : window.innerWidth;
+    const h = vv ? Math.round(vv.height) : window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+  }
 
-function getCharacterCommands(key) {
-  return CHARACTERS[key]?.commands || [];
-}
-function renderMenuCommands() {
-  const cmds = getCharacterCommands(selectedCharacter);
-  menuCommandList.innerHTML = cmds.map(c => `
-    <div class="command-row">
-      <strong>${c.input}</strong>
-      <span>${c.name}</span>
-    </div>
-  `).join("");
-}
-function renderCharacterCommands() {
-  const ch = CHARACTERS[selectedCharacter];
-  characterCommandBox.innerHTML = `
-    <h3 style="margin:0 0 8px;">${ch.name} の固有コマンド</h3>
-    ${ch.commands.map(c => `<p><strong>${c.input}</strong> : ${c.name}</p>`).join("")}
-    <p><strong>BURST</strong> : ${ch.burstName}</p>
-  `;
-}
-function setHelpText() {
-  const commonKeys = isMobile
-    ? `← → : 移動 / ↑ : ジャンプ / P : パンチ / K : キック / S : 必殺技 / ゲージ100でバースト`
-    : `← → : 移動 / ↑ : ジャンプ / Z : パンチ / X : キック / C : 必殺技 / ゲージ100でバースト`;
-  const cmdLines = getCharacterCommands(selectedCharacter).map(c => `<p>${c.input} : ${c.name}</p>`).join("");
-  helpContent.innerHTML = `
-    <p><strong>${isMobile ? "スマホ操作" : "PC操作"}</strong></p>
-    <p>${commonKeys}</p>
-    <p><strong>${CHARACTERS[selectedCharacter].name} 固有コマンド</strong></p>
-    ${cmdLines}
-    <p><strong>覚醒変身</strong></p>
-    <p>HP35以下で自動変身。速度・攻撃・オーラが強化されます。</p>
-    <p><strong>ボス第2形態</strong></p>
-    <p>BOSS難度の敵は瀕死時にさらに変身して強くなります。</p>
-    <p><strong>ステージギミック</strong></p>
-    <p>DOJO: 霊気 / RUINS: 落石 / NEON: 雷撃 / MOON: 低重力。</p>
-  `;
-}
-function renderCharacterCards() {
-  characterGrid.innerHTML = "";
-  Object.values(CHARACTERS).forEach(ch => {
-    const el = document.createElement("div");
-    el.className = "card" + (selectedCharacter === ch.key ? " active" : "");
-    el.innerHTML = `
-      <h3>${ch.name}</h3>
-      <p>${ch.style}</p>
-      <p>速度 ${ch.speed.toFixed(1)} / 攻撃 ${ch.atk.toFixed(2)} / 防御 ${ch.def.toFixed(2)}</p>
-      <span class="tag">${ch.specialName}</span>
-      <span class="tag">${ch.burstName}</span>
+  function applyViewportSafeLayout(){
+    const vv = window.visualViewport;
+    const w = vv ? vv.width : window.innerWidth;
+    const h = vv ? vv.height : window.innerHeight;
+    const shortSide = Math.min(w, h);
+    const verySmall = shortSide <= 430;
+
+    const hiddenTop = vv ? Math.max(0, vv.offsetTop) : 0;
+    let scaleMobile = 0.62;
+    if (window.innerWidth <= 700) scaleMobile = 0.50;
+    if (window.innerWidth <= 480) scaleMobile = 0.43;
+
+    root.style.setProperty("--hudTop", `${(verySmall ? 4 : 5) + Math.min(10, hiddenTop + 1)}px`);
+    root.style.setProperty("--gameScale", ("ontouchstart" in window || navigator.maxTouchPoints > 0) ? `${scaleMobile}` : `0.90`);
+  }
+
+  function updateRotateNotice(){
+    const portrait = window.matchMedia("(orientation: portrait)").matches;
+    rotateNotice.style.display = ((("ontouchstart" in window || navigator.maxTouchPoints > 0)) && portrait && gameRunning) ? "flex" : "none";
+  }
+
+  function fullscreenSupported(){
+    const el = document.documentElement;
+    return !!(el.requestFullscreen || el.webkitRequestFullscreen);
+  }
+
+  async function enterFullscreenIfPossible(){
+    try{
+      const el = document.documentElement;
+      if (!fullscreenSupported()) return false;
+      if (document.fullscreenElement) return true;
+      if (el.requestFullscreen) { await el.requestFullscreen({ navigationUI:"hide" }); return true; }
+      if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); return true; }
+      return false;
+    }catch(e){
+      return false;
+    }
+  }
+
+  function showMessage(text, ms=1200){
+    messageEl.textContent = text;
+    messageEl.classList.add("show");
+    clearTimeout(showMessage.timer);
+    showMessage.timer = setTimeout(() => messageEl.classList.remove("show"), ms);
+  }
+
+  function getCharacterCommands(key){
+    return CHARACTERS[key].commands;
+  }
+
+  function renderMenuCommands(){
+    menuCommandList.innerHTML = getCharacterCommands(selectedCharacter).map(c => `
+      <div class="command-row">
+        <strong>${c[0]}</strong>
+        <span>${c[1]}</span>
+      </div>
+    `).join("");
+  }
+
+  function renderCharacterCommands(){
+    const ch = CHARACTERS[selectedCharacter];
+    characterCommandBox.innerHTML = `
+      <h3 style="margin:0 0 8px;">${ch.name} の固有コマンド</h3>
+      ${ch.commands.map(c => `<p><strong>${c[0]}</strong> : ${c[1]}</p>`).join("")}
+      <p><strong>BURST</strong> : ${ch.burstName}</p>
     `;
-    el.addEventListener("click", () => {
-      selectedCharacter = ch.key;
-      renderCharacterCards();
-      renderCharacterCommands();
-      renderMenuCommands();
-      setHelpText();
+  }
+
+  function setHelpText(){
+    const isMobile = ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+    const common = isMobile
+      ? `← → : 移動 / ↑ : ジャンプ / P : パンチ / K : キック / S : 必殺技 / ゲージ100で超必殺`
+      : `← → : 移動 / ↑ : ジャンプ / Z : パンチ / X : キック / C : 必殺技 / ゲージ100で超必殺`;
+
+    const lines = getCharacterCommands(selectedCharacter).map(c => `<p>${c[0]} : ${c[1]}</p>`).join("");
+    helpContent.innerHTML = `
+      <p><strong>${isMobile ? "スマホ操作" : "PC操作"}</strong></p>
+      <p>${common}</p>
+      <p><strong>${CHARACTERS[selectedCharacter].name} 固有コマンド</strong></p>
+      ${lines}
+      <p><strong>この版の要素</strong></p>
+      <p>・覚醒変身</p>
+      <p>・ボス第2形態</p>
+      <p>・飛び道具相殺</p>
+      <p>・勝利カットイン</p>
+      <p>・ステージギミック</p>
+      <p>・スマホ大型ボタン最適化</p>
+    `;
+  }
+
+  function renderCharacterCards(){
+    characterGrid.innerHTML = "";
+    Object.values(CHARACTERS).forEach(ch => {
+      const el = document.createElement("div");
+      el.className = "card" + (selectedCharacter === ch.key ? " active" : "");
+      el.innerHTML = `
+        <h3>${ch.name}</h3>
+        <p>${ch.style}</p>
+        <p>速度 ${ch.speed.toFixed(1)} / 攻撃 ${ch.atk.toFixed(2)} / 防御 ${ch.def.toFixed(2)}</p>
+        <span class="tag">${ch.specialName}</span>
+        <span class="tag">${ch.burstName}</span>
+      `;
+      el.addEventListener("click", () => {
+        selectedCharacter = ch.key;
+        renderCharacterCards();
+        renderCharacterCommands();
+        renderMenuCommands();
+        setHelpText();
+      });
+      characterGrid.appendChild(el);
     });
-    characterGrid.appendChild(el);
-  });
-  renderCharacterCommands();
-}
-renderCharacterCards();
-renderMenuCommands();
-setHelpText();
+    renderCharacterCommands();
+  }
 
-/* =========================
-   Firebase login
-========================= */
-setOnlineAvailability(false, "Firebase接続確認中...");
-refreshFullscreenButtons();
+  function saveLocalRanking(score, mode){
+    const key = mode === "musou" ? "fight_v100_god_musou" : "fight_v100_god_battle";
+    const list = JSON.parse(localStorage.getItem(key) || "[]");
+    list.push({
+      name: CHARACTERS[selectedCharacter].name,
+      score,
+      stage: STAGES[stageSelect.value].label,
+      date: new Date().toLocaleDateString("ja-JP")
+    });
+    list.sort((a,b)=>b.score-a.score);
+    localStorage.setItem(key, JSON.stringify(list.slice(0,10)));
+  }
 
-try {
-  const cred = await signInAnonymously(auth);
-  firebaseReady = true;
-  firebaseUserId = cred.user?.uid || "guest";
-  setOnlineAvailability(true, "オンライン使用可能");
-} catch (err) {
-  console.error("Firebase auth error", err);
-  setOnlineAvailability(false, "オンライン未使用: Firebase認証失敗");
-}
-
-/* =========================
-   Ranking
-========================= */
-async function loadRanking() {
-  rankingList.innerHTML = "読み込み中...";
-  try {
-    const q = query(
-      collection(db, "fight_game_ranking"),
-      where("mode", "==", rankingModeFilter),
-      orderBy("score", "desc"),
-      limit(10)
-    );
-    const snap = await getDocs(q);
-    if (snap.empty) {
+  function loadLocalRanking(){
+    const key = rankingModeFilter === "musou" ? "fight_v100_god_musou" : "fight_v100_god_battle";
+    const list = JSON.parse(localStorage.getItem(key) || "[]");
+    if (!list.length){
       rankingList.innerHTML = "<p>まだランキングがありません。</p>";
       return;
     }
-    let rank = 1;
-    rankingList.innerHTML = "";
-    snap.forEach((docSnap) => {
-      const data = docSnap.data();
-      rankingList.innerHTML += `
-        <div class="rank-item">
-          <span>${rank}位</span>
-          <span>${data.name || "PLAYER"}</span>
-          <span>${data.score ?? 0}</span>
-          <span>${data.stage || "-"}</span>
-        </div>
-      `;
-      rank++;
-    });
-  } catch (e) {
-    console.error(e);
-    rankingList.innerHTML = "<p>ランキングの読み込みに失敗しました。<br>Firestore で複合インデックス作成が必要な場合があります。</p>";
-  }
-}
-async function saveRanking(score, mode = "battle") {
-  if (!firebaseReady) return;
-  try {
-    await addDoc(collection(db, "fight_game_ranking"), {
-      uid: firebaseUserId,
-      name: CHARACTERS[selectedCharacter].name,
-      score,
-      mode,
-      stage: STAGES[stageSelect.value].label,
-      difficulty: difficultySelect.value,
-      createdAt: serverTimestamp()
-    });
-  } catch (e) {
-    console.error("ranking save failed", e);
-  }
-}
-
-/* =========================
-   Config / game data
-========================= */
-function difficultyConfig() {
-  const v = difficultySelect.value;
-  if (v === "boss") return { label:"BOSS", speed:5.8, react:0.995, defend:0.55, aggro:1.9 };
-  if (v === "god") return { label:"GOD", speed:5.2, react:0.95, defend:0.38, aggro:1.35 };
-  if (v === "hard") return { label:"HARD", speed:4.5, react:0.82, defend:0.24, aggro:1.08 };
-  return { label:"NORMAL", speed:3.8, react:0.66, defend:0.14, aggro:0.86 };
-}
-function stageBuff(characterKey) {
-  const st = STAGES[stageSelect.value];
-  return st.buff[characterKey] || { atk:1.0 };
-}
-function baseStatsFromCharacter(characterKey) {
-  const ch = CHARACTERS[characterKey];
-  const sb = stageBuff(characterKey);
-  return {
-    speed: ch.speed,
-    jump: ch.jump,
-    atk: ch.atk * (sb.atk || 1),
-    def: ch.def,
-    superGain: ch.superGain,
-    color: ch.color,
-    accent: ch.accent,
-    hair: ch.hair,
-    aura: ch.aura,
-    scarf: ch.scarf,
-    name: ch.name,
-    specialName: ch.specialName,
-    burstName: ch.burstName,
-    silhouette: ch.silhouette
-  };
-}
-function pickEnemyCharacter() {
-  const keys = Object.keys(CHARACTERS).filter(k => k !== selectedCharacter);
-  return keys[Math.floor(Math.random() * keys.length)];
-}
-
-/* =========================
-   State
-========================= */
-const keys = { left:false, right:false, jump:false, punch:false, kick:false, special:false };
-let pressedThisFrame = { punch:false, kick:false, special:false };
-let gameRunning = false;
-let gameOver = false;
-let animationId = 0;
-let lastTime = performance.now();
-let combo = 0;
-let lastHitTime = 0;
-let cameraShake = 0;
-let particles = [];
-let commandBuffer = [];
-let projectiles = [];
-let guardRings = [];
-let hazards = [];
-let roundTimer = 99;
-let resultSaved = false;
-let gameMode = "cpu";
-let onlineGameStarted = false;
-let pendingResult = null;
-let lastBattleMode = "cpu";
-let onlineResultRoomCode = "";
-let transformLock = false;
-let cutinPlaying = false;
-
-let musou = { active:false, score:0, wins:0, wave:1 };
-const gravity = 0.9;
-
-function createFighter(characterKey, isPlayer) {
-  const st = baseStatsFromCharacter(characterKey);
-  return {
-    characterKey,
-    name: st.name,
-    specialName: st.specialName,
-    burstName: st.burstName,
-    x: isPlayer ? 120 : canvas.width - 190,
-    y: groundY() - 120,
-    w: 64,
-    h: 120,
-    vx: 0,
-    vy: 0,
-    dir: isPlayer ? 1 : -1,
-    speed: st.speed,
-    jumpPower: st.jump,
-    hp: 100,
-    maxHp: 100,
-    super: 0,
-    maxSuper: 100,
-    awaken:0,
-    awakened:false,
-    bossForm2:false,
-    atkMul: st.atk,
-    defMul: st.def,
-    superGain: st.superGain,
-    color: st.color,
-    accent: st.accent,
-    hair: st.hair,
-    aura: st.aura,
-    scarf: st.scarf,
-    silhouette: st.silhouette,
-    onGround:true,
-    dead:false,
-    state:"idle",
-    attackType:"",
-    attackTimer:0,
-    attackCooldown:0,
-    hitstun:0,
-    invuln:0,
-    guardTimer:0,
-    hurtFlash:0,
-    hasHitCurrentAttack:false,
-    isPlayer,
-    animPhase:Math.random() * Math.PI * 2,
-    runPhase:0,
-    resultPose:"",
-    chargeBackFrames:0
-  };
-}
-
-let player = createFighter(selectedCharacter, true);
-let enemy = createFighter(pickEnemyCharacter(), false);
-
-function fighterToPlain(f) { return { ...f }; }
-function applyRemoteState(state) {
-  if (!state) return;
-  if (state.player) player = { ...player, ...state.player };
-  if (state.enemy) enemy = { ...enemy, ...state.enemy };
-  if (typeof state.roundTimer === "number") roundTimer = state.roundTimer;
-  if (typeof state.combo === "number") combo = state.combo;
-  if (typeof state.gameOver === "boolean") gameOver = state.gameOver;
-  if (typeof state.resultSaved === "boolean") resultSaved = state.resultSaved;
-  if (state.centerInfo) centerInfo.textContent = state.centerInfo;
-  if (state.projectiles) projectiles = state.projectiles;
-  comboText.textContent = "COMBO " + combo;
-}
-
-function resetMusou() {
-  musou.active = false;
-  musou.score = 0;
-  musou.wins = 0;
-  musou.wave = 1;
-}
-
-function resetBattle(enemyCharacter = null) {
-  fitCanvas();
-  const enemyChar = enemyCharacter || pickEnemyCharacter();
-  lastBattleMode = gameMode;
-  player = createFighter(selectedCharacter, true);
-  enemy = createFighter(enemyChar, false);
-  combo = 0;
-  lastHitTime = 0;
-  cameraShake = 0;
-  particles = [];
-  projectiles = [];
-  guardRings = [];
-  hazards = [];
-  commandBuffer = [];
-  roundTimer = musou.active ? 60 : 99;
-  gameOver = false;
-  resultSaved = false;
-  pendingResult = null;
-  transformLock = false;
-  cutinPlaying = false;
-
-  leftName.textContent = player.name;
-  rightName.textContent = enemy.name;
-  difficultyText.textContent =
-    gameMode.startsWith("online") || gameMode === "spectator"
-      ? (gameMode === "spectator" ? "SPECTATE / " : "ONLINE / ") + STAGES[stageSelect.value].label
-      : musou.active
-        ? `MUSOU W${musou.wave}`
-        : difficultyConfig().label + " / " + STAGES[stageSelect.value].label;
-
-  centerInfo.textContent = "READY";
-  comboText.textContent = "COMBO 0";
-  showMessage("READY", 700);
-}
-
-function resetInput() {
-  Object.keys(keys).forEach(k => keys[k] = false);
-  Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
-  Object.values(touchButtons).forEach(btn => btn.classList.remove("active"));
-}
-
-function stopGame() {
-  gameRunning = false;
-  cancelAnimationFrame(animationId);
-  canvas.style.display = "none";
-  hud.style.display = "none";
-  topButtons.style.display = "none";
-  resetInput();
-  onlineGameStarted = false;
-  updateRotateNotice();
-}
-
-/* =========================
-   Overlays
-========================= */
-async function playTransformOverlay(text, color) {
-  transformText.textContent = text;
-  transformText.style.background = `linear-gradient(90deg,#fff,${color},#fff)`;
-  transformText.style.webkitBackgroundClip = "text";
-  transformText.style.backgroundClip = "text";
-  transformText.style.color = "transparent";
-  transformOverlay.classList.add("show");
-  await delay(700);
-  transformOverlay.classList.remove("show");
-}
-async function playVictoryCutin(fighter) {
-  if (cutinPlaying) return;
-  cutinPlaying = true;
-  cutinName.textContent = fighter.name;
-  cutinArt.style.setProperty("--cutinColor", fighter.aura);
-  cutinOverlay.classList.add("show");
-  await delay(1200);
-  cutinOverlay.classList.remove("show");
-  cutinPlaying = false;
-}
-
-/* =========================
-   Start / result
-========================= */
-async function startCpuGame() {
-  resetMusou();
-  gameMode = "cpu";
-  await enterFullscreenIfPossible();
-  resetBattle();
-  clearScreens();
-  canvas.style.display = "block";
-  hud.style.display = "block";
-  topButtons.style.display = "flex";
-  gameRunning = true;
-  lastTime = performance.now();
-  fitCanvas();
-  cancelAnimationFrame(animationId);
-  animationId = requestAnimationFrame(loop);
-  applyViewportSafeLayout();
-  updateRotateNotice();
-}
-
-async function startMusouGame() {
-  musou.active = true;
-  musou.score = 0;
-  musou.wins = 0;
-  musou.wave = 1;
-  gameMode = "cpu";
-  await enterFullscreenIfPossible();
-  resetBattle();
-  clearScreens();
-  canvas.style.display = "block";
-  hud.style.display = "block";
-  topButtons.style.display = "flex";
-  gameRunning = true;
-  lastTime = performance.now();
-  fitCanvas();
-  cancelAnimationFrame(animationId);
-  animationId = requestAnimationFrame(loop);
-  applyViewportSafeLayout();
-  updateRotateNotice();
-  showMessage("MUSOU START", 1000);
-}
-
-async function startOnlineGameAsRole(role, remoteCharacterKey) {
-  resetMusou();
-  gameMode = role === "host" ? "online-host" : role === "guest" ? "online-guest" : "spectator";
-  await enterFullscreenIfPossible();
-  resetBattle(remoteCharacterKey || pickEnemyCharacter());
-  clearScreens();
-  canvas.style.display = "block";
-  hud.style.display = "block";
-  topButtons.style.display = "flex";
-  gameRunning = true;
-  onlineGameStarted = true;
-  lastTime = performance.now();
-  fitCanvas();
-  cancelAnimationFrame(animationId);
-  animationId = requestAnimationFrame(loop);
-  applyViewportSafeLayout();
-  updateRotateNotice();
-  showMessage(role === "spectator" ? "WATCH" : "FIGHT", 900);
-}
-
-async function rematchLastBattle() {
-  if (musou.active) {
-    await startMusouGame();
-    return;
-  }
-  if (lastBattleMode === "cpu") {
-    await startCpuGame();
-    return;
-  }
-  showMenu();
-}
-
-function showResultScreen(title, sub) {
-  stopGame();
-  resultTitle.textContent = title;
-  resultSub.textContent = sub;
-  onlineRematchBtn.style.display = lastBattleMode.startsWith("online") ? "inline-block" : "none";
-  rematchBtn.style.display = lastBattleMode === "cpu" ? "inline-block" : "none";
-  clearScreens();
-  resultScreen.classList.add("show");
-}
-
-/* =========================
-   Commands / combat
-========================= */
-function recordCommand(dir) {
-  const now = performance.now();
-  commandBuffer.push({ dir, time: now });
-  commandBuffer = commandBuffer.filter(v => now - v.time < 650);
-}
-function commandMatched(sequence) {
-  if (commandBuffer.length < sequence.length) return false;
-  const arr = commandBuffer.map(v => v.dir);
-  return arr.slice(-sequence.length).join(",") === sequence.join(",");
-}
-
-function attackData(type) {
-  if (type === "punch") return { timer:11, cooldown:12, damage:6, kb:10, superGain:8 };
-  if (type === "kick") return { timer:16, cooldown:18, damage:10, kb:15, superGain:11 };
-  if (type === "dashPunch") return { timer:14, cooldown:18, damage:12, kb:18, superGain:14 };
-  if (type === "uppercut") return { timer:18, cooldown:24, damage:14, kb:18, superGain:15 };
-  if (type === "chargeKick") return { timer:18, cooldown:22, damage:13, kb:20, superGain:14 };
-  if (type === "groundBurst") return { timer:18, cooldown:24, damage:13, kb:16, superGain:14 };
-  if (type === "flashKick") return { timer:18, cooldown:22, damage:15, kb:22, superGain:15 };
-  if (type === "shadowStep") return { timer:16, cooldown:20, damage:12, kb:19, superGain:13 };
-  if (type === "special") return { timer:28, cooldown:36, damage:18, kb:26, superGain:0, cost:50 };
-  if (type === "burst") return { timer:36, cooldown:46, damage:28, kb:34, superGain:0, cost:100 };
-  if (type === "projectile") return { timer:18, cooldown:20, damage:11, kb:18, superGain:12 };
-  return { timer:0, cooldown:0, damage:0, kb:0, superGain:0 };
-}
-
-function getAttackRect(f) {
-  let range = 0, height = 0, yOffset = 0;
-  if (f.attackType === "punch") { range = 32; height = 22; yOffset = 38; }
-  if (f.attackType === "kick") { range = 52; height = 30; yOffset = 66; }
-  if (f.attackType === "dashPunch") { range = 74; height = 28; yOffset = 36; }
-  if (f.attackType === "uppercut") { range = 40; height = 56; yOffset = 8; }
-  if (f.attackType === "chargeKick") { range = 86; height = 34; yOffset = 62; }
-  if (f.attackType === "groundBurst") { range = 82; height = 44; yOffset = 58; }
-  if (f.attackType === "flashKick") { range = 88; height = 38; yOffset = 52; }
-  if (f.attackType === "shadowStep") { range = 92; height = 32; yOffset = 34; }
-  if (f.attackType === "special") { range = 112; height = 42; yOffset = 22; }
-  if (f.attackType === "burst") { range = 138; height = 54; yOffset = 16; }
-  if (f.dir === 1) return { x:f.x + f.w - 4, y:f.y + yOffset, w:range, h:height };
-  return { x:f.x - range + 4, y:f.y + yOffset, w:range, h:height };
-}
-
-function attackActiveFrame(type, timer) {
-  if (type === "punch") return timer >= 5 && timer <= 7;
-  if (type === "kick") return timer >= 8 && timer <= 12;
-  if (type === "dashPunch") return timer >= 6 && timer <= 11;
-  if (type === "uppercut") return timer >= 5 && timer <= 11;
-  if (type === "chargeKick") return timer >= 7 && timer <= 12;
-  if (type === "groundBurst") return timer >= 7 && timer <= 12;
-  if (type === "flashKick") return timer >= 6 && timer <= 12;
-  if (type === "shadowStep") return timer >= 5 && timer <= 10;
-  if (type === "special") return timer >= 10 && timer <= 20;
-  if (type === "burst") return timer >= 12 && timer <= 28;
-  return false;
-}
-
-function spawnImpact(x, y, color, count=8) {
-  for (let i = 0; i < count; i++) {
-    particles.push({ x, y, vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*6 - 1, life:18 + Math.random()*12, size:2 + Math.random()*3, color });
-  }
-}
-
-function spawnAuraBurst(x, y, color) {
-  for (let i = 0; i < 18; i++) {
-    particles.push({ x, y, vx:(Math.random()-0.5)*9, vy:(Math.random()-0.5)*7 - 1, life:22 + Math.random()*12, size:3 + Math.random()*4, color });
-  }
-}
-
-function spawnGuardRing(x, y, color="#aee1ff") {
-  guardRings.push({ x, y, r:20, maxR:48, alpha:0.9, color });
-  for (let i = 0; i < 10; i++) {
-    particles.push({
-      x, y,
-      vx:(Math.random()-0.5)*7,
-      vy:(Math.random()-0.5)*7,
-      life:14 + Math.random()*10,
-      size:2 + Math.random()*2.5,
-      color
-    });
-  }
-}
-
-function spawnClashEffect(x, y) {
-  for (let i = 0; i < 20; i++) {
-    particles.push({
-      x, y,
-      vx:(Math.random()-0.5)*10,
-      vy:(Math.random()-0.5)*10,
-      life:18 + Math.random()*12,
-      size:2 + Math.random()*3,
-      color: i % 2 ? "#ffd59e" : "#cce7ff"
-    });
-  }
-  guardRings.push({ x, y, r:18, maxR:56, alpha:0.85, color:"#ffffff" });
-  cameraShake = Math.max(cameraShake, 6);
-}
-
-function getProjectileSpec(f) {
-  const key = f.characterKey;
-  if (key === "ryu") return { name:"波動弾", colorKey:"fire", speed:7.2, size:16 };
-  if (key === "blade") return { name:"ブレードウェーブ", colorKey:"wind", speed:7.8, size:14 };
-  if (key === "titan") return { name:"岩砕弾", colorKey:"gold", speed:6.4, size:18 };
-  if (key === "shadow") return { name:"ナイトショット", colorKey:"dark", speed:7.5, size:15 };
-  if (key === "valkyrie") return { name:"ランサーショット", colorKey:"wind", speed:7.1, size:15 };
-  if (key === "phoenix") return { name:"フレイムショット", colorKey:"fire", speed:7.7, size:17 };
-  if (key === "frost") return { name:"アイスショット", colorKey:"ice", speed:7.0, size:16 };
-  if (key === "oni") return { name:"鬼炎弾", colorKey:"dark", speed:6.8, size:18 };
-  return { name:"ショット", colorKey:"fire", speed:7.0, size:16 };
-}
-
-function spawnProjectile(owner, target) {
-  const spec = getProjectileSpec(owner);
-  const damage = attackData("projectile").damage * owner.atkMul / target.defMul;
-  const bodyX = owner.dir === 1 ? owner.x + owner.w + 6 : owner.x - 6;
-  const bodyY = owner.y + 44;
-
-  projectiles.push({
-    id: Math.random().toString(36).slice(2),
-    owner: owner.isPlayer ? "player" : "enemy",
-    x: bodyX,
-    y: bodyY,
-    vx: spec.speed * owner.dir,
-    r: spec.size,
-    colorKey: spec.colorKey,
-    damage,
-    kb: attackData("projectile").kb,
-    life: 130,
-    ownerDir: owner.dir
-  });
-  spawnAuraBurst(bodyX, bodyY, owner.aura);
-  if (owner.isPlayer) showMessage(spec.name, 240);
-}
-
-function tryStartAttack(f, type) {
-  if (f.dead || f.hitstun > 0 || transformLock) return false;
-  if (f.attackTimer > 0 || f.attackCooldown > 0) return false;
-  const data = attackData(type);
-  if ((type === "special" || type === "burst") && f.super < data.cost) return false;
-
-  if (type === "special" || type === "burst") {
-    f.super = clamp(f.super - data.cost, 0, f.maxSuper);
-    spawnAuraBurst(f.x + f.w/2, f.y + 50, f.aura);
+    rankingList.innerHTML = list.map((r, i) => `
+      <div class="rank-item">
+        <span>${i+1}位</span>
+        <span>${r.name}</span>
+        <span>${r.score}</span>
+        <span>${r.stage}</span>
+      </div>
+    `).join("");
   }
 
-  f.attackType = type;
-  f.attackTimer = data.timer;
-  f.attackCooldown = data.cooldown;
-  f.state = "attack";
-  f.hasHitCurrentAttack = false;
-
-  if (type === "dashPunch") f.vx = 7.0 * f.dir;
-  if (type === "uppercut") f.vy = -7.0;
-  if (type === "chargeKick") f.vx = 6.2 * f.dir;
-  if (type === "flashKick") f.vx = 6.8 * f.dir;
-  if (type === "shadowStep") f.vx = 8.2 * f.dir;
-
-  if (type === "groundBurst") spawnAuraBurst(f.x + f.w/2, f.y + f.h - 10, "#ffd166");
-  if (type === "flashKick") spawnAuraBurst(f.x + f.w/2, f.y + 64, "#8ed0ff");
-  if (type === "shadowStep") spawnAuraBurst(f.x + f.w/2, f.y + 44, "#b89cff");
-  if (type === "burst") {
-    spawnAuraBurst(f.x + f.w/2, f.y + 40, "#ffffff");
-    spawnAuraBurst(f.x + f.w/2, f.y + 40, f.aura);
+  function resetLocalRanking(){
+    localStorage.removeItem("fight_v100_god_battle");
+    localStorage.removeItem("fight_v100_god_musou");
+    loadLocalRanking();
   }
 
-  if (f.isPlayer) {
-    if (type === "special") showMessage(f.specialName, 450);
-    else if (type === "burst") showMessage(f.burstName, 650);
-    else if (type === "uppercut") showMessage("UPPERCUT", 240);
-    else if (type === "chargeKick") showMessage("CHARGE THRUST", 240);
-    else if (type === "dashPunch") showMessage("DASH PUNCH", 240);
-    else if (type === "groundBurst") showMessage("GROUND BURST", 240);
-    else if (type === "flashKick") showMessage("FLASH KICK", 240);
-    else if (type === "shadowStep") showMessage("SHADOW STEP", 240);
-  }
-  return true;
-}
-
-function gainSuper(f, value) { f.super = clamp(f.super + value * f.superGain, 0, f.maxSuper); }
-function facingProperForGuard(target, attacker) { return target.dir === -attacker.dir; }
-
-async function triggerAwaken(f) {
-  if (f.awakened) return;
-  f.awakened = true;
-  f.speed += 0.45;
-  f.atkMul *= 1.12;
-  transformLock = true;
-  await playTransformOverlay(f.isPlayer ? "AWAKENING" : "ENEMY AWAKEN", f.aura);
-  spawnAuraBurst(f.x + f.w/2, f.y + 40, f.aura);
-  transformLock = false;
-}
-
-async function triggerBossForm2(f) {
-  if (f.bossForm2) return;
-  f.bossForm2 = true;
-  f.maxHp += 35;
-  f.hp = Math.min(f.maxHp, f.hp + 22);
-  f.speed += 0.6;
-  f.atkMul *= 1.18;
-  f.defMul *= 1.08;
-  f.super = clamp(f.super + 40, 0, 100);
-  f.aura = "#ffea7a";
-  transformLock = true;
-  await playTransformOverlay("BOSS FORM II", "#ffdb7f");
-  spawnAuraBurst(f.x + f.w/2, f.y + 40, "#fff0a8");
-  transformLock = false;
-}
-
-function updateAwakenAsync(f) {
-  const hpRate = f.hp / f.maxHp;
-  f.awaken = clamp((1 - hpRate - 0.65) / 0.35, 0, 1);
-  if (!f.awakened && hpRate <= 0.35) triggerAwaken(f);
-  if (!f.isPlayer && difficultySelect.value === "boss" && !f.bossForm2 && hpRate <= 0.40) triggerBossForm2(f);
-}
-
-async function advanceMusouRound() {
-  if (!musou.active || gameOver) return;
-  musou.wins += 1;
-  const gain = Math.floor(400 + musou.wins * 120 + player.hp * 8);
-  musou.score += gain;
-  musou.wave += 1;
-  showMessage(`WAVE ${musou.wave} +${gain}`, 1000);
-
-  const enemyChar = pickEnemyCharacter();
-  enemy = createFighter(enemyChar, false);
-  enemy.maxHp = Math.min(150, 100 + musou.wins * 7);
-  enemy.hp = enemy.maxHp;
-  enemy.atkMul *= 1 + musou.wins * 0.035;
-  enemy.defMul *= 1 + musou.wins * 0.02;
-
-  player.x = 120;
-  player.y = groundY() - player.h;
-  player.vx = 0;
-  player.vy = 0;
-  player.dead = false;
-  player.state = "idle";
-  player.attackType = "";
-  player.attackTimer = 0;
-  player.hitstun = 0;
-  player.invuln = 30;
-  player.super = clamp(player.super + 22, 0, 100);
-
-  projectiles = [];
-  guardRings = [];
-  hazards = [];
-  roundTimer = 60;
-  combo = 0;
-  comboText.textContent = "COMBO 0";
-  difficultyText.textContent = `MUSOU W${musou.wave}`;
-  rightName.textContent = enemy.name;
-}
-
-function maybeSaveWinRanking() {
-  if (musou.active) return;
-  if (!resultSaved && gameMode !== "online-guest" && gameMode !== "spectator") {
-    resultSaved = true;
-    const score = Math.max(0, Math.floor(player.hp * 100 + roundTimer * 10 + combo * 30));
-    saveRanking(score, "battle");
-  }
-}
-
-async function saveMusouIfNeeded() {
-  if (!musou.active || resultSaved) return;
-  resultSaved = true;
-  await saveRanking(musou.score, "musou");
-}
-
-async function finishMatch(attackerIsPlayer, reasonText) {
-  if (pendingResult) return;
-
-  if (musou.active && attackerIsPlayer) {
-    await advanceMusouRound();
-    return;
+  function stageGimmick(){
+    return STAGES[stageSelect.value].gimmick;
   }
 
-  gameOver = true;
-  pendingResult = { title: attackerIsPlayer ? "YOU WIN" : "YOU LOSE", sub: reasonText };
-
-  if (attackerIsPlayer) {
-    player.resultPose = "win";
-    enemy.resultPose = "lose";
-  } else {
-    player.resultPose = "lose";
-    enemy.resultPose = "win";
+  function moonGravityModifier(){
+    return stageGimmick() === "gravity" ? 0.72 : 1;
   }
 
-  showMessage(pendingResult.title, 1600);
-
-  const winner = attackerIsPlayer ? player : enemy;
-  await playVictoryCutin(winner);
-
-  if (musou.active) {
-    await saveMusouIfNeeded();
-    const sub = `${reasonText} / 撃破数 ${musou.wins} / SCORE ${musou.score}`;
-    showResultScreen(attackerIsPlayer ? "MUSOU CLEAR" : "MUSOU END", sub);
-    return;
+  function baseStatsFromCharacter(characterKey){
+    const ch = CHARACTERS[characterKey];
+    return {
+      speed: ch.speed,
+      jump: ch.jump,
+      atk: ch.atk,
+      def: ch.def,
+      superGain: ch.superGain,
+      color: ch.color,
+      accent: ch.accent,
+      hair: ch.hair,
+      aura: ch.aura,
+      scarf: ch.scarf,
+      name: ch.name,
+      specialName: ch.specialName,
+      burstName: ch.burstName,
+      silhouette: ch.silhouette
+    };
   }
 
-  if (gameMode === "cpu") {
-    if (attackerIsPlayer) maybeSaveWinRanking();
-    showResultScreen(pendingResult.title, pendingResult.sub);
-    return;
+  function pickEnemyCharacter(){
+    const keys = Object.keys(CHARACTERS).filter(k => k !== selectedCharacter);
+    return keys[Math.floor(Math.random() * keys.length)];
   }
 
-  onlineResultRoomCode = onlineInfo.roomCode || onlineResultRoomCode;
-  showResultScreen(
-    pendingResult.title,
-    pendingResult.sub + (gameMode === "spectator" ? " / 観戦中" : " / オンライン再戦申請できます")
-  );
-}
-
-function applyDamage(attacker, target, attackType = null, overrideDamage = null, overrideKb = null) {
-  const type = attackType || attacker.attackType;
-  const data = attackData(type === "projectile" ? "projectile" : type);
-  let damage = overrideDamage ?? (data.damage * attacker.atkMul / target.defMul);
-  let kb = overrideKb ?? data.kb;
-
-  if (target.guardTimer > 0 && facingProperForGuard(target, attacker)) {
-    damage *= 0.35;
-    kb *= 0.5;
-    target.hitstun = 6;
-    target.invuln = 6;
-    spawnImpact(target.x + target.w/2, target.y + 40, "#aee1ff", 8);
-    spawnGuardRing(target.x + target.w/2, target.y + 42, "#9fdcff");
-    cameraShake = Math.max(cameraShake, 3);
-  } else {
-    target.hitstun = (type === "special" || type === "burst") ? 18 : 11;
-    target.invuln = (type === "special" || type === "burst") ? 14 : 9;
-    spawnImpact(target.x + target.w/2, target.y + 36, "#ffffff", (type === "special" || type === "burst") ? 16 : 8);
+  function createFighter(characterKey, isPlayer){
+    const st = baseStatsFromCharacter(characterKey);
+    return {
+      characterKey,
+      name: st.name,
+      specialName: st.specialName,
+      burstName: st.burstName,
+      x: isPlayer ? 120 : canvas.width - 190,
+      y: groundY() - 120,
+      w: 64,
+      h: 120,
+      vx: 0,
+      vy: 0,
+      dir: isPlayer ? 1 : -1,
+      speed: st.speed,
+      jumpPower: st.jump,
+      hp: 100,
+      maxHp: 100,
+      super: 0,
+      maxSuper: 100,
+      awaken: 0,
+      awakened: false,
+      bossForm2: false,
+      atkMul: st.atk,
+      defMul: st.def,
+      superGain: st.superGain,
+      color: st.color,
+      accent: st.accent,
+      hair: st.hair,
+      aura: st.aura,
+      scarf: st.scarf,
+      silhouette: st.silhouette,
+      onGround: true,
+      dead: false,
+      state: "idle",
+      attackType: "",
+      attackTimer: 0,
+      attackCooldown: 0,
+      hitstun: 0,
+      invuln: 0,
+      guardTimer: 0,
+      hurtFlash: 0,
+      hasHitCurrentAttack: false,
+      isPlayer,
+      animPhase: Math.random() * Math.PI * 2,
+      runPhase: 0,
+      resultPose: "",
+      chargeBackFrames: 0
+    };
   }
 
-  target.hp = clamp(target.hp - damage, 0, target.maxHp);
-  target.hurtFlash = 8;
-  target.x += kb * (attacker.dir === 1 ? 1 : -1);
-  target.vx = kb * 0.18 * (attacker.dir === 1 ? 1 : -1);
-  if (type === "special" || type === "uppercut" || type === "flashKick" || type === "burst") target.vy = -4.7;
+  let player = createFighter(selectedCharacter, true);
+  let enemy = createFighter(pickEnemyCharacter(), false);
 
-  gainSuper(attacker, data.superGain || 0);
-  gainSuper(target, 4);
+  function fighterToPlain(f){ return { ...f }; }
 
-  attacker.hasHitCurrentAttack = true;
-  cameraShake = Math.max(cameraShake, type === "burst" ? 12 : type === "special" ? 10 : type === "groundBurst" ? 7 : 4);
+  function resetMusou(){
+    musou.active = false;
+    musou.score = 0;
+    musou.wins = 0;
+    musou.wave = 1;
+  }
 
-  if (attacker.isPlayer) {
+  function resetBattle(enemyCharacter = null){
+    fitCanvas();
+    player = createFighter(selectedCharacter, true);
+    enemy = createFighter(enemyCharacter || pickEnemyCharacter(), false);
+    combo = 0;
+    lastHitTime = 0;
+    cameraShake = 0;
+    particles = [];
+    guardRings = [];
+    projectiles = [];
+    hazards = [];
+    commandBuffer = [];
+    roundTimer = musou.active ? 60 : 99;
+    gameOver = false;
+    resultSaved = false;
+    transformLock = false;
+    cutinPlaying = false;
+    stageGimmickTimer = 0;
+
+    leftName.textContent = player.name;
+    rightName.textContent = enemy.name;
+    difficultyText.textContent = musou.active ? `MUSOU W${musou.wave}` : `${difficultySelect.value.toUpperCase()} / ${STAGES[stageSelect.value].label}`;
+    centerInfo.textContent = "READY";
+    comboText.textContent = "COMBO 0";
+    showMessage("READY", 700);
+  }
+
+  function resetInput(){
+    Object.keys(keys).forEach(k => keys[k] = false);
+    Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
+    Object.values(touchButtons).forEach(btn => btn.classList.remove("active"));
+  }
+
+  function stopGame(){
+    gameRunning = false;
+    cancelAnimationFrame(animationId);
+    canvas.style.display = "none";
+    hud.style.display = "none";
+    topButtons.style.display = "none";
+    resetInput();
+    updateRotateNotice();
+  }
+
+  async function playTransformOverlay(text, color){
+    transformText.textContent = text;
+    transformText.style.background = `linear-gradient(90deg,#fff,${color},#fff)`;
+    transformText.style.webkitBackgroundClip = "text";
+    transformText.style.backgroundClip = "text";
+    transformText.style.color = "transparent";
+    transformOverlay.classList.add("show");
+    await delay(700);
+    transformOverlay.classList.remove("show");
+  }
+
+  async function playVictoryCutin(fighter){
+    if (cutinPlaying) return;
+    cutinPlaying = true;
+    cutinName.textContent = fighter.name;
+    cutinArt.style.setProperty("--cutinColor", fighter.aura);
+    cutinOverlay.classList.add("show");
+    await delay(1100);
+    cutinOverlay.classList.remove("show");
+    cutinPlaying = false;
+  }
+
+  async function startCpuGame(){
+    resetMusou();
+    lastBattleMode = "cpu";
+    await enterFullscreenIfPossible();
+    resetBattle();
+    clearScreens();
+    canvas.style.display = "block";
+    hud.style.display = "block";
+    topButtons.style.display = "flex";
+    gameRunning = true;
+    lastTime = performance.now();
+    animationId = requestAnimationFrame(loop);
+    applyViewportSafeLayout();
+    updateRotateNotice();
+  }
+
+  async function startMusouGame(){
+    musou.active = true;
+    musou.score = 0;
+    musou.wins = 0;
+    musou.wave = 1;
+    lastBattleMode = "cpu";
+    await enterFullscreenIfPossible();
+    resetBattle();
+    clearScreens();
+    canvas.style.display = "block";
+    hud.style.display = "block";
+    topButtons.style.display = "flex";
+    gameRunning = true;
+    lastTime = performance.now();
+    animationId = requestAnimationFrame(loop);
+    applyViewportSafeLayout();
+    updateRotateNotice();
+    showMessage("MUSOU START", 1000);
+  }
+
+  async function rematchLastBattle(){
+    if (musou.active) return startMusouGame();
+    return startCpuGame();
+  }
+
+  function showResultScreen(title, sub){
+    stopGame();
+    resultTitle.textContent = title;
+    resultSub.textContent = sub;
+    clearScreens();
+    resultScreen.classList.add("show");
+  }
+
+  function recordCommand(dir){
     const now = performance.now();
-    combo = (now - lastHitTime < 1200) ? combo + 1 : 1;
-    lastHitTime = now;
-    comboText.textContent = "COMBO " + combo;
+    commandBuffer.push({ dir, time: now });
+    commandBuffer = commandBuffer.filter(v => now - v.time < 650);
   }
 
-  if (target.hp <= 0) {
-    target.dead = true;
-    finishMatch(attacker.isPlayer, "KO");
-  }
-}
-
-function applyStageDamage(target, damage, label, color) {
-  if (target.invuln > 0 || target.dead) return;
-  target.hp = clamp(target.hp - damage, 0, target.maxHp);
-  target.hurtFlash = 8;
-  target.hitstun = 7;
-  target.invuln = 10;
-  spawnImpact(target.x + target.w/2, target.y + 40, color, 10);
-  showMessage(label, 280);
-  if (target.hp <= 0) {
-    target.dead = true;
-    finishMatch(target !== player, "GIMMICK KO");
-  }
-}
-
-function resolveAttackHit(attacker, target) {
-  if (!attacker.attackType || attacker.hasHitCurrentAttack) return;
-  if (!attackActiveFrame(attacker.attackType, attacker.attackTimer)) return;
-  if (target.invuln > 0) return;
-  const atk = getAttackRect(attacker);
-  const body = getBodyRect(target);
-  if (rectsOverlap(atk, body)) applyDamage(attacker, target);
-}
-
-function resolveProjectileClash() {
-  for (let i = 0; i < projectiles.length; i++) {
-    const a = projectiles[i];
-    if (!a || a.life <= 0) continue;
-    for (let j = i + 1; j < projectiles.length; j++) {
-      const b = projectiles[j];
-      if (!b || b.life <= 0) continue;
-      if (a.owner === b.owner) continue;
-      const dx = a.x - b.x;
-      const dy = a.y - b.y;
-      const rr = (a.r * 0.5) + (b.r * 0.5);
-      if (dx * dx + dy * dy <= rr * rr) {
-        const cx = (a.x + b.x) * 0.5;
-        const cy = (a.y + b.y) * 0.5;
-        a.life = 0;
-        b.life = 0;
-        spawnClashEffect(cx, cy);
-        showMessage("CLASH", 180);
-      }
-    }
-  }
-}
-
-function resolveProjectiles() {
-  resolveProjectileClash();
-
-  projectiles.forEach(p => {
-    p.x += p.vx;
-    p.life--;
-
-    const target = p.owner === "player" ? enemy : player;
-    const pseudoAttacker = p.owner === "player" ? player : enemy;
-
-    const rect = { x:p.x - p.r/2, y:p.y - p.r/2, w:p.r, h:p.r };
-    const body = getBodyRect(target);
-
-    if (target.invuln <= 0 && rectsOverlap(rect, body)) {
-      if (target.guardTimer > 0 && facingProperForGuard(target, pseudoAttacker)) {
-        applyDamage(pseudoAttacker, target, "projectile", p.damage * 0.35, p.kb * 0.5);
-      } else {
-        applyDamage(pseudoAttacker, target, "projectile", p.damage, p.kb);
-      }
-      p.life = 0;
-    }
-
-    if (p.x < -40 || p.x > canvas.width + 40) p.life = 0;
-  });
-
-  projectiles = projectiles.filter(p => p.life > 0);
-}
-
-function updateGuardRings() {
-  guardRings.forEach(g => {
-    g.r += 2.8;
-    g.alpha *= 0.90;
-  });
-  guardRings = guardRings.filter(g => g.alpha > 0.04 && g.r < g.maxR);
-}
-
-/* =========================
-   Stage gimmicks
-========================= */
-let gimmickTimer = 0;
-
-function spawnStageGimmick() {
-  const gimmick = STAGES[stageSelect.value].gimmick;
-  if (gimmick === "lightning") {
-    const x = 80 + Math.random() * (canvas.width - 160);
-    hazards.push({ type:"lightning", x, y:0, w:28, h:groundY(), life:34 });
-  } else if (gimmick === "rock") {
-    const x = 40 + Math.random() * (canvas.width - 80);
-    hazards.push({ type:"rock", x, y:-30, w:32, h:32, vy:5.5, life:150 });
-  } else if (gimmick === "spirit") {
-    hazards.push({ type:"spirit", x:canvas.width/2, y:groundY()-60, w:220, h:90, life:50 });
-  }
-}
-
-function updateHazards() {
-  const gimmick = STAGES[stageSelect.value].gimmick;
-  gimmickTimer++;
-  const interval = gimmick === "lightning" ? 320 : gimmick === "rock" ? 280 : gimmick === "spirit" ? 420 : 999999;
-  if (gimmick !== "gravity" && gimmickTimer >= interval) {
-    gimmickTimer = 0;
-    spawnStageGimmick();
+  function commandMatched(sequence){
+    if (commandBuffer.length < sequence.length) return false;
+    const arr = commandBuffer.map(v => v.dir);
+    return arr.slice(-sequence.length).join(",") === sequence.join(",");
   }
 
-  hazards.forEach(h => {
-    if (h.type === "rock") {
-      h.y += h.vy;
-      h.vy += 0.18;
-      if (h.y >= groundY() - h.h) {
-        h.y = groundY() - h.h;
-        h.life = 0;
-        spawnImpact(h.x + h.w/2, h.y + h.h/2, "#d8b68a", 14);
-      }
-      const rect = { x:h.x, y:h.y, w:h.w, h:h.h };
-      if (rectsOverlap(rect, getBodyRect(player))) {
-        applyStageDamage(player, 8, "ROCK HIT", "#d9c2a0");
-        h.life = 0;
-      }
-      if (rectsOverlap(rect, getBodyRect(enemy))) {
-        applyStageDamage(enemy, 8, "ROCK HIT", "#d9c2a0");
-        h.life = 0;
-      }
-    }
-
-    if (h.type === "lightning") {
-      h.life--;
-      const active = h.life > 8 && h.life < 28;
-      if (active) {
-        const rect = { x:h.x, y:0, w:h.w, h:groundY() };
-        if (rectsOverlap(rect, getBodyRect(player))) applyStageDamage(player, 5, "THUNDER", "#baf4ff");
-        if (rectsOverlap(rect, getBodyRect(enemy))) applyStageDamage(enemy, 5, "THUNDER", "#baf4ff");
-      }
-    }
-
-    if (h.type === "spirit") {
-      h.life--;
-      const rect = { x:h.x - h.w/2, y:h.y - h.h/2, w:h.w, h:h.h };
-      if (rectsOverlap(rect, getBodyRect(player))) player.super = clamp(player.super + 0.7, 0, 100);
-      if (rectsOverlap(rect, getBodyRect(enemy))) enemy.super = clamp(enemy.super + 0.7, 0, 100);
-    }
-  });
-
-  hazards = hazards.filter(h => h.life > 0);
-}
-
-function moonGravityModifier() {
-  return STAGES[stageSelect.value].gimmick === "gravity" ? 0.72 : 1;
-}
-
-/* =========================
-   Command resolution
-========================= */
-function tryProjectileCommand(fighter) {
-  const target = fighter === player ? enemy : player;
-  spawnProjectile(fighter, target);
-  fighter.attackType = "projectile";
-  fighter.attackTimer = 14;
-  fighter.attackCooldown = 18;
-  fighter.state = "attack";
-  fighter.hasHitCurrentAttack = true;
-  return true;
-}
-
-function updateCommandInputsForFighter(fighter, pressedFrame) {
-  const justPunch = !!pressedFrame.punch;
-  const justKick = !!pressedFrame.kick;
-  const justSpecial = !!pressedFrame.special;
-  const key = fighter.characterKey;
-
-  if (justPunch) {
-    if (fighter.isPlayer && commandMatched(["D","R"])) {
-      tryProjectileCommand(fighter);
-      commandBuffer = [];
-      return;
-    }
-    if (fighter.isPlayer && commandMatched(["R","R"])) {
-      if (tryStartAttack(fighter, "dashPunch")) { commandBuffer = []; return; }
-    }
-    if (fighter.isPlayer && commandMatched(["D","D"])) {
-      if (tryStartAttack(fighter, "groundBurst")) { commandBuffer = []; return; }
-    }
-    if (fighter.isPlayer && commandMatched(["L","R"])) {
-      if (tryStartAttack(fighter, "shadowStep")) { commandBuffer = []; return; }
-    }
-    tryStartAttack(fighter, "punch");
+  function attackData(type){
+    if (type === "punch") return { timer:11, cooldown:12, damage:6, kb:10, superGain:8 };
+    if (type === "kick") return { timer:16, cooldown:18, damage:10, kb:15, superGain:11 };
+    if (type === "dashPunch") return { timer:14, cooldown:18, damage:12, kb:18, superGain:14 };
+    if (type === "uppercut") return { timer:18, cooldown:24, damage:14, kb:18, superGain:15 };
+    if (type === "chargeKick") return { timer:18, cooldown:22, damage:13, kb:20, superGain:14 };
+    if (type === "groundBurst") return { timer:18, cooldown:24, damage:13, kb:16, superGain:14 };
+    if (type === "flashKick") return { timer:18, cooldown:22, damage:15, kb:22, superGain:15 };
+    if (type === "shadowStep") return { timer:16, cooldown:20, damage:12, kb:19, superGain:13 };
+    if (type === "special") return { timer:28, cooldown:36, damage:18, kb:26, superGain:0, cost:50 };
+    if (type === "burst") return { timer:36, cooldown:46, damage:28, kb:34, superGain:0, cost:100 };
+    if (type === "projectile") return { timer:18, cooldown:20, damage:11, kb:18, superGain:12 };
+    return { timer:0, cooldown:0, damage:0, kb:0, superGain:0 };
   }
 
-  if (justKick) {
-    if (fighter.isPlayer && commandMatched(["R","R"])) {
-      if (tryStartAttack(fighter, key === "blade" || key === "phoenix" || key === "shadow" ? "flashKick" : "dashPunch")) {
-        commandBuffer = [];
-        return;
-      }
-    }
-    if (fighter.isPlayer && commandMatched(["R","D"])) {
-      if (tryStartAttack(fighter, "uppercut")) { commandBuffer = []; return; }
-    }
-    if (fighter.isPlayer && fighter.chargeBackFrames >= 22 && commandMatched(["R"])) {
-      if (tryStartAttack(fighter, "chargeKick")) {
-        fighter.chargeBackFrames = 0;
-        commandBuffer = [];
-        return;
-      }
-    }
-    tryStartAttack(fighter, "kick");
+  function getAttackRect(f){
+    let range = 0, height = 0, yOffset = 0;
+    if (f.attackType === "punch") { range = 32; height = 22; yOffset = 38; }
+    if (f.attackType === "kick") { range = 52; height = 30; yOffset = 66; }
+    if (f.attackType === "dashPunch") { range = 74; height = 28; yOffset = 36; }
+    if (f.attackType === "uppercut") { range = 40; height = 56; yOffset = 8; }
+    if (f.attackType === "chargeKick") { range = 86; height = 34; yOffset = 62; }
+    if (f.attackType === "groundBurst") { range = 82; height = 44; yOffset = 58; }
+    if (f.attackType === "flashKick") { range = 88; height = 38; yOffset = 52; }
+    if (f.attackType === "shadowStep") { range = 92; height = 32; yOffset = 34; }
+    if (f.attackType === "special") { range = 112; height = 42; yOffset = 22; }
+    if (f.attackType === "burst") { range = 138; height = 54; yOffset = 16; }
+    if (f.dir === 1) return { x:f.x + f.w - 4, y:f.y + yOffset, w:range, h:height };
+    return { x:f.x - range + 4, y:f.y + yOffset, w:range, h:height };
   }
 
-  if (justSpecial) {
-    if (fighter.super >= 100) {
-      tryStartAttack(fighter, "burst");
-      return;
-    }
-    tryStartAttack(fighter, "special");
-  }
-}
-
-/* =========================
-   Fighter update
-========================= */
-function animateCommon(f, dt) {
-  f.animPhase += dt * 0.006;
-  const moving = Math.abs(f.vx) > 0.5;
-  if (moving && f.onGround) f.runPhase += dt * 0.018;
-}
-
-function updateFighterByInput(f, input, dt) {
-  if (!input) input = {};
-  if (f.dead) return;
-  const opponent = f === player ? enemy : player;
-  facingUpdate(f, opponent);
-  animateCommon(f, dt);
-  updateAwakenAsync(f);
-
-  if (f.invuln > 0) f.invuln--;
-  if (f.hitstun > 0) f.hitstun--;
-  if (f.guardTimer > 0) f.guardTimer--;
-  if (f.attackCooldown > 0) f.attackCooldown--;
-  if (f.hurtFlash > 0) f.hurtFlash--;
-
-  if (input.left && !input.right && f.dir === -1) f.chargeBackFrames = Math.min(60, f.chargeBackFrames + 1);
-  else if (!input.left) f.chargeBackFrames = Math.max(0, f.chargeBackFrames - 1);
-
-  if (f.attackTimer > 0) {
-    f.attackTimer--;
-    if (f.attackType === "dashPunch") f.vx = 5.2 * f.dir;
-    if (f.attackType === "chargeKick") f.vx = 4.4 * f.dir;
-    if (f.attackType === "flashKick") f.vx = 4.8 * f.dir;
-    if (f.attackType === "shadowStep") f.vx = 5.4 * f.dir;
-    if (f.attackTimer === 0) {
-      f.attackType = "";
-      f.state = "idle";
-      f.hasHitCurrentAttack = false;
-    }
+  function attackActiveFrame(type, timer){
+    if (type === "punch") return timer >= 5 && timer <= 7;
+    if (type === "kick") return timer >= 8 && timer <= 12;
+    if (type === "dashPunch") return timer >= 6 && timer <= 11;
+    if (type === "uppercut") return timer >= 5 && timer <= 11;
+    if (type === "chargeKick") return timer >= 7 && timer <= 12;
+    if (type === "groundBurst") return timer >= 7 && timer <= 12;
+    if (type === "flashKick") return timer >= 6 && timer <= 12;
+    if (type === "shadowStep") return timer >= 5 && timer <= 10;
+    if (type === "special") return timer >= 10 && timer <= 20;
+    if (type === "burst") return timer >= 12 && timer <= 28;
+    return false;
   }
 
-  const spd = f.speed + (f.awakened ? 0.35 : 0) + (f.bossForm2 ? 0.25 : 0);
-  const grav = gravity * moonGravityModifier();
-
-  if (f.hitstun <= 0 && f.attackTimer <= 0 && !transformLock) {
-    if (input.left && !input.right) f.vx = -spd;
-    else if (input.right && !input.left) f.vx = spd;
-    else f.vx *= 0.72;
-
-    if (input.jump && f.onGround) {
-      f.vy = -(f.jumpPower + (f.awakened ? 0.5 : 0)) * moonGravityModifier();
-      f.onGround = false;
-    }
-
-    updateCommandInputsForFighter(f, {
-      punch:!!input.punch,
-      kick:!!input.kick,
-      special:!!input.special
-    });
-  } else if (f.hitstun > 0) {
-    f.vx *= 0.9;
-  }
-
-  f.vy += grav;
-  f.x += f.vx;
-  f.y += f.vy;
-
-  if (f.y >= groundY() - f.h) {
-    f.y = groundY() - f.h;
-    f.vy = 0;
-    f.onGround = true;
-  } else {
-    f.onGround = false;
-  }
-
-  f.x = clamp(f.x, 16, canvas.width - f.w - 16);
-}
-
-function updatePlayerOffline(dt) {
-  updateFighterByInput(player, {
-    left:keys.left,
-    right:keys.right,
-    jump:keys.jump,
-    punch:pressedThisFrame.punch,
-    kick:pressedThisFrame.kick,
-    special:pressedThisFrame.special
-  }, dt);
-}
-
-function aiWantsGuard() {
-  const d = distX(enemy, player);
-  return d < 104 && Math.random() < difficultyConfig().defend;
-}
-
-function aiTryCommands() {
-  const d = distX(enemy, player);
-  const cfg = difficultyConfig();
-  const react = cfg.react;
-  const aggro = cfg.aggro;
-  const key = enemy.characterKey;
-
-  if (enemy.super >= 100 && d < 160 && Math.random() < 0.010 * react * aggro) return tryStartAttack(enemy, "burst");
-  if (d > 110 && d < 240 && Math.random() < 0.018 * react * aggro) { tryProjectileCommand(enemy); return true; }
-  if (d < 82 && Math.random() < 0.028 * react * aggro) return tryStartAttack(enemy, "punch");
-  if (d < 110 && Math.random() < 0.025 * react * aggro) return tryStartAttack(enemy, "kick");
-  if (d > 90 && d < 170 && Math.random() < 0.022 * react * aggro) return tryStartAttack(enemy, "dashPunch");
-  if ((key === "blade" || key === "phoenix" || key === "shadow") && d > 90 && d < 180 && Math.random() < 0.020 * react * aggro) return tryStartAttack(enemy, "flashKick");
-  if ((key === "titan" || key === "oni" || key === "phoenix" || key === "frost") && d < 100 && Math.random() < 0.017 * react * aggro) return tryStartAttack(enemy, "groundBurst");
-  if (d < 96 && Math.random() < 0.016 * react * aggro) return tryStartAttack(enemy, "uppercut");
-  if ((key === "shadow" || key === "blade") && d > 70 && d < 150 && Math.random() < 0.016 * react * aggro) return tryStartAttack(enemy, "shadowStep");
-  if ((key === "titan" || key === "oni") && d > 60 && d < 160 && Math.random() < 0.016 * react * aggro) return tryStartAttack(enemy, "chargeKick");
-  if (d < 140 && enemy.super >= 50 && Math.random() < 0.014 * react * aggro) return tryStartAttack(enemy, "special");
-  return false;
-}
-
-function updateEnemyAI(dt) {
-  if (enemy.dead) return;
-  facingUpdate(enemy, player);
-  animateCommon(enemy, dt);
-  updateAwakenAsync(enemy);
-
-  if (enemy.invuln > 0) enemy.invuln--;
-  if (enemy.hitstun > 0) enemy.hitstun--;
-  if (enemy.guardTimer > 0) enemy.guardTimer--;
-  if (enemy.attackCooldown > 0) enemy.attackCooldown--;
-  if (enemy.hurtFlash > 0) enemy.hurtFlash--;
-
-  if (enemy.attackTimer > 0) {
-    enemy.attackTimer--;
-    if (enemy.attackType === "dashPunch") enemy.vx = 5.5 * enemy.dir;
-    if (enemy.attackType === "chargeKick") enemy.vx = 4.6 * enemy.dir;
-    if (enemy.attackType === "flashKick") enemy.vx = 4.9 * enemy.dir;
-    if (enemy.attackType === "shadowStep") enemy.vx = 5.7 * enemy.dir;
-    if (enemy.attackTimer === 0) {
-      enemy.attackType = "";
-      enemy.state = "idle";
-      enemy.hasHitCurrentAttack = false;
-    }
-  }
-
-  if (enemy.hitstun <= 0 && enemy.attackTimer <= 0 && !transformLock) {
-    const d = distX(enemy, player);
-    const cfg = difficultyConfig();
-    enemy.guardTimer = aiWantsGuard() ? 2 : 0;
-    const moveSpd = cfg.speed + (enemy.awakened ? 0.35 : 0) + (enemy.bossForm2 ? 0.25 : 0);
-
-    if (d > 150) enemy.vx = enemy.dir === 1 ? moveSpd : -moveSpd;
-    else if (d < 74) enemy.vx = enemy.dir === 1 ? -moveSpd * 0.9 : moveSpd * 0.9;
-    else enemy.vx *= 0.6;
-
-    if (enemy.onGround && Math.random() < 0.004 * cfg.aggro && d > 110 && d < 240) {
-      enemy.vy = -(enemy.jumpPower * 0.98 + (enemy.awakened ? 0.4 : 0)) * moonGravityModifier();
-      enemy.onGround = false;
-    }
-
-    aiTryCommands();
-  } else if (enemy.hitstun > 0) {
-    enemy.vx *= 0.9;
-  }
-
-  enemy.vy += gravity * moonGravityModifier();
-  enemy.x += enemy.vx;
-  enemy.y += enemy.vy;
-
-  if (enemy.y >= groundY() - enemy.h) {
-    enemy.y = groundY() - enemy.h;
-    enemy.vy = 0;
-    enemy.onGround = true;
-  } else enemy.onGround = false;
-
-  enemy.x = clamp(enemy.x, 16, canvas.width - enemy.w - 16);
-}
-
-function resolvePush() {
-  const a = getBodyRect(player);
-  const b = getBodyRect(enemy);
-  if (!rectsOverlap(a, b)) return;
-  const centerA = a.x + a.w / 2;
-  const centerB = b.x + b.w / 2;
-  const overlap = (a.w / 2 + b.w / 2) - Math.abs(centerA - centerB);
-  if (overlap > 0) {
-    const dir = centerA < centerB ? -1 : 1;
-    player.x += dir * overlap / 2;
-    enemy.x -= dir * overlap / 2;
-    player.x = clamp(player.x, 16, canvas.width - player.w - 16);
-    enemy.x = clamp(enemy.x, 16, canvas.width - enemy.w - 16);
-  }
-}
-
-function updateParticles() {
-  particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.18;
-    p.life -= 1;
-  });
-  particles = particles.filter(p => p.life > 0);
-}
-
-function getOnlineLocalInput() {
-  return {
-    left:!!keys.left,
-    right:!!keys.right,
-    jump:!!keys.jump,
-    punch:!!pressedThisFrame.punch,
-    kick:!!pressedThisFrame.kick,
-    special:!!pressedThisFrame.special,
-    ts:Date.now()
-  };
-}
-function consumePressedThisFrame() { Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false); }
-
-/* =========================
-   Online room
-========================= */
-let onlineInfo = { roomCode:"", role:"", roomRef:null, roomUnsub:null, stateUnsub:null, inputUnsub:null, rematchUnsub:null, remoteInput:null };
-
-function cleanupRoomListeners() {
-  if (onlineInfo.roomUnsub) onlineInfo.roomUnsub();
-  if (onlineInfo.stateUnsub) onlineInfo.stateUnsub();
-  if (onlineInfo.inputUnsub) onlineInfo.inputUnsub();
-  if (onlineInfo.rematchUnsub) onlineInfo.rematchUnsub();
-  onlineInfo.roomUnsub = null;
-  onlineInfo.stateUnsub = null;
-  onlineInfo.inputUnsub = null;
-  onlineInfo.rematchUnsub = null;
-}
-async function pushSharedOnlineState() {
-  if (!onlineInfo.roomCode || gameMode !== "online-host") return;
-  const stateRef = ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/state`);
-  try {
-    await update(stateRef, {
-      player: fighterToPlain(player),
-      enemy: fighterToPlain(enemy),
-      projectiles,
-      roundTimer,
-      combo,
-      gameOver,
-      resultSaved,
-      centerInfo: centerInfo.textContent,
-      updatedAt: Date.now()
-    });
-  } catch (e) {
-    console.error("push shared state failed", e);
-  }
-}
-async function pushOnlineInput() {
-  if (!onlineInfo.roomCode || !(gameMode === "online-host" || gameMode === "online-guest")) return;
-  const slot = onlineInfo.role === "host" ? "host" : "guest";
-  const inputRef = ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/players/${slot}/input`);
-  try {
-    await set(inputRef, getOnlineLocalInput());
-  } catch (e) {
-    console.error("push input failed", e);
-  }
-}
-async function createOnlineRoom() {
-  if (!firebaseReady) {
-    alert("Firebase認証がまだ完了していません。");
-    return;
-  }
-  try {
-    const roomCode = randomRoomCode();
-    const roomRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}`);
-    onlineInfo.roomCode = roomCode;
-    onlineInfo.role = "host";
-    onlineInfo.roomRef = roomRef;
-    onlineResultRoomCode = roomCode;
-    await set(roomRef, {
-      createdAt: Date.now(),
-      status: "lobby",
-      stage: stageSelect.value,
-      hostCharacter: selectedCharacter,
-      guestCharacter: "",
-      hostUid: firebaseUserId,
-      guestUid: "",
-      rematch: { host:false, guest:false },
-      spectators: {},
-      players: {
-        host: { uid: firebaseUserId, connected: true, ready: false, character: selectedCharacter, input: { left:false,right:false,jump:false,punch:false,kick:false,special:false,ts:Date.now() } },
-        guest: { uid: "", connected: false, ready: false, character: "", input: { left:false,right:false,jump:false,punch:false,kick:false,special:false,ts:Date.now() } }
-      }
-    });
-    try { onDisconnect(ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/players/host/connected`)).set(false); } catch {}
-    watchRoom(roomCode);
-    clearScreens();
-    lobbyScreen.classList.add("show");
-    roomCodeLabel.textContent = roomCode;
-    lobbyStatus.textContent = "ルーム作成完了";
-  } catch (e) {
-    console.error("create room failed", e);
-    alert("ルーム作成失敗。F12→Console の赤文字を確認してください。");
-  }
-}
-async function joinOnlineRoom(codeRaw) {
-  if (!firebaseReady) {
-    alert("Firebase認証がまだ完了していません。");
-    return;
-  }
-  try {
-    const roomCode = sanitizeRoomCode(codeRaw);
-    roomCodeInput.value = roomCode;
-    if (roomCode.length !== 6) {
-      alert("6文字のルームコードを入力してください。");
-      return;
-    }
-    const roomRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}`);
-    const snap = await get(roomRef);
-    if (!snap.exists()) {
-      alert("ルームが見つかりません。");
-      return;
-    }
-    const room = snap.val();
-    onlineInfo.roomCode = roomCode;
-    onlineInfo.roomRef = roomRef;
-    onlineResultRoomCode = roomCode;
-    if (!room.players?.guest?.connected) {
-      await update(roomRef, {
-        guestUid: firebaseUserId,
-        guestCharacter: selectedCharacter,
-        "players/guest/uid": firebaseUserId,
-        "players/guest/connected": true,
-        "players/guest/ready": false,
-        "players/guest/character": selectedCharacter
+  function spawnImpact(x, y, color, count=8){
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x, y,
+        vx:(Math.random()-0.5)*6,
+        vy:(Math.random()-0.5)*6 - 1,
+        life:18 + Math.random()*12,
+        size:2 + Math.random()*3,
+        color
       });
-      try { onDisconnect(ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/players/guest/connected`)).set(false); } catch {}
-      onlineInfo.role = "guest";
-    } else {
-      await update(ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/spectators/${firebaseUserId}`), { joinedAt: Date.now() });
-      try { onDisconnect(ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/spectators/${firebaseUserId}`)).remove(); } catch {}
-      onlineInfo.role = "spectator";
     }
-    watchRoom(roomCode);
-    clearScreens();
-    lobbyScreen.classList.add("show");
-    roomCodeLabel.textContent = roomCode;
-  } catch (e) {
-    console.error("join room failed", e);
-    alert("参加失敗。F12→Console の赤文字を確認してください。");
   }
-}
-function watchRoom(roomCode) {
-  cleanupRoomListeners();
-  const roomRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}`);
-  const stateRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/state`);
-  const guestInputRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/players/guest/input`);
-  const rematchRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/rematch`);
 
-  const roomCb = onValue(roomRef, async (snap) => {
-    const room = snap.val();
-    if (!room) {
-      if (gameMode.startsWith("online") || gameMode === "spectator") {
-        showMessage("ROOM CLOSED", 1200);
-        await leaveOnlineRoom(false);
-        showMenu();
-      }
-      return;
-    }
-    const spectatorsCount = room.spectators ? Object.keys(room.spectators).length : 0;
-    const hostConnected = !!room.players?.host?.connected;
-    const guestConnected = !!room.players?.guest?.connected;
-    const hostReady = !!room.players?.host?.ready;
-    const guestReady = !!room.players?.guest?.ready;
-
-    roomCodeLabel.textContent = roomCode;
-    lobbyPlayers.textContent = `ホスト: ${hostConnected ? "接続" : "未接続"} / ゲスト: ${guestConnected ? "接続" : "未接続"} / 観戦: ${spectatorsCount}人`;
-
-    if (!guestConnected) lobbyStatus.textContent = "接続待ち...";
-    else if (!hostReady || !guestReady) lobbyStatus.textContent = "両プレイヤーの開始待ち...";
-    else lobbyStatus.textContent = "開始準備完了";
-
-    lobbyActionRow.style.display = onlineInfo.role === "spectator" ? "none" : "flex";
-
-    if (room.status === "playing" && !onlineGameStarted) {
-      stageSelect.value = room.stage || stageSelect.value;
-      const remoteCharacter = onlineInfo.role === "host" ? (room.guestCharacter || "blade") : (room.hostCharacter || "ryu");
-      await startOnlineGameAsRole(onlineInfo.role, remoteCharacter);
-
-      if (onlineInfo.role === "host") {
-        leftName.textContent = CHARACTERS[room.hostCharacter || selectedCharacter].name;
-        rightName.textContent = CHARACTERS[room.guestCharacter || "blade"].name;
-      } else {
-        leftName.textContent = CHARACTERS[room.hostCharacter || "ryu"].name;
-        rightName.textContent = CHARACTERS[room.guestCharacter || "blade"].name;
-      }
-    }
-  });
-
-  const stateCb = onValue(stateRef, (snap) => {
-    const state = snap.val();
-    if ((gameMode === "online-guest" || gameMode === "spectator") && state) applyRemoteState(state);
-  });
-
-  const inputCb = onValue(guestInputRef, (snap) => {
-    if (gameMode === "online-host") onlineInfo.remoteInput = snap.val() || {};
-  });
-
-  const rematchCb = onValue(rematchRef, async (snap) => {
-    const val = snap.val() || { host:false, guest:false };
-    if (val.host && val.guest && onlineInfo.role === "host") {
-      const roomSnap = await get(roomRef);
-      const room = roomSnap.val();
-      if (!room) return;
-
-      await update(roomRef, {
-        status: "playing",
-        rematch: { host:false, guest:false },
-        "players/host/ready": false,
-        "players/guest/ready": false,
-        stage: stageSelect.value,
-        hostCharacter: room.players?.host?.character || selectedCharacter,
-        guestCharacter: room.players?.guest?.character || (room.guestCharacter || "blade")
+  function spawnAuraBurst(x, y, color){
+    for (let i = 0; i < 18; i++) {
+      particles.push({
+        x, y,
+        vx:(Math.random()-0.5)*9,
+        vy:(Math.random()-0.5)*7 - 1,
+        life:22 + Math.random()*12,
+        size:3 + Math.random()*4,
+        color
       });
-
-      const hostChar = room.players?.host?.character || selectedCharacter;
-      const guestChar = room.players?.guest?.character || (room.guestCharacter || "blade");
-      player = createFighter(hostChar, true);
-      enemy = createFighter(guestChar, false);
-      projectiles = [];
-      guardRings = [];
-      hazards = [];
-
-      await update(ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/state`), {
-        player: fighterToPlain(player),
-        enemy: fighterToPlain(enemy),
-        projectiles: [],
-        roundTimer: 99,
-        combo: 0,
-        gameOver: false,
-        resultSaved: false,
-        centerInfo: "FIGHT",
-        updatedAt: Date.now()
-      });
-
-      pendingResult = null;
-      resultScreen.classList.remove("show");
-      clearScreens();
-      canvas.style.display = "block";
-      hud.style.display = "block";
-      topButtons.style.display = "flex";
-      gameRunning = true;
-      onlineGameStarted = true;
-      lastTime = performance.now();
-      animationId = requestAnimationFrame(loop);
-      updateRotateNotice();
-      showMessage("REMATCH", 900);
     }
-  });
+  }
 
-  onlineInfo.roomUnsub = () => off(roomRef, "value", roomCb);
-  onlineInfo.stateUnsub = () => off(stateRef, "value", stateCb);
-  onlineInfo.inputUnsub = () => off(guestInputRef, "value", inputCb);
-  onlineInfo.rematchUnsub = () => off(rematchRef, "value", rematchCb);
-}
-async function markReadyAndStartIfPossible() {
-  if (!onlineInfo.roomCode || !onlineInfo.role || onlineInfo.role === "spectator") return;
-  const slot = onlineInfo.role === "host" ? "host" : "guest";
-  const roomRef = ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}`);
-  await update(roomRef, { [`players/${slot}/ready`]: true });
-  const snap = await get(roomRef);
-  const room = snap.val();
-  if (!room) return;
-  const canStart = room.players?.host?.connected && room.players?.guest?.connected &&
-                   room.players?.host?.ready && room.players?.guest?.ready;
-  if (canStart && onlineInfo.role === "host") {
-    await update(roomRef, {
-      status: "playing",
-      stage: stageSelect.value,
-      hostCharacter: room.players.host.character || selectedCharacter,
-      guestCharacter: room.players.guest.character || "blade",
-      rematch: { host:false, guest:false }
+  function spawnGuardRing(x, y, color="#aee1ff"){
+    guardRings.push({ x, y, r:20, maxR:48, alpha:0.9, color });
+  }
+
+  function spawnClashEffect(x, y){
+    for (let i = 0; i < 20; i++) {
+      particles.push({
+        x, y,
+        vx:(Math.random()-0.5)*10,
+        vy:(Math.random()-0.5)*10,
+        life:18 + Math.random()*12,
+        size:2 + Math.random()*3,
+        color: i % 2 ? "#ffd59e" : "#cce7ff"
+      });
+    }
+    guardRings.push({ x, y, r:18, maxR:56, alpha:0.85, color:"#ffffff" });
+    cameraShake = Math.max(cameraShake, 6);
+  }
+
+  function getProjectileSpec(f){
+    const key = f.characterKey;
+    if (key === "ryu") return { name:"波動弾", colorKey:"fire", speed:7.2, size:16 };
+    if (key === "blade") return { name:"ブレードウェーブ", colorKey:"wind", speed:7.8, size:14 };
+    if (key === "titan") return { name:"岩砕弾", colorKey:"gold", speed:6.4, size:18 };
+    if (key === "shadow") return { name:"ナイトショット", colorKey:"dark", speed:7.5, size:15 };
+    if (key === "valkyrie") return { name:"ランサーショット", colorKey:"wind", speed:7.1, size:15 };
+    if (key === "phoenix") return { name:"フレイムショット", colorKey:"fire", speed:7.7, size:17 };
+    if (key === "frost") return { name:"アイスショット", colorKey:"ice", speed:7.0, size:16 };
+    return { name:"鬼炎弾", colorKey:"dark", speed:6.8, size:18 };
+  }
+
+  function spawnProjectile(owner, target){
+    const spec = getProjectileSpec(owner);
+    const damage = attackData("projectile").damage * owner.atkMul / target.defMul;
+    const bodyX = owner.dir === 1 ? owner.x + owner.w + 6 : owner.x - 6;
+    const bodyY = owner.y + 44;
+
+    projectiles.push({
+      id: Math.random().toString(36).slice(2),
+      owner: owner.isPlayer ? "player" : "enemy",
+      x: bodyX,
+      y: bodyY,
+      vx: spec.speed * owner.dir,
+      r: spec.size,
+      colorKey: spec.colorKey,
+      damage,
+      kb: attackData("projectile").kb,
+      life: 130
     });
 
-    player = createFighter(room.players.host.character || selectedCharacter, true);
-    enemy = createFighter(room.players.guest.character || "blade", false);
+    spawnAuraBurst(bodyX, bodyY, owner.aura);
+    if (owner.isPlayer) showMessage(spec.name, 240);
+  }
+
+  function tryStartAttack(f, type){
+    if (f.dead || f.hitstun > 0 || transformLock) return false;
+    if (f.attackTimer > 0 || f.attackCooldown > 0) return false;
+    const data = attackData(type);
+    if ((type === "special" || type === "burst") && f.super < data.cost) return false;
+
+    if (type === "special" || type === "burst") {
+      f.super = clamp(f.super - data.cost, 0, f.maxSuper);
+      spawnAuraBurst(f.x + f.w/2, f.y + 50, f.aura);
+    }
+
+    f.attackType = type;
+    f.attackTimer = data.timer;
+    f.attackCooldown = data.cooldown;
+    f.state = "attack";
+    f.hasHitCurrentAttack = false;
+
+    if (type === "dashPunch") f.vx = 7.0 * f.dir;
+    if (type === "uppercut") f.vy = -7.0;
+    if (type === "chargeKick") f.vx = 6.2 * f.dir;
+    if (type === "flashKick") f.vx = 6.8 * f.dir;
+    if (type === "shadowStep") f.vx = 8.2 * f.dir;
+
+    if (type === "groundBurst") spawnAuraBurst(f.x + f.w/2, f.y + f.h - 10, "#ffd166");
+    if (type === "flashKick") spawnAuraBurst(f.x + f.w/2, f.y + 64, "#8ed0ff");
+    if (type === "shadowStep") spawnAuraBurst(f.x + f.w/2, f.y + 44, "#b89cff");
+    if (type === "burst") {
+      spawnAuraBurst(f.x + f.w/2, f.y + 40, "#ffffff");
+      spawnAuraBurst(f.x + f.w/2, f.y + 40, f.aura);
+    }
+
+    if (f.isPlayer) {
+      if (type === "special") showMessage(f.specialName, 450);
+      else if (type === "burst") showMessage(f.burstName, 650);
+      else if (type === "uppercut") showMessage("UPPERCUT", 240);
+      else if (type === "chargeKick") showMessage("CHARGE THRUST", 240);
+      else if (type === "dashPunch") showMessage("DASH PUNCH", 240);
+      else if (type === "groundBurst") showMessage("GROUND BURST", 240);
+      else if (type === "flashKick") showMessage("FLASH KICK", 240);
+      else if (type === "shadowStep") showMessage("SHADOW STEP", 240);
+    }
+    return true;
+  }
+
+  function gainSuper(f, value){
+    f.super = clamp(f.super + value * f.superGain, 0, f.maxSuper);
+  }
+
+  function facingProperForGuard(target, attacker){
+    return target.dir === -attacker.dir;
+  }
+
+  async function triggerAwaken(f){
+    if (f.awakened) return;
+    f.awakened = true;
+    f.speed += 0.45;
+    f.atkMul *= 1.12;
+    transformLock = true;
+    await playTransformOverlay(f.isPlayer ? "AWAKENING" : "ENEMY AWAKEN", f.aura);
+    spawnAuraBurst(f.x + f.w/2, f.y + 40, f.aura);
+    transformLock = false;
+  }
+
+  async function triggerBossForm2(f){
+    if (f.bossForm2) return;
+    f.bossForm2 = true;
+    f.maxHp += 35;
+    f.hp = Math.min(f.maxHp, f.hp + 22);
+    f.speed += 0.6;
+    f.atkMul *= 1.18;
+    f.defMul *= 1.08;
+    f.super = clamp(f.super + 40, 0, 100);
+    f.aura = "#ffea7a";
+    transformLock = true;
+    await playTransformOverlay("BOSS FORM II", "#ffdb7f");
+    spawnAuraBurst(f.x + f.w/2, f.y + 40, "#fff0a8");
+    transformLock = false;
+  }
+
+  function updateAwakenAsync(f){
+    const hpRate = f.hp / f.maxHp;
+    f.awaken = clamp((1 - hpRate - 0.65) / 0.35, 0, 1);
+    if (!f.awakened && hpRate <= 0.35) triggerAwaken(f);
+    if (!f.isPlayer && difficultySelect.value === "boss" && !f.bossForm2 && hpRate <= 0.40) triggerBossForm2(f);
+  }
+
+  async function advanceMusouRound(){
+    musou.wins += 1;
+    const gain = Math.floor(400 + musou.wins * 120 + player.hp * 8);
+    musou.score += gain;
+    musou.wave += 1;
+    showMessage(`WAVE ${musou.wave} +${gain}`, 1000);
+
+    enemy = createFighter(pickEnemyCharacter(), false);
+    enemy.maxHp = Math.min(150, 100 + musou.wins * 7);
+    enemy.hp = enemy.maxHp;
+    enemy.atkMul *= 1 + musou.wins * 0.035;
+    enemy.defMul *= 1 + musou.wins * 0.02;
+
+    player.x = 120;
+    player.y = groundY() - player.h;
+    player.vx = 0;
+    player.vy = 0;
+    player.dead = false;
+    player.state = "idle";
+    player.attackType = "";
+    player.attackTimer = 0;
+    player.hitstun = 0;
+    player.invuln = 30;
+    player.super = clamp(player.super + 22, 0, 100);
+
     projectiles = [];
     guardRings = [];
     hazards = [];
+    roundTimer = 60;
+    combo = 0;
+    comboText.textContent = "COMBO 0";
+    difficultyText.textContent = `MUSOU W${musou.wave}`;
+    rightName.textContent = enemy.name;
+  }
 
-    await update(ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/state`), {
-      player: fighterToPlain(player),
-      enemy: fighterToPlain(enemy),
-      projectiles: [],
-      roundTimer: 99,
-      combo: 0,
-      gameOver: false,
-      resultSaved: false,
-      centerInfo: "FIGHT",
-      updatedAt: Date.now()
-    });
-  }
-}
-async function requestOnlineRematch() {
-  if (!onlineInfo.roomCode || !onlineInfo.role || onlineInfo.role === "spectator") {
-    showMessage("再戦はプレイヤーのみ", 1000);
-    return;
-  }
-  const key = onlineInfo.role === "host" ? "host" : "guest";
-  await update(ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/rematch`), { [key]: true });
-  resultSub.textContent = "再戦申請済み。相手の申請を待っています。";
-}
-async function leaveOnlineRoom(removeAll = true) {
-  try {
-    cleanupRoomListeners();
-    if (onlineInfo.roomCode && onlineInfo.role) {
-      const roomPath = `fight_game_v100_kai/rooms/${onlineInfo.roomCode}`;
-      const roomRef = ref(rtdb, roomPath);
-      if (removeAll && onlineInfo.role === "host") {
-        await remove(roomRef);
-      } else if (onlineInfo.role === "guest") {
-        await update(roomRef, {
-          guestUid: "",
-          guestCharacter: "",
-          status: "lobby",
-          "players/guest/uid": "",
-          "players/guest/connected": false,
-          "players/guest/ready": false,
-          "players/guest/character": "",
-          "players/guest/input": null,
-          rematch: { host:false, guest:false }
-        });
-      } else if (onlineInfo.role === "spectator") {
-        await remove(ref(rtdb, `${roomPath}/spectators/${firebaseUserId}`));
-      }
+  async function finishMatch(attackerIsPlayer, reasonText){
+    if (gameOver) return;
+    if (musou.active && attackerIsPlayer) return advanceMusouRound();
+
+    gameOver = true;
+    const winner = attackerIsPlayer ? player : enemy;
+    player.resultPose = attackerIsPlayer ? "win" : "lose";
+    enemy.resultPose = attackerIsPlayer ? "lose" : "win";
+
+    showMessage(attackerIsPlayer ? "YOU WIN" : "YOU LOSE", 1200);
+    await playVictoryCutin(winner);
+
+    if (musou.active){
+      saveLocalRanking(musou.score, "musou");
+      showResultScreen(attackerIsPlayer ? "MUSOU CLEAR" : "MUSOU END", `${reasonText} / 撃破数 ${musou.wins} / SCORE ${musou.score}`);
+      return;
     }
-  } catch (e) {
-    console.error("leave room failed", e);
-  }
-  onlineInfo.roomCode = "";
-  onlineInfo.role = "";
-  onlineInfo.roomRef = null;
-  onlineInfo.remoteInput = null;
-  onlineGameStarted = false;
-}
 
-/* =========================
-   Update loop
-========================= */
-function updateOnlineHost(dt) {
-  if (gameOver) return;
-  roundTimer -= dt / 1000;
-  if (roundTimer < 0) roundTimer = 0;
-  centerInfo.textContent = `${STAGES[stageSelect.value].label} / ${Math.ceil(roundTimer)}`;
-
-  const hostInput = getOnlineLocalInput();
-  const guestInput = onlineInfo.remoteInput || {};
-  updateFighterByInput(player, hostInput, dt);
-  updateFighterByInput(enemy, guestInput, dt);
-
-  updateHazards();
-  resolvePush();
-  resolveAttackHit(player, enemy);
-  resolveAttackHit(enemy, player);
-  resolveProjectiles();
-  updateParticles();
-  updateGuardRings();
-
-  if (performance.now() - lastHitTime > 1300 && combo !== 0) {
-    combo = 0;
-    comboText.textContent = "COMBO 0";
+    if (attackerIsPlayer && !resultSaved){
+      resultSaved = true;
+      const score = Math.max(0, Math.floor(player.hp * 100 + roundTimer * 10 + combo * 30));
+      saveLocalRanking(score, "battle");
+    }
+    showResultScreen(attackerIsPlayer ? "YOU WIN" : "YOU LOSE", reasonText);
   }
 
-  if (!gameOver && roundTimer <= 0) {
-    if (player.hp > enemy.hp) { maybeSaveWinRanking(); finishMatch(true, "TIME UP"); }
-    else if (enemy.hp > player.hp) finishMatch(false, "TIME UP");
-    else finishMatch(true, "DRAW扱い終了");
-  }
+  function applyDamage(attacker, target, attackType = null, overrideDamage = null, overrideKb = null){
+    const type = attackType || attacker.attackType;
+    const data = attackData(type === "projectile" ? "projectile" : type);
+    let damage = overrideDamage ?? (data.damage * attacker.atkMul / target.defMul);
+    let kb = overrideKb ?? data.kb;
 
-  pushSharedOnlineState();
-  pushOnlineInput();
-  consumePressedThisFrame();
-}
-
-function updateGame(dt) {
-  if (gameMode === "online-host") { updateOnlineHost(dt); return; }
-  if (gameMode === "online-guest") { pushOnlineInput(); updateParticles(); updateGuardRings(); consumePressedThisFrame(); return; }
-  if (gameMode === "spectator") { updateParticles(); updateGuardRings(); consumePressedThisFrame(); return; }
-  if (gameOver) return;
-
-  roundTimer -= dt / 1000;
-  if (roundTimer < 0) roundTimer = 0;
-
-  if (musou.active) centerInfo.textContent = `W${musou.wave} / ${Math.ceil(roundTimer)} / ${musou.score}`;
-  else centerInfo.textContent = `${STAGES[stageSelect.value].label} / ${Math.ceil(roundTimer)}`;
-
-  updatePlayerOffline(dt);
-  updateEnemyAI(dt);
-
-  updateHazards();
-  resolvePush();
-  resolveAttackHit(player, enemy);
-  resolveAttackHit(enemy, player);
-  resolveProjectiles();
-  updateParticles();
-  updateGuardRings();
-
-  if (performance.now() - lastHitTime > 1300 && combo !== 0) {
-    combo = 0;
-    comboText.textContent = "COMBO 0";
-  }
-
-  if (!gameOver && roundTimer <= 0) {
-    if (musou.active) {
-      finishMatch(false, "TIME UP");
+    if (target.guardTimer > 0 && facingProperForGuard(target, attacker)) {
+      damage *= 0.35;
+      kb *= 0.5;
+      target.hitstun = 6;
+      target.invuln = 6;
+      spawnImpact(target.x + target.w/2, target.y + 40, "#aee1ff", 8);
+      spawnGuardRing(target.x + target.w/2, target.y + 42, "#9fdcff");
+      cameraShake = Math.max(cameraShake, 3);
     } else {
-      if (player.hp > enemy.hp) { maybeSaveWinRanking(); finishMatch(true, "TIME UP"); }
-      else if (enemy.hp > player.hp) finishMatch(false, "TIME UP");
-      else finishMatch(true, "DRAW扱い終了");
+      target.hitstun = (type === "special" || type === "burst") ? 18 : 11;
+      target.invuln = (type === "special" || type === "burst") ? 14 : 9;
+      spawnImpact(target.x + target.w/2, target.y + 36, "#ffffff", (type === "special" || type === "burst") ? 16 : 8);
+    }
+
+    target.hp = clamp(target.hp - damage, 0, target.maxHp);
+    target.hurtFlash = 8;
+    target.x += kb * (attacker.dir === 1 ? 1 : -1);
+    target.vx = kb * 0.18 * (attacker.dir === 1 ? 1 : -1);
+    if (type === "special" || type === "uppercut" || type === "flashKick" || type === "burst") target.vy = -4.7;
+
+    gainSuper(attacker, data.superGain || 0);
+    gainSuper(target, 4);
+
+    attacker.hasHitCurrentAttack = true;
+    cameraShake = Math.max(cameraShake, type === "burst" ? 12 : type === "special" ? 10 : type === "groundBurst" ? 7 : 4);
+
+    if (attacker.isPlayer) {
+      const now = performance.now();
+      combo = (now - lastHitTime < 1200) ? combo + 1 : 1;
+      lastHitTime = now;
+      comboText.textContent = "COMBO " + combo;
+    }
+
+    if (target.hp <= 0) {
+      target.dead = true;
+      finishMatch(attacker.isPlayer, "KO");
     }
   }
 
-  consumePressedThisFrame();
-}
-
-function loop(now) {
-  const dt = Math.min(32, now - lastTime);
-  lastTime = now;
-  if (!gameRunning) return;
-  updateGame(dt);
-  render();
-  animationId = requestAnimationFrame(loop);
-}
-
-/* =========================
-   Draw
-========================= */
-function drawBackground() {
-  const st = STAGES[stageSelect.value];
-  const horizon = canvas.height * 0.56;
-  const grad = ctx.createLinearGradient(0, 0, 0, horizon);
-  grad.addColorStop(0, st.skyTop);
-  grad.addColorStop(1, st.skyBottom);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, horizon);
-  ctx.fillStyle = st.glow;
-  ctx.fillRect(0, 0, canvas.width, horizon);
-
-  if (stageSelect.value === "neon") {
-    for (let i = 0; i < 12; i++) {
-      ctx.fillStyle = i % 2 ? "rgba(116,196,255,.12)" : "rgba(255,90,180,.08)";
-      ctx.fillRect(i * (canvas.width/12), 42 + (i%3)*14, 44, horizon - 100 - (i%4)*18);
-    }
-  } else if (stageSelect.value === "moon") {
-    ctx.fillStyle = "rgba(255,255,255,.14)";
-    ctx.beginPath();
-    ctx.arc(canvas.width * 0.82, 92, 42, 0, Math.PI * 2);
-    ctx.fill();
-  } else {
-    ctx.fillStyle = "rgba(255,255,255,.04)";
-    for (let i = 0; i < 8; i++) {
-      const bw = 84 + (i % 3) * 44;
-      const bh = 90 + (i % 4) * 24;
-      const bx = i * (canvas.width / 8);
-      const by = horizon - bh;
-      ctx.fillRect(bx, by, bw, bh);
+  function applyStageDamage(target, damage, label, color){
+    if (target.invuln > 0 || target.dead) return;
+    target.hp = clamp(target.hp - damage, 0, target.maxHp);
+    target.hurtFlash = 8;
+    target.hitstun = 7;
+    target.invuln = 10;
+    spawnImpact(target.x + target.w/2, target.y + 40, color, 10);
+    showMessage(label, 280);
+    if (target.hp <= 0) {
+      target.dead = true;
+      finishMatch(target !== player, "GIMMICK KO");
     }
   }
 
-  ctx.fillStyle = st.floor;
-  ctx.fillRect(0, horizon, canvas.width, canvas.height - horizon);
-  ctx.fillStyle = st.line;
-  for (let i = 0; i < canvas.width; i += 76) ctx.fillRect(i, horizon + 28, 44, 3);
-}
-
-function drawAura(f, x, y) {
-  const base = f.super >= 50 || f.awakened || f.bossForm2;
-  if (!base) return;
-  const pulse = 0.65 + Math.sin(performance.now() * 0.01 + f.animPhase) * 0.08;
-  ctx.save();
-  ctx.globalAlpha = f.bossForm2 ? 0.30 : (f.awakened ? 0.22 : 0.14);
-  ctx.fillStyle = f.aura;
-  ctx.beginPath();
-  ctx.ellipse(x + f.w/2, y + f.h/2, (f.bossForm2 ? 42 : f.awakened ? 36 : 28) * pulse, (f.bossForm2 ? 74 : f.awakened ? 66 : 54) * pulse, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawFighter(f) {
-  const x = Math.round(f.x);
-  const y = Math.round(f.y);
-  const t = performance.now() * 0.01 + f.animPhase;
-  const breathe = Math.sin(t) * 1.4;
-  const runSwing = Math.sin(f.runPhase) * 10;
-  const runSwing2 = Math.sin(f.runPhase + Math.PI) * 10;
-  const attackStretch = f.attackTimer > 0 ? 1 + 0.04 * Math.sin(f.attackTimer) : 1;
-  const moving = Math.abs(f.vx) > 0.5 && f.onGround;
-
-  ctx.save();
-  drawAura(f, x, y);
-  if (f.hurtFlash > 0) ctx.globalAlpha = 0.82;
-
-  ctx.fillStyle = "rgba(0,0,0,.28)";
-  ctx.beginPath();
-  ctx.ellipse(x + f.w / 2, groundY() - 3, 24, 7, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  const bodyX = x + 10;
-  const bodyY = y + 18 + breathe;
-  const bodyW = f.w - 20;
-  const bodyH = f.h - 36;
-
-  if (f.resultPose === "win") ctx.translate(0, -4);
-  if (f.resultPose === "lose") ctx.rotate(-0.08 * f.dir);
-
-  ctx.fillStyle = f.scarf;
-  ctx.globalAlpha = 0.28;
-  ctx.beginPath();
-  ctx.moveTo(bodyX + bodyW/2, bodyY + 22);
-  ctx.quadraticCurveTo(bodyX + bodyW/2 - 16 * f.dir, bodyY + 38, bodyX + bodyW/2 - 6 * f.dir, bodyY + 58 + runSwing * 0.15);
-  ctx.lineTo(bodyX + bodyW/2 + 11 * f.dir, bodyY + 30);
-  ctx.closePath();
-  ctx.fill();
-  ctx.globalAlpha = 1;
-
-  ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
-  ctx.strokeStyle = f.accent;
-  ctx.lineWidth = f.bossForm2 ? 4 : 3;
-  ctx.beginPath();
-  ctx.roundRect(bodyX, bodyY, bodyW, bodyH * attackStretch, 14);
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.fillStyle = "rgba(255,255,255,.18)";
-  ctx.fillRect(bodyX + 8, bodyY + 28, bodyW - 16, 7);
-  ctx.fillStyle = "rgba(0,0,0,.16)";
-  ctx.fillRect(bodyX + 8, bodyY + 58, bodyW - 16, 9);
-
-  ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
-  ctx.beginPath();
-  ctx.arc(x + f.w/2, y + 14 + breathe, f.bossForm2 ? 16 : 15, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.fillStyle = f.hair;
-  ctx.beginPath();
-  if (f.silhouette === "heavy") ctx.ellipse(x + f.w/2, y + 8 + breathe, 18, 9, 0, Math.PI, 0, true);
-  else if (f.silhouette === "ninja") {
-    ctx.moveTo(x + f.w/2 - 16, y + 14 + breathe);
-    ctx.lineTo(x + f.w/2 + 8, y - 4 + breathe);
-    ctx.lineTo(x + f.w/2 + 16, y + 14 + breathe);
-    ctx.closePath();
-  } else if (f.silhouette === "assassin") {
-    ctx.moveTo(x + f.w/2 - 16, y + 10 + breathe);
-    ctx.lineTo(x + f.w/2, y - 8 + breathe);
-    ctx.lineTo(x + f.w/2 + 16, y + 10 + breathe);
-    ctx.closePath();
-  } else {
-    ctx.ellipse(x + f.w/2, y + 9 + breathe, 15, 8, 0, Math.PI, 0, true);
-  }
-  ctx.fill();
-
-  ctx.fillStyle = "#101624";
-  ctx.fillRect(x + f.w/2 - 6, y + 14 + breathe, 4, 2);
-  ctx.fillRect(x + f.w/2 + 2, y + 14 + breathe, 4, 2);
-
-  const cx = x + f.w/2;
-  const armY = y + 44 + breathe;
-  const legY = y + f.h - 24;
-  const footY = y + f.h - 2;
-  const forward = f.dir === 1 ? 1 : -1;
-  const backArmOffset = moving ? runSwing2 * 0.45 : 6;
-  const frontArmOffset = moving ? runSwing * 0.45 : 8;
-  const frontLegOffset = moving ? runSwing : 0;
-  const backLegOffset = moving ? runSwing2 : 0;
-
-  ctx.strokeStyle = f.accent;
-  ctx.lineWidth = 7;
-  ctx.lineCap = "round";
-
-  ctx.beginPath();
-  ctx.moveTo(cx, armY);
-  if (f.resultPose === "win") ctx.lineTo(cx + 10 * forward, armY - 28);
-  else if (f.attackTimer > 0) {
-    const len = f.attackType === "punch" ? 34 :
-      f.attackType === "kick" ? 18 :
-      f.attackType === "dashPunch" ? 48 :
-      f.attackType === "uppercut" ? 18 :
-      f.attackType === "chargeKick" ? 28 :
-      f.attackType === "groundBurst" ? 24 :
-      f.attackType === "flashKick" ? 20 :
-      f.attackType === "shadowStep" ? 38 :
-      f.attackType === "projectile" ? 28 :
-      f.attackType === "burst" ? 60 : 58;
-    const rise = f.attackType === "special" ? -10 : f.attackType === "uppercut" ? -26 : f.attackType === "burst" ? -18 : -2;
-    ctx.lineTo(cx + len * forward, armY + rise);
-  } else {
-    ctx.lineTo(cx + (14 + frontArmOffset) * forward, armY + 11);
-  }
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(cx, armY);
-  if (f.resultPose === "lose") ctx.lineTo(cx - 10 * forward, armY + 16);
-  else ctx.lineTo(cx - (14 + backArmOffset) * forward, armY + 11);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(cx, legY);
-  if (f.attackTimer > 0 && (f.attackType === "kick" || f.attackType === "chargeKick" || f.attackType === "flashKick")) ctx.lineTo(cx + 42 * forward, legY + 4);
-  else ctx.lineTo(cx + 10 + frontLegOffset * 0.35, footY);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(cx, legY);
-  if (f.resultPose === "lose") ctx.lineTo(cx - 4, footY + 3);
-  else ctx.lineTo(cx - 10 + backLegOffset * 0.35, footY);
-  ctx.stroke();
-
-  if (f.guardTimer > 0) {
-    ctx.strokeStyle = "rgba(165,220,255,.72)";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(cx, y + 43, 30, 0, Math.PI * 2);
-    ctx.stroke();
+  function resolveAttackHit(attacker, target){
+    if (!attacker.attackType || attacker.hasHitCurrentAttack) return;
+    if (!attackActiveFrame(attacker.attackType, attacker.attackTimer)) return;
+    if (target.invuln > 0) return;
+    const atk = getAttackRect(attacker);
+    const body = getBodyRect(target);
+    if (rectsOverlap(atk, body)) applyDamage(attacker, target);
   }
 
-  if (f.attackTimer > 0 && f.attackType !== "projectile") {
-    const atk = getAttackRect(f);
-    if (["special","groundBurst","flashKick","shadowStep","burst"].includes(f.attackType)) {
-      if (f.attackType === "special") {
-        ctx.fillStyle = "rgba(255,210,77,.22)";
-        ctx.strokeStyle = "rgba(255,230,166,.82)";
-      } else if (f.attackType === "groundBurst") {
-        ctx.fillStyle = "rgba(255,195,90,.20)";
-        ctx.strokeStyle = "rgba(255,226,160,.80)";
-      } else if (f.attackType === "flashKick") {
-        ctx.fillStyle = "rgba(120,180,255,.18)";
-        ctx.strokeStyle = "rgba(170,220,255,.80)";
-      } else if (f.attackType === "burst") {
-        ctx.fillStyle = "rgba(255,255,255,.18)";
-        ctx.strokeStyle = "rgba(255,255,255,.92)";
-      } else {
-        ctx.fillStyle = "rgba(180,120,255,.18)";
-        ctx.strokeStyle = "rgba(220,180,255,.80)";
+  function resolveProjectileClash(){
+    for (let i = 0; i < projectiles.length; i++) {
+      const a = projectiles[i];
+      if (!a || a.life <= 0) continue;
+      for (let j = i + 1; j < projectiles.length; j++) {
+        const b = projectiles[j];
+        if (!b || b.life <= 0) continue;
+        if (a.owner === b.owner) continue;
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const rr = (a.r * 0.5) + (b.r * 0.5);
+        if (dx * dx + dy * dy <= rr * rr) {
+          const cx = (a.x + b.x) * 0.5;
+          const cy = (a.y + b.y) * 0.5;
+          a.life = 0;
+          b.life = 0;
+          spawnClashEffect(cx, cy);
+          showMessage("CLASH", 180);
+        }
       }
+    }
+  }
+
+  function resolveProjectiles(){
+    resolveProjectileClash();
+
+    projectiles.forEach(p => {
+      p.x += p.vx;
+      p.life--;
+
+      const target = p.owner === "player" ? enemy : player;
+      const pseudoAttacker = p.owner === "player" ? player : enemy;
+      const rect = { x:p.x - p.r/2, y:p.y - p.r/2, w:p.r, h:p.r };
+      const body = getBodyRect(target);
+
+      if (target.invuln <= 0 && rectsOverlap(rect, body)) {
+        if (target.guardTimer > 0 && facingProperForGuard(target, pseudoAttacker)) {
+          applyDamage(pseudoAttacker, target, "projectile", p.damage * 0.35, p.kb * 0.5);
+        } else {
+          applyDamage(pseudoAttacker, target, "projectile", p.damage, p.kb);
+        }
+        p.life = 0;
+      }
+
+      if (p.x < -40 || p.x > canvas.width + 40) p.life = 0;
+    });
+
+    projectiles = projectiles.filter(p => p.life > 0);
+  }
+
+  function updateGuardRings(){
+    guardRings.forEach(g => {
+      g.r += 2.8;
+      g.alpha *= 0.90;
+    });
+    guardRings = guardRings.filter(g => g.alpha > 0.04 && g.r < g.maxR);
+  }
+
+  function spawnStageGimmick(){
+    const gimmick = stageGimmick();
+    if (gimmick === "lightning") {
+      const x = 80 + Math.random() * (canvas.width - 160);
+      hazards.push({ type:"lightning", x, y:0, w:28, h:groundY(), life:34 });
+    } else if (gimmick === "rock") {
+      const x = 40 + Math.random() * (canvas.width - 80);
+      hazards.push({ type:"rock", x, y:-30, w:32, h:32, vy:5.5, life:150 });
+    } else if (gimmick === "spirit") {
+      hazards.push({ type:"spirit", x:canvas.width/2, y:groundY()-60, w:220, h:90, life:50 });
+    }
+  }
+
+  function updateHazards(){
+    const gimmick = stageGimmick();
+    stageGimmickTimer++;
+    const interval = gimmick === "lightning" ? 320 : gimmick === "rock" ? 280 : gimmick === "spirit" ? 420 : 999999;
+    if (gimmick !== "gravity" && stageGimmickTimer >= interval) {
+      stageGimmickTimer = 0;
+      spawnStageGimmick();
+    }
+
+    hazards.forEach(h => {
+      if (h.type === "rock") {
+        h.y += h.vy;
+        h.vy += 0.18;
+        if (h.y >= groundY() - h.h) {
+          h.y = groundY() - h.h;
+          h.life = 0;
+          spawnImpact(h.x + h.w/2, h.y + h.h/2, "#d8b68a", 14);
+        }
+        const rect = { x:h.x, y:h.y, w:h.w, h:h.h };
+        if (rectsOverlap(rect, getBodyRect(player))) { applyStageDamage(player, 8, "ROCK HIT", "#d9c2a0"); h.life = 0; }
+        if (rectsOverlap(rect, getBodyRect(enemy))) { applyStageDamage(enemy, 8, "ROCK HIT", "#d9c2a0"); h.life = 0; }
+      }
+
+      if (h.type === "lightning") {
+        h.life--;
+        const active = h.life > 8 && h.life < 28;
+        if (active) {
+          const rect = { x:h.x, y:0, w:h.w, h:groundY() };
+          if (rectsOverlap(rect, getBodyRect(player))) applyStageDamage(player, 5, "THUNDER", "#baf4ff");
+          if (rectsOverlap(rect, getBodyRect(enemy))) applyStageDamage(enemy, 5, "THUNDER", "#baf4ff");
+        }
+      }
+
+      if (h.type === "spirit") {
+        h.life--;
+        const rect = { x:h.x - h.w/2, y:h.y - h.h/2, w:h.w, h:h.h };
+        if (rectsOverlap(rect, getBodyRect(player))) player.super = clamp(player.super + 0.7, 0, 100);
+        if (rectsOverlap(rect, getBodyRect(enemy))) enemy.super = clamp(enemy.super + 0.7, 0, 100);
+      }
+    });
+
+    hazards = hazards.filter(h => h.life > 0);
+  }
+
+  function tryProjectileCommand(fighter){
+    const target = fighter === player ? enemy : player;
+    spawnProjectile(fighter, target);
+    fighter.attackType = "projectile";
+    fighter.attackTimer = 14;
+    fighter.attackCooldown = 18;
+    fighter.state = "attack";
+    fighter.hasHitCurrentAttack = true;
+    return true;
+  }
+
+  function updateCommandInputsForFighter(fighter, pressedFrame){
+    const justPunch = !!pressedFrame.punch;
+    const justKick = !!pressedFrame.kick;
+    const justSpecial = !!pressedFrame.special;
+    const key = fighter.characterKey;
+
+    if (justPunch) {
+      if (fighter.isPlayer && commandMatched(["D","R"])) {
+        tryProjectileCommand(fighter);
+        commandBuffer = [];
+        return;
+      }
+      if (fighter.isPlayer && commandMatched(["R","R"])) {
+        if (tryStartAttack(fighter, "dashPunch")) { commandBuffer = []; return; }
+      }
+      if (fighter.isPlayer && commandMatched(["D","D"])) {
+        if (tryStartAttack(fighter, "groundBurst")) { commandBuffer = []; return; }
+      }
+      if (fighter.isPlayer && commandMatched(["L","R"])) {
+        if (tryStartAttack(fighter, "shadowStep")) { commandBuffer = []; return; }
+      }
+      tryStartAttack(fighter, "punch");
+    }
+
+    if (justKick) {
+      if (fighter.isPlayer && commandMatched(["R","R"])) {
+        if (tryStartAttack(fighter, (key === "blade" || key === "phoenix" || key === "shadow") ? "flashKick" : "dashPunch")) {
+          commandBuffer = [];
+          return;
+        }
+      }
+      if (fighter.isPlayer && commandMatched(["R","D"])) {
+        if (tryStartAttack(fighter, "uppercut")) { commandBuffer = []; return; }
+      }
+      if (fighter.isPlayer && fighter.chargeBackFrames >= 22 && commandMatched(["R"])) {
+        if (tryStartAttack(fighter, "chargeKick")) {
+          fighter.chargeBackFrames = 0;
+          commandBuffer = [];
+          return;
+        }
+      }
+      tryStartAttack(fighter, "kick");
+    }
+
+    if (justSpecial) {
+      if (fighter.super >= 100) {
+        tryStartAttack(fighter, "burst");
+        return;
+      }
+      tryStartAttack(fighter, "special");
+    }
+  }
+
+  function animateCommon(f, dt){
+    f.animPhase += dt * 0.006;
+    const moving = Math.abs(f.vx) > 0.5;
+    if (moving && f.onGround) f.runPhase += dt * 0.018;
+  }
+
+  function updateFighterByInput(f, input, dt){
+    if (f.dead) return;
+    const opponent = f === player ? enemy : player;
+    facingUpdate(f, opponent);
+    animateCommon(f, dt);
+    updateAwakenAsync(f);
+
+    if (f.invuln > 0) f.invuln--;
+    if (f.hitstun > 0) f.hitstun--;
+    if (f.guardTimer > 0) f.guardTimer--;
+    if (f.attackCooldown > 0) f.attackCooldown--;
+    if (f.hurtFlash > 0) f.hurtFlash--;
+
+    if (input.left && !input.right && f.dir === -1) f.chargeBackFrames = Math.min(60, f.chargeBackFrames + 1);
+    else if (!input.left) f.chargeBackFrames = Math.max(0, f.chargeBackFrames - 1);
+
+    if (f.attackTimer > 0) {
+      f.attackTimer--;
+      if (f.attackType === "dashPunch") f.vx = 5.2 * f.dir;
+      if (f.attackType === "chargeKick") f.vx = 4.4 * f.dir;
+      if (f.attackType === "flashKick") f.vx = 4.8 * f.dir;
+      if (f.attackType === "shadowStep") f.vx = 5.4 * f.dir;
+      if (f.attackTimer === 0) {
+        f.attackType = "";
+        f.state = "idle";
+        f.hasHitCurrentAttack = false;
+      }
+    }
+
+    const spd = f.speed + (f.awakened ? 0.35 : 0) + (f.bossForm2 ? 0.25 : 0);
+    const grav = gravity * moonGravityModifier();
+
+    if (f.hitstun <= 0 && f.attackTimer <= 0 && !transformLock) {
+      if (input.left && !input.right) f.vx = -spd;
+      else if (input.right && !input.left) f.vx = spd;
+      else f.vx *= 0.72;
+
+      if (input.jump && f.onGround) {
+        f.vy = -(f.jumpPower + (f.awakened ? 0.5 : 0)) * moonGravityModifier();
+        f.onGround = false;
+      }
+
+      updateCommandInputsForFighter(f, {
+        punch: !!input.punch,
+        kick: !!input.kick,
+        special: !!input.special
+      });
+    } else if (f.hitstun > 0) {
+      f.vx *= 0.9;
+    }
+
+    f.vy += grav;
+    f.x += f.vx;
+    f.y += f.vy;
+
+    if (f.y >= groundY() - f.h) {
+      f.y = groundY() - f.h;
+      f.vy = 0;
+      f.onGround = true;
+    } else {
+      f.onGround = false;
+    }
+
+    f.x = clamp(f.x, 16, canvas.width - f.w - 16);
+  }
+
+  function updatePlayerOffline(dt){
+    updateFighterByInput(player, {
+      left:keys.left,
+      right:keys.right,
+      jump:keys.jump,
+      punch:pressedThisFrame.punch,
+      kick:pressedThisFrame.kick,
+      special:pressedThisFrame.special
+    }, dt);
+  }
+
+  function aiWantsGuard(){
+    const d = distX(enemy, player);
+    const diff = difficultySelect.value;
+    const defend = diff === "boss" ? 0.55 : diff === "god" ? 0.38 : diff === "hard" ? 0.24 : 0.14;
+    return d < 104 && Math.random() < defend;
+  }
+
+  function aiTryCommands(){
+    const d = distX(enemy, player);
+    const diff = difficultySelect.value;
+    const react = diff === "boss" ? 0.995 : diff === "god" ? 0.95 : diff === "hard" ? 0.82 : 0.66;
+    const aggro = diff === "boss" ? 1.9 : diff === "god" ? 1.35 : diff === "hard" ? 1.08 : 0.86;
+    const key = enemy.characterKey;
+
+    if (enemy.super >= 100 && d < 160 && Math.random() < 0.010 * react * aggro) return tryStartAttack(enemy, "burst");
+    if (d > 110 && d < 240 && Math.random() < 0.018 * react * aggro) { tryProjectileCommand(enemy); return true; }
+    if (d < 82 && Math.random() < 0.028 * react * aggro) return tryStartAttack(enemy, "punch");
+    if (d < 110 && Math.random() < 0.025 * react * aggro) return tryStartAttack(enemy, "kick");
+    if (d > 90 && d < 170 && Math.random() < 0.022 * react * aggro) return tryStartAttack(enemy, "dashPunch");
+    if ((key === "blade" || key === "phoenix" || key === "shadow") && d > 90 && d < 180 && Math.random() < 0.020 * react * aggro) return tryStartAttack(enemy, "flashKick");
+    if ((key === "titan" || key === "oni" || key === "phoenix" || key === "frost") && d < 100 && Math.random() < 0.017 * react * aggro) return tryStartAttack(enemy, "groundBurst");
+    if (d < 96 && Math.random() < 0.016 * react * aggro) return tryStartAttack(enemy, "uppercut");
+    if ((key === "shadow" || key === "blade") && d > 70 && d < 150 && Math.random() < 0.016 * react * aggro) return tryStartAttack(enemy, "shadowStep");
+    if ((key === "titan" || key === "oni") && d > 60 && d < 160 && Math.random() < 0.016 * react * aggro) return tryStartAttack(enemy, "chargeKick");
+    if (d < 140 && enemy.super >= 50 && Math.random() < 0.014 * react * aggro) return tryStartAttack(enemy, "special");
+    return false;
+  }
+
+  function updateEnemyAI(dt){
+    if (enemy.dead) return;
+    facingUpdate(enemy, player);
+    animateCommon(enemy, dt);
+    updateAwakenAsync(enemy);
+
+    if (enemy.invuln > 0) enemy.invuln--;
+    if (enemy.hitstun > 0) enemy.hitstun--;
+    if (enemy.guardTimer > 0) enemy.guardTimer--;
+    if (enemy.attackCooldown > 0) enemy.attackCooldown--;
+    if (enemy.hurtFlash > 0) enemy.hurtFlash--;
+
+    if (enemy.attackTimer > 0) {
+      enemy.attackTimer--;
+      if (enemy.attackType === "dashPunch") enemy.vx = 5.5 * enemy.dir;
+      if (enemy.attackType === "chargeKick") enemy.vx = 4.6 * enemy.dir;
+      if (enemy.attackType === "flashKick") enemy.vx = 4.9 * enemy.dir;
+      if (enemy.attackType === "shadowStep") enemy.vx = 5.7 * enemy.dir;
+      if (enemy.attackTimer === 0) {
+        enemy.attackType = "";
+        enemy.state = "idle";
+        enemy.hasHitCurrentAttack = false;
+      }
+    }
+
+    if (enemy.hitstun <= 0 && enemy.attackTimer <= 0 && !transformLock) {
+      const d = distX(enemy, player);
+      const diff = difficultySelect.value;
+      const baseSpeed = diff === "boss" ? 5.8 : diff === "god" ? 5.2 : diff === "hard" ? 4.5 : 3.8;
+      enemy.guardTimer = aiWantsGuard() ? 2 : 0;
+      const moveSpd = baseSpeed + (enemy.awakened ? 0.35 : 0) + (enemy.bossForm2 ? 0.25 : 0);
+
+      if (d > 150) enemy.vx = enemy.dir === 1 ? moveSpd : -moveSpd;
+      else if (d < 74) enemy.vx = enemy.dir === 1 ? -moveSpd * 0.9 : moveSpd * 0.9;
+      else enemy.vx *= 0.6;
+
+      if (enemy.onGround && Math.random() < 0.004 && d > 110 && d < 240) {
+        enemy.vy = -(enemy.jumpPower * 0.98 + (enemy.awakened ? 0.4 : 0)) * moonGravityModifier();
+        enemy.onGround = false;
+      }
+
+      aiTryCommands();
+    } else if (enemy.hitstun > 0) {
+      enemy.vx *= 0.9;
+    }
+
+    enemy.vy += gravity * moonGravityModifier();
+    enemy.x += enemy.vx;
+    enemy.y += enemy.vy;
+
+    if (enemy.y >= groundY() - enemy.h) {
+      enemy.y = groundY() - enemy.h;
+      enemy.vy = 0;
+      enemy.onGround = true;
+    } else enemy.onGround = false;
+
+    enemy.x = clamp(enemy.x, 16, canvas.width - enemy.w - 16);
+  }
+
+  function resolvePush(){
+    const a = getBodyRect(player);
+    const b = getBodyRect(enemy);
+    if (!rectsOverlap(a, b)) return;
+    const centerA = a.x + a.w / 2;
+    const centerB = b.x + b.w / 2;
+    const overlap = (a.w / 2 + b.w / 2) - Math.abs(centerA - centerB);
+    if (overlap > 0) {
+      const dir = centerA < centerB ? -1 : 1;
+      player.x += dir * overlap / 2;
+      enemy.x -= dir * overlap / 2;
+      player.x = clamp(player.x, 16, canvas.width - player.w - 16);
+      enemy.x = clamp(enemy.x, 16, canvas.width - enemy.w - 16);
+    }
+  }
+
+  function updateParticles(){
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.18;
+      p.life -= 1;
+    });
+    particles = particles.filter(p => p.life > 0);
+  }
+
+  function updateGame(dt){
+    if (gameOver) return;
+
+    roundTimer -= dt / 1000;
+    if (roundTimer < 0) roundTimer = 0;
+
+    centerInfo.textContent = musou.active
+      ? `W${musou.wave} / ${Math.ceil(roundTimer)} / ${musou.score}`
+      : `${STAGES[stageSelect.value].label} / ${Math.ceil(roundTimer)}`;
+
+    updatePlayerOffline(dt);
+    updateEnemyAI(dt);
+    updateHazards();
+    resolvePush();
+    resolveAttackHit(player, enemy);
+    resolveAttackHit(enemy, player);
+    resolveProjectiles();
+    updateParticles();
+    updateGuardRings();
+
+    if (performance.now() - lastHitTime > 1300 && combo !== 0) {
+      combo = 0;
+      comboText.textContent = "COMBO 0";
+    }
+
+    if (!gameOver && roundTimer <= 0) {
+      if (musou.active) {
+        finishMatch(false, "TIME UP");
+      } else {
+        if (player.hp >= enemy.hp) finishMatch(true, "TIME UP");
+        else finishMatch(false, "TIME UP");
+      }
+    }
+
+    Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
+  }
+
+  function loop(now){
+    const dt = Math.min(32, now - lastTime);
+    lastTime = now;
+    if (!gameRunning) return;
+    updateGame(dt);
+    render();
+    animationId = requestAnimationFrame(loop);
+  }
+
+  function drawBackground(){
+    const st = STAGES[stageSelect.value];
+    const horizon = canvas.height * 0.56;
+    const grad = ctx.createLinearGradient(0, 0, 0, horizon);
+    grad.addColorStop(0, st.skyTop);
+    grad.addColorStop(1, st.skyBottom);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, horizon);
+    ctx.fillStyle = st.glow;
+    ctx.fillRect(0, 0, canvas.width, horizon);
+
+    if (stageSelect.value === "neon") {
+      for (let i = 0; i < 12; i++) {
+        ctx.fillStyle = i % 2 ? "rgba(116,196,255,.12)" : "rgba(255,90,180,.08)";
+        ctx.fillRect(i * (canvas.width/12), 42 + (i%3)*14, 44, horizon - 100 - (i%4)*18);
+      }
+    } else if (stageSelect.value === "moon") {
+      ctx.fillStyle = "rgba(255,255,255,.14)";
+      ctx.beginPath();
+      ctx.arc(canvas.width * 0.82, 92, 42, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = "rgba(255,255,255,.04)";
+      for (let i = 0; i < 8; i++) {
+        const bw = 84 + (i % 3) * 44;
+        const bh = 90 + (i % 4) * 24;
+        const bx = i * (canvas.width / 8);
+        const by = horizon - bh;
+        ctx.fillRect(bx, by, bw, bh);
+      }
+    }
+
+    ctx.fillStyle = st.floor;
+    ctx.fillRect(0, horizon, canvas.width, canvas.height - horizon);
+    ctx.fillStyle = st.line;
+    for (let i = 0; i < canvas.width; i += 76) ctx.fillRect(i, horizon + 28, 44, 3);
+  }
+
+  function drawAura(f, x, y){
+    const base = f.super >= 50 || f.awakened || f.bossForm2;
+    if (!base) return;
+    const pulse = 0.65 + Math.sin(performance.now() * 0.01 + f.animPhase) * 0.08;
+    ctx.save();
+    ctx.globalAlpha = f.bossForm2 ? 0.30 : (f.awakened ? 0.22 : 0.14);
+    ctx.fillStyle = f.aura;
+    ctx.beginPath();
+    ctx.ellipse(x + f.w/2, y + f.h/2, (f.bossForm2 ? 42 : f.awakened ? 36 : 28) * pulse, (f.bossForm2 ? 74 : f.awakened ? 66 : 54) * pulse, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawFighter(f){
+    const x = Math.round(f.x);
+    const y = Math.round(f.y);
+    const t = performance.now() * 0.01 + f.animPhase;
+    const breathe = Math.sin(t) * 1.4;
+    const runSwing = Math.sin(f.runPhase) * 10;
+    const runSwing2 = Math.sin(f.runPhase + Math.PI) * 10;
+    const attackStretch = f.attackTimer > 0 ? 1 + 0.04 * Math.sin(f.attackTimer) : 1;
+    const moving = Math.abs(f.vx) > 0.5 && f.onGround;
+
+    ctx.save();
+    drawAura(f, x, y);
+    if (f.hurtFlash > 0) ctx.globalAlpha = 0.82;
+
+    ctx.fillStyle = "rgba(0,0,0,.28)";
+    ctx.beginPath();
+    ctx.ellipse(x + f.w / 2, groundY() - 3, 24, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    const bodyX = x + 10;
+    const bodyY = y + 18 + breathe;
+    const bodyW = f.w - 20;
+    const bodyH = f.h - 36;
+
+    if (f.resultPose === "win") ctx.translate(0, -4);
+    if (f.resultPose === "lose") ctx.rotate(-0.08 * f.dir);
+
+    ctx.fillStyle = f.scarf;
+    ctx.globalAlpha = 0.28;
+    ctx.beginPath();
+    ctx.moveTo(bodyX + bodyW/2, bodyY + 22);
+    ctx.quadraticCurveTo(bodyX + bodyW/2 - 16 * f.dir, bodyY + 38, bodyX + bodyW/2 - 6 * f.dir, bodyY + 58 + runSwing * 0.15);
+    ctx.lineTo(bodyX + bodyW/2 + 11 * f.dir, bodyY + 30);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
+    ctx.strokeStyle = f.accent;
+    ctx.lineWidth = f.bossForm2 ? 4 : 3;
+    ctx.beginPath();
+    ctx.roundRect(bodyX, bodyY, bodyW, bodyH * attackStretch, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "rgba(255,255,255,.18)";
+    ctx.fillRect(bodyX + 8, bodyY + 28, bodyW - 16, 7);
+    ctx.fillStyle = "rgba(0,0,0,.16)";
+    ctx.fillRect(bodyX + 8, bodyY + 58, bodyW - 16, 9);
+
+    ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
+    ctx.beginPath();
+    ctx.arc(x + f.w/2, y + 14 + breathe, f.bossForm2 ? 16 : 15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = f.hair;
+    ctx.beginPath();
+    if (f.silhouette === "heavy") ctx.ellipse(x + f.w/2, y + 8 + breathe, 18, 9, 0, Math.PI, 0, true);
+    else if (f.silhouette === "ninja") {
+      ctx.moveTo(x + f.w/2 - 16, y + 14 + breathe);
+      ctx.lineTo(x + f.w/2 + 8, y - 4 + breathe);
+      ctx.lineTo(x + f.w/2 + 16, y + 14 + breathe);
+      ctx.closePath();
+    } else if (f.silhouette === "assassin") {
+      ctx.moveTo(x + f.w/2 - 16, y + 10 + breathe);
+      ctx.lineTo(x + f.w/2, y - 8 + breathe);
+      ctx.lineTo(x + f.w/2 + 16, y + 10 + breathe);
+      ctx.closePath();
+    } else {
+      ctx.ellipse(x + f.w/2, y + 9 + breathe, 15, 8, 0, Math.PI, 0, true);
+    }
+    ctx.fill();
+
+    ctx.fillStyle = "#101624";
+    ctx.fillRect(x + f.w/2 - 6, y + 14 + breathe, 4, 2);
+    ctx.fillRect(x + f.w/2 + 2, y + 14 + breathe, 4, 2);
+
+    const cx = x + f.w/2;
+    const armY = y + 44 + breathe;
+    const legY = y + f.h - 24;
+    const footY = y + f.h - 2;
+    const forward = f.dir === 1 ? 1 : -1;
+    const backArmOffset = moving ? runSwing2 * 0.45 : 6;
+    const frontArmOffset = moving ? runSwing * 0.45 : 8;
+    const frontLegOffset = moving ? runSwing : 0;
+    const backLegOffset = moving ? runSwing2 : 0;
+
+    ctx.strokeStyle = f.accent;
+    ctx.lineWidth = 7;
+    ctx.lineCap = "round";
+
+    ctx.beginPath();
+    ctx.moveTo(cx, armY);
+    if (f.resultPose === "win") ctx.lineTo(cx + 10 * forward, armY - 28);
+    else if (f.attackTimer > 0) {
+      const len = f.attackType === "punch" ? 34 :
+        f.attackType === "kick" ? 18 :
+        f.attackType === "dashPunch" ? 48 :
+        f.attackType === "uppercut" ? 18 :
+        f.attackType === "chargeKick" ? 28 :
+        f.attackType === "groundBurst" ? 24 :
+        f.attackType === "flashKick" ? 20 :
+        f.attackType === "shadowStep" ? 38 :
+        f.attackType === "projectile" ? 28 :
+        f.attackType === "burst" ? 60 : 58;
+      const rise = f.attackType === "special" ? -10 : f.attackType === "uppercut" ? -26 : f.attackType === "burst" ? -18 : -2;
+      ctx.lineTo(cx + len * forward, armY + rise);
+    } else {
+      ctx.lineTo(cx + (14 + frontArmOffset) * forward, armY + 11);
+    }
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(cx, armY);
+    if (f.resultPose === "lose") ctx.lineTo(cx - 10 * forward, armY + 16);
+    else ctx.lineTo(cx - (14 + backArmOffset) * forward, armY + 11);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(cx, legY);
+    if (f.attackTimer > 0 && (f.attackType === "kick" || f.attackType === "chargeKick" || f.attackType === "flashKick")) ctx.lineTo(cx + 42 * forward, legY + 4);
+    else ctx.lineTo(cx + 10 + frontLegOffset * 0.35, footY);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(cx, legY);
+    if (f.resultPose === "lose") ctx.lineTo(cx - 4, footY + 3);
+    else ctx.lineTo(cx - 10 + backLegOffset * 0.35, footY);
+    ctx.stroke();
+
+    if (f.guardTimer > 0) {
+      ctx.strokeStyle = "rgba(165,220,255,.72)";
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.roundRect(atk.x, atk.y, atk.w, atk.h, 18);
-      ctx.fill();
+      ctx.arc(cx, y + 43, 30, 0, Math.PI * 2);
       ctx.stroke();
-    } else if (attackActiveFrame(f.attackType, f.attackTimer)) {
-      ctx.fillStyle = "rgba(255,255,255,.12)";
-      ctx.beginPath();
-      ctx.roundRect(atk.x, atk.y, atk.w, atk.h, 14);
-      ctx.fill();
     }
+
+    if (f.attackTimer > 0 && f.attackType !== "projectile") {
+      const atk = getAttackRect(f);
+      if (["special","groundBurst","flashKick","shadowStep","burst"].includes(f.attackType)) {
+        if (f.attackType === "special") {
+          ctx.fillStyle = "rgba(255,210,77,.22)";
+          ctx.strokeStyle = "rgba(255,230,166,.82)";
+        } else if (f.attackType === "groundBurst") {
+          ctx.fillStyle = "rgba(255,195,90,.20)";
+          ctx.strokeStyle = "rgba(255,226,160,.80)";
+        } else if (f.attackType === "flashKick") {
+          ctx.fillStyle = "rgba(120,180,255,.18)";
+          ctx.strokeStyle = "rgba(170,220,255,.80)";
+        } else if (f.attackType === "burst") {
+          ctx.fillStyle = "rgba(255,255,255,.18)";
+          ctx.strokeStyle = "rgba(255,255,255,.92)";
+        } else {
+          ctx.fillStyle = "rgba(180,120,255,.18)";
+          ctx.strokeStyle = "rgba(220,180,255,.80)";
+        }
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(atk.x, atk.y, atk.w, atk.h, 18);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+
+    ctx.restore();
   }
-  ctx.restore();
-}
 
-function drawProjectiles() {
-  projectiles.forEach(p => {
-    const st = PROJECTILE_STYLE[p.colorKey] || PROJECTILE_STYLE.fire;
-    ctx.save();
-    ctx.globalAlpha = 0.35;
-    ctx.fillStyle = st.glow;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r * 1.25, 0, Math.PI * 2);
-    ctx.fill();
+  function drawProjectiles(){
+    projectiles.forEach(p => {
+      const st = PROJECTILE_STYLE[p.colorKey] || PROJECTILE_STYLE.fire;
+      ctx.save();
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = st.glow;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 1.25, 0, Math.PI * 2);
+      ctx.fill();
 
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = st.fill;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "rgba(255,255,255,.35)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(p.x - p.vx * 0.8, p.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  function drawGuardRings(){
+    guardRings.forEach(g => {
+      ctx.save();
+      ctx.globalAlpha = g.alpha;
+      ctx.strokeStyle = g.color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  function drawHazards(){
+    hazards.forEach(h => {
+      if (h.type === "lightning") {
+        ctx.save();
+        ctx.globalAlpha = h.life > 8 && h.life < 28 ? 0.45 : 0.18;
+        ctx.fillStyle = "rgba(160,245,255,.95)";
+        ctx.fillRect(h.x, 0, h.w, groundY());
+        ctx.restore();
+      }
+      if (h.type === "rock") {
+        ctx.save();
+        ctx.fillStyle = "#8a725e";
+        ctx.beginPath();
+        ctx.arc(h.x + h.w/2, h.y + h.h/2, h.w/2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      if (h.type === "spirit") {
+        ctx.save();
+        ctx.globalAlpha = 0.18 + Math.sin(performance.now()*0.01) * 0.04;
+        ctx.fillStyle = "#8ef2ff";
+        ctx.beginPath();
+        ctx.ellipse(h.x, h.y, h.w/2, h.h/2, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+      }
+    });
+  }
+
+  function drawParticles(){
+    particles.forEach(p => {
+      ctx.globalAlpha = Math.max(0, p.life / 32);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
     ctx.globalAlpha = 1;
-    ctx.fillStyle = st.fill;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r * 0.5, 0, Math.PI * 2);
-    ctx.fill();
+  }
 
-    ctx.strokeStyle = "rgba(255,255,255,.35)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(p.x - p.vx * 0.8, p.y);
-    ctx.lineTo(p.x, p.y);
-    ctx.stroke();
-    ctx.restore();
-  });
-}
+  function drawHud(){
+    playerHpBar.style.width = ((player.hp / player.maxHp) * 100) + "%";
+    enemyHpBar.style.width = ((enemy.hp / enemy.maxHp) * 100) + "%";
+    playerSuperBar.style.width = ((player.super / player.maxSuper) * 100) + "%";
+    enemySuperBar.style.width = ((enemy.super / enemy.maxSuper) * 100) + "%";
+    playerAwakenBar.style.width = (player.awaken * 100) + "%";
+    enemyAwakenBar.style.width = (enemy.awaken * 100) + "%";
+    playerHpText.textContent = `HP ${Math.ceil(player.hp)} / ${player.maxHp}`;
+    enemyHpText.textContent = musou.active ? `S ${musou.score}` : `HP ${Math.ceil(enemy.hp)} / ${enemy.maxHp}`;
+  }
 
-function drawGuardRings() {
-  guardRings.forEach(g => {
+  function render(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const shakeX = cameraShake > 0 ? (Math.random() - 0.5) * cameraShake : 0;
+    const shakeY = cameraShake > 0 ? (Math.random() - 0.5) * cameraShake : 0;
+    const scale = parseFloat(getComputedStyle(root).getPropertyValue("--gameScale")) || 1;
+
     ctx.save();
-    ctx.globalAlpha = g.alpha;
-    ctx.strokeStyle = g.color;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.globalAlpha = g.alpha * 0.35;
-    ctx.fillStyle = g.color;
-    ctx.beginPath();
-    ctx.arc(g.x, g.y, g.r * 0.55, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.translate(shakeX, shakeY);
+
+    if (scale !== 1) {
+      const topMargin = 8;
+      ctx.translate((canvas.width - canvas.width * scale) / 2, topMargin);
+      ctx.scale(scale, scale);
+    }
+
+    drawBackground();
+    drawHazards();
+    drawFighter(player);
+    drawFighter(enemy);
+    drawProjectiles();
+    drawGuardRings();
+    drawParticles();
     ctx.restore();
-  });
-}
 
-function drawHazards() {
-  hazards.forEach(h => {
-    if (h.type === "lightning") {
-      ctx.save();
-      ctx.globalAlpha = h.life > 8 && h.life < 28 ? 0.45 : 0.18;
-      ctx.fillStyle = "rgba(160,245,255,.95)";
-      ctx.fillRect(h.x, 0, h.w, groundY());
-      ctx.restore();
+    if (cameraShake > 0) cameraShake *= 0.82;
+    if (cameraShake < 0.3) cameraShake = 0;
+    drawHud();
+  }
+
+  function setKeyFromCode(code, pressed){
+    if (code === "ArrowLeft") {
+      if (pressed && !keys.left) recordCommand("L");
+      keys.left = pressed;
     }
-    if (h.type === "rock") {
-      ctx.save();
-      ctx.fillStyle = "#8a725e";
-      ctx.beginPath();
-      ctx.arc(h.x + h.w/2, h.y + h.h/2, h.w/2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+    if (code === "ArrowRight") {
+      if (pressed && !keys.right) recordCommand("R");
+      keys.right = pressed;
     }
-    if (h.type === "spirit") {
-      ctx.save();
-      ctx.globalAlpha = 0.18 + Math.sin(performance.now()*0.01) * 0.04;
-      ctx.fillStyle = "#8ef2ff";
-      ctx.beginPath();
-      ctx.ellipse(h.x, h.y, h.w/2, h.h/2, 0, 0, Math.PI*2);
-      ctx.fill();
-      ctx.restore();
+    if (code === "ArrowUp") keys.jump = pressed;
+    if (code === "ArrowDown" && pressed) recordCommand("D");
+    if (code === "KeyZ") {
+      if (pressed) pressedThisFrame.punch = true;
+      keys.punch = pressed;
     }
+    if (code === "KeyX") {
+      if (pressed) pressedThisFrame.kick = true;
+      keys.kick = pressed;
+    }
+    if (code === "KeyC") {
+      if (pressed) pressedThisFrame.special = true;
+      keys.special = pressed;
+    }
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","KeyZ","KeyX","KeyC","Space"].includes(e.code)) e.preventDefault();
+    setKeyFromCode(e.code, true);
+  }, { passive:false });
+
+  window.addEventListener("keyup", (e) => setKeyFromCode(e.code, false));
+
+  function bindTouchButton(el, keyName, recordDir = null){
+    const on = (e) => {
+      e.preventDefault();
+      keys[keyName] = true;
+      if (recordDir) recordCommand(recordDir);
+      if (keyName === "punch") pressedThisFrame.punch = true;
+      if (keyName === "kick") pressedThisFrame.kick = true;
+      if (keyName === "special") pressedThisFrame.special = true;
+      el.classList.add("active");
+    };
+    const off = (e) => {
+      e.preventDefault();
+      keys[keyName] = false;
+      el.classList.remove("active");
+    };
+    el.addEventListener("pointerdown", on, { passive:false });
+    el.addEventListener("pointerup", off, { passive:false });
+    el.addEventListener("pointercancel", off, { passive:false });
+    el.addEventListener("pointerleave", off, { passive:false });
+  }
+
+  bindTouchButton(touchButtons.left, "left", "L");
+  bindTouchButton(touchButtons.right, "right", "R");
+  bindTouchButton(touchButtons.jump, "jump");
+  bindTouchButton(touchButtons.punch, "punch");
+  bindTouchButton(touchButtons.kick, "kick");
+  bindTouchButton(touchButtons.special, "special");
+
+  startCpuBtn.addEventListener("click", startCpuGame);
+  startMusouBtn.addEventListener("click", startMusouGame);
+  rankingBtn.addEventListener("click", () => {
+    rankingModeFilter = "battle";
+    loadLocalRanking();
+    clearScreens();
+    rankingScreen.classList.add("show");
   });
-}
-
-function drawParticles() {
-  particles.forEach(p => {
-    ctx.globalAlpha = Math.max(0, p.life / 32);
-    ctx.fillStyle = p.color;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    ctx.fill();
+  helpBtn.addEventListener("click", () => {
+    setHelpText();
+    clearScreens();
+    helpScreen.classList.add("show");
   });
-  ctx.globalAlpha = 1;
-}
+  helpBackBtn.addEventListener("click", () => {
+    clearScreens();
+    menuScreen.classList.add("show");
+  });
+  characterBtn.addEventListener("click", () => {
+    renderCharacterCards();
+    clearScreens();
+    characterScreen.classList.add("show");
+  });
+  characterBackBtn.addEventListener("click", () => {
+    clearScreens();
+    menuScreen.classList.add("show");
+  });
+  rankingBackBtn.addEventListener("click", () => {
+    clearScreens();
+    menuScreen.classList.add("show");
+  });
+  rankBattleBtn.addEventListener("click", () => {
+    rankingModeFilter = "battle";
+    loadLocalRanking();
+  });
+  rankMusouBtn.addEventListener("click", () => {
+    rankingModeFilter = "musou";
+    loadLocalRanking();
+  });
+  rankingResetBtn.addEventListener("click", resetLocalRanking);
+  rematchBtn.addEventListener("click", rematchLastBattle);
+  resultMenuBtn.addEventListener("click", () => {
+    resetMusou();
+    stopGame();
+    clearScreens();
+    menuScreen.classList.add("show");
+  });
+  fullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
+  gameFullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
+  backMenuBtn.addEventListener("click", () => {
+    resetMusou();
+    stopGame();
+    clearScreens();
+    menuScreen.classList.add("show");
+  });
 
-function drawHud() {
-  playerHpBar.style.width = ((player.hp / player.maxHp) * 100) + "%";
-  enemyHpBar.style.width = ((enemy.hp / enemy.maxHp) * 100) + "%";
-  playerSuperBar.style.width = ((player.super / player.maxSuper) * 100) + "%";
-  enemySuperBar.style.width = ((enemy.super / enemy.maxSuper) * 100) + "%";
-  playerAwakenBar.style.width = (player.awaken * 100) + "%";
-  enemyAwakenBar.style.width = (enemy.awaken * 100) + "%";
-  playerHpText.textContent = `HP ${Math.ceil(player.hp)} / ${player.maxHp}`;
-  enemyHpText.textContent = musou.active ? `S ${musou.score}` : `HP ${Math.ceil(enemy.hp)} / ${enemy.maxHp}`;
-}
+  fitCanvas();
+  applyViewportSafeLayout();
+  renderCharacterCards();
+  renderMenuCommands();
+  setHelpText();
 
-function render() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const shakeX = cameraShake > 0 ? (Math.random() - 0.5) * cameraShake : 0;
-  const shakeY = cameraShake > 0 ? (Math.random() - 0.5) * cameraShake : 0;
-  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--gameScale")) || 1;
+  window.addEventListener("resize", () => {
+    fitCanvas();
+    applyViewportSafeLayout();
+    updateRotateNotice();
+  });
 
-  ctx.save();
-  ctx.translate(shakeX, shakeY);
+  window.addEventListener("orientationchange", () => {
+    setTimeout(() => {
+      fitCanvas();
+      applyViewportSafeLayout();
+      updateRotateNotice();
+    }, 250);
+  });
 
-  if (scale !== 1) {
-    const topMargin = 8;
-    ctx.translate((canvas.width - canvas.width * scale) / 2, topMargin);
-    ctx.scale(scale, scale);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", () => {
+      applyViewportSafeLayout();
+      updateRotateNotice();
+    });
+    window.visualViewport.addEventListener("scroll", () => {
+      applyViewportSafeLayout();
+      updateRotateNotice();
+    });
   }
 
-  drawBackground();
-  drawHazards();
-  drawFighter(player);
-  drawFighter(enemy);
-  drawProjectiles();
-  drawGuardRings();
-  drawParticles();
-  ctx.restore();
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
+  document.addEventListener("selectstart", (e) => e.preventDefault());
+  document.addEventListener("dragstart", (e) => e.preventDefault());
+  document.addEventListener("gesturestart", (e) => e.preventDefault());
+  document.addEventListener("gesturechange", (e) => e.preventDefault());
+  document.addEventListener("gestureend", (e) => e.preventDefault());
 
-  if (cameraShake > 0) cameraShake *= 0.82;
-  if (cameraShake < 0.3) cameraShake = 0;
-  drawHud();
-}
-
-/* =========================
-   Input
-========================= */
-function setKeyFromCode(code, pressed) {
-  if (code === "ArrowLeft") {
-    if (pressed && !keys.left) recordCommand("L");
-    keys.left = pressed;
-  }
-  if (code === "ArrowRight") {
-    if (pressed && !keys.right) recordCommand("R");
-    keys.right = pressed;
-  }
-  if (code === "ArrowUp") keys.jump = pressed;
-  if (code === "ArrowDown" && pressed) recordCommand("D");
-  if (code === "KeyZ") {
-    if (pressed) pressedThisFrame.punch = true;
-    keys.punch = pressed;
-  }
-  if (code === "KeyX") {
-    if (pressed) pressedThisFrame.kick = true;
-    keys.kick = pressed;
-  }
-  if (code === "KeyC") {
-    if (pressed) pressedThisFrame.special = true;
-    keys.special = pressed;
-  }
-}
-window.addEventListener("keydown", (e) => {
-  if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","KeyZ","KeyX","KeyC","Space"].includes(e.code)) e.preventDefault();
-  setKeyFromCode(e.code, true);
-}, { passive:false });
-window.addEventListener("keyup", (e) => setKeyFromCode(e.code, false));
-
-function bindTouchButton(el, keyName, recordDir = null) {
-  const on = (e) => {
-    e.preventDefault();
-    keys[keyName] = true;
-    if (recordDir) recordCommand(recordDir);
-    if (keyName === "punch") pressedThisFrame.punch = true;
-    if (keyName === "kick") pressedThisFrame.kick = true;
-    if (keyName === "special") pressedThisFrame.special = true;
-    el.classList.add("active");
-  };
-  const off = (e) => {
-    e.preventDefault();
-    keys[keyName] = false;
-    el.classList.remove("active");
-  };
-  el.addEventListener("pointerdown", on, { passive:false });
-  el.addEventListener("pointerup", off, { passive:false });
-  el.addEventListener("pointercancel", off, { passive:false });
-  el.addEventListener("pointerleave", off, { passive:false });
-}
-bindTouchButton(touchButtons.left, "left", "L");
-bindTouchButton(touchButtons.right, "right", "R");
-bindTouchButton(touchButtons.jump, "jump");
-bindTouchButton(touchButtons.punch, "punch");
-bindTouchButton(touchButtons.kick, "kick");
-bindTouchButton(touchButtons.special, "special");
-
-/* =========================
-   Events
-========================= */
-startCpuBtn.addEventListener("click", startCpuGame);
-startMusouBtn.addEventListener("click", startMusouGame);
-openOnlineBtn.addEventListener("click", () => {
   clearScreens();
-  onlineScreen.classList.add("show");
-});
-fullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
-gameFullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
-createRoomBtn.addEventListener("click", createOnlineRoom);
-joinRoomBtn.addEventListener("click", () => joinOnlineRoom(roomCodeInput.value));
-roomCodeInput.addEventListener("input", () => { roomCodeInput.value = sanitizeRoomCode(roomCodeInput.value); });
-roomCodeInput.addEventListener("keydown", (e) => e.stopPropagation());
-onlineBackBtn.addEventListener("click", () => { clearScreens(); menuScreen.classList.add("show"); });
-readyOnlineBtn.addEventListener("click", markReadyAndStartIfPossible);
-leaveRoomBtn.addEventListener("click", async () => {
-  await leaveOnlineRoom(true);
-  clearScreens();
-  onlineScreen.classList.add("show");
-});
-backMenuBtn.addEventListener("click", async () => {
-  if (gameMode.startsWith("online") || gameMode === "spectator") await leaveOnlineRoom(gameMode === "online-host");
-  showMenu();
-});
-helpBtn.addEventListener("click", () => { clearScreens(); setHelpText(); helpScreen.classList.add("show"); });
-helpBackBtn.addEventListener("click", () => { clearScreens(); menuScreen.classList.add("show"); });
-characterBtn.addEventListener("click", () => { clearScreens(); renderCharacterCards(); characterScreen.classList.add("show"); });
-characterBackBtn.addEventListener("click", () => { clearScreens(); menuScreen.classList.add("show"); });
-rankingBtn.addEventListener("click", async () => {
-  clearScreens();
-  rankingScreen.classList.add("show");
-  await loadRanking();
-});
-rankingReloadBtn.addEventListener("click", loadRanking);
-rankingBackBtn.addEventListener("click", () => { clearScreens(); menuScreen.classList.add("show"); });
-rankBattleBtn.addEventListener("click", async () => {
-  rankingModeFilter = "battle";
-  await loadRanking();
-});
-rankMusouBtn.addEventListener("click", async () => {
-  rankingModeFilter = "musou";
-  await loadRanking();
-});
-rematchBtn.addEventListener("click", rematchLastBattle);
-onlineRematchBtn.addEventListener("click", requestOnlineRematch);
-resultMenuBtn.addEventListener("click", () => {
-  resetMusou();
-  showMenu();
-});
-window.addEventListener("beforeunload", async () => {
-  if (gameMode.startsWith("online") || gameMode === "spectator") await leaveOnlineRoom(gameMode === "online-host");
-});
-
-/* =========================
-   Boot
-========================= */
-fitCanvas();
-applyViewportSafeLayout();
-window.addEventListener("resize", () => { fitCanvas(); applyViewportSafeLayout(); updateRotateNotice(); });
-window.addEventListener("orientationchange", () => { setTimeout(() => { fitCanvas(); applyViewportSafeLayout(); updateRotateNotice(); }, 250); });
-if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", () => { applyViewportSafeLayout(); updateRotateNotice(); });
-  window.visualViewport.addEventListener("scroll", () => { applyViewportSafeLayout(); updateRotateNotice(); });
-}
-document.addEventListener("gesturestart", (e) => e.preventDefault());
-document.addEventListener("gesturechange", (e) => e.preventDefault());
-document.addEventListener("gestureend", (e) => e.preventDefault());
-document.addEventListener("contextmenu", (e) => e.preventDefault());
-document.addEventListener("selectstart", (e) => e.preventDefault());
-document.addEventListener("dragstart", (e) => e.preventDefault());
-
-showMenu();
+  menuScreen.classList.add("show");
+})();
 </script>
 </body>
 </html>
