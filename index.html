@@ -7,12 +7,12 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#05070d">
-  <title>Fight Game v12 Ultimate</title>
+  <title>Fight Game v13 Ultimate Fixed</title>
   <style>
     :root{
       --bg1:#09101d;
       --bg2:#16233f;
-      --panel:rgba(8,12,22,.92);
+      --panel:rgba(8,12,22,.94);
       --line:rgba(255,255,255,.12);
       --text:#eef3ff;
       --muted:#a9b6d8;
@@ -25,10 +25,10 @@
       --green1:#60ecb3;
       --green2:#18af7b;
       --shadow:0 18px 50px rgba(0,0,0,.44);
-      --hudTop:18px;
-      --controlLift:8px;
+      --hudTop:10px;
+      --controlLift:0px;
       --gameScale:1;
-      --bottomSafePad:74px;
+      --bottomSafePad:58px;
     }
 
     *{
@@ -84,7 +84,7 @@
       display:none;
       align-items:center;
       justify-content:center;
-      padding:20px;
+      padding:12px;
       background:
         radial-gradient(circle at 50% 14%, rgba(255,255,255,.06), transparent 34%),
         linear-gradient(180deg, rgba(14,22,42,.96), rgba(0,0,0,.96));
@@ -94,63 +94,64 @@
     .screen.show{ display:flex; }
 
     .panel{
-      width:min(94vw,1000px);
-      max-height:92vh;
+      width:min(96vw,1000px);
+      max-height:96dvh;
       overflow:auto;
       background:var(--panel);
       border:1px solid var(--line);
-      border-radius:28px;
-      padding:24px;
+      border-radius:24px;
+      padding:18px;
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
       text-align:center;
     }
 
     h1{
-      margin:0 0 10px;
-      font-size:clamp(34px,6vw,62px);
+      margin:0 0 8px;
+      font-size:clamp(30px,6vw,62px);
       letter-spacing:.08em;
     }
 
     h2{
-      margin:0 0 16px;
-      font-size:clamp(24px,4vw,38px);
+      margin:0 0 12px;
+      font-size:clamp(22px,4vw,38px);
     }
 
     p{
-      margin:8px 0;
+      margin:6px 0;
       color:var(--muted);
-      line-height:1.7;
+      line-height:1.55;
+      font-size:14px;
     }
 
     .sub{
-      font-size:13px;
+      font-size:12px;
       color:var(--muted);
-      margin-bottom:18px;
+      margin-bottom:12px;
     }
 
     .stack{
       display:flex;
       flex-direction:column;
-      gap:12px;
+      gap:10px;
       align-items:center;
     }
 
     .row{
       display:flex;
       flex-wrap:wrap;
-      gap:12px;
+      gap:10px;
       justify-content:center;
-      margin-top:12px;
+      margin-top:10px;
     }
 
     button,select,input{
       border:none;
       outline:none;
       min-width:220px;
-      padding:16px 20px;
+      padding:14px 18px;
       border-radius:16px;
-      font-size:18px;
+      font-size:17px;
       font-weight:900;
       color:#fff;
       box-shadow:var(--shadow);
@@ -159,6 +160,11 @@
     button{
       background:linear-gradient(180deg,var(--red1),var(--red2));
       cursor:pointer;
+    }
+
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
     }
 
     button.secondary{ background:linear-gradient(180deg,#61718f,#32405c); }
@@ -181,15 +187,15 @@
     .pick-grid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-      margin-top:14px;
+      gap:12px;
+      margin-top:12px;
     }
 
     .card{
       background:rgba(255,255,255,.04);
       border:1px solid var(--line);
-      border-radius:22px;
-      padding:14px;
+      border-radius:20px;
+      padding:12px;
       text-align:left;
       cursor:pointer;
       transition:transform .15s ease, border-color .15s ease;
@@ -219,18 +225,18 @@
     .box{
       background:rgba(255,255,255,.04);
       border:1px solid var(--line);
-      border-radius:18px;
-      padding:18px;
+      border-radius:16px;
+      padding:14px;
       text-align:left;
-      margin:16px 0;
+      margin:12px 0;
     }
 
     .room-code{
-      font-size:clamp(30px,6vw,54px);
+      font-size:clamp(26px,6vw,54px);
       font-weight:900;
       letter-spacing:.18em;
       color:#fff;
-      margin:12px 0;
+      margin:10px 0;
     }
 
     .rank-item{
@@ -257,33 +263,33 @@
       left:0;
       top:var(--hudTop);
       width:100%;
-      padding:0 14px;
+      padding:0 10px;
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
-      gap:10px;
+      gap:8px;
     }
 
     .fighter-panel{
-      width:min(34vw,300px);
+      width:min(32vw,250px);
       background:rgba(0,0,0,.42);
       border:1px solid rgba(255,255,255,.12);
-      border-radius:20px;
-      padding:10px 10px 8px;
+      border-radius:18px;
+      padding:8px 8px 7px;
       backdrop-filter:blur(8px);
       box-shadow:0 8px 30px rgba(0,0,0,.24);
     }
 
     .fighter-name{
-      font-size:13px;
+      font-size:12px;
       font-weight:900;
-      margin-bottom:8px;
+      margin-bottom:6px;
       letter-spacing:.06em;
     }
 
     .bar-wrap{
       width:100%;
-      height:17px;
+      height:14px;
       border-radius:999px;
       overflow:hidden;
       background:rgba(255,255,255,.09);
@@ -302,17 +308,17 @@
     .bar.super{ background:linear-gradient(90deg,#ffe08a,#ffb300); }
 
     .small-info{
-      margin-top:6px;
+      margin-top:4px;
       display:flex;
       justify-content:space-between;
       gap:8px;
-      font-size:11px;
+      font-size:10px;
       color:var(--muted);
     }
 
     #centerWrap{
       padding-top:4px;
-      min-width:120px;
+      min-width:100px;
       text-align:center;
     }
 
@@ -321,22 +327,22 @@
       letter-spacing:.08em;
       text-align:center;
       text-shadow:0 4px 18px rgba(0,0,0,.5);
-      font-size:clamp(14px,2vw,22px);
+      font-size:clamp(12px,2vw,20px);
     }
 
     #message{
       position:absolute;
       left:50%;
-      top:calc(var(--hudTop) + 76px);
+      top:calc(var(--hudTop) + 58px);
       transform:translateX(-50%);
-      min-width:220px;
+      min-width:160px;
       max-width:84vw;
       text-align:center;
-      padding:12px 18px;
-      border-radius:20px;
+      padding:8px 12px;
+      border-radius:18px;
       background:rgba(0,0,0,.55);
       border:1px solid var(--line);
-      font-size:clamp(18px,4vw,40px);
+      font-size:clamp(14px,4vw,24px);
       font-weight:900;
       opacity:0;
       transition:opacity .2s ease;
@@ -348,7 +354,7 @@
     #topButtons{
       position:absolute;
       top:calc(var(--hudTop) + 2px);
-      right:12px;
+      right:10px;
       display:none;
       gap:8px;
       z-index:20;
@@ -357,8 +363,8 @@
 
     .mini-btn{
       min-width:auto;
-      width:48px;
-      height:48px;
+      width:44px;
+      height:44px;
       padding:0;
       border-radius:50%;
       font-size:16px;
@@ -374,10 +380,10 @@
       justify-content:space-between;
       align-items:flex-end;
       padding:
-        8px
-        max(18px, env(safe-area-inset-right))
-        calc(var(--bottomSafePad) + env(safe-area-inset-bottom))
-        max(18px, env(safe-area-inset-left));
+        4px
+        max(10px, env(safe-area-inset-right))
+        calc(14px + env(safe-area-inset-bottom))
+        max(10px, env(safe-area-inset-left));
       z-index:18;
       pointer-events:none;
       transform:translateY(calc(-1 * var(--controlLift)));
@@ -386,7 +392,7 @@
 
     .pad{
       display:flex;
-      gap:10px;
+      gap:8px;
       align-items:flex-end;
       pointer-events:auto;
     }
@@ -394,14 +400,14 @@
     .pad.right{ align-items:center; }
 
     .touch-btn{
-      width:56px;
-      height:56px;
+      width:48px;
+      height:48px;
       border-radius:50%;
       display:flex;
       align-items:center;
       justify-content:center;
       color:#fff;
-      font-size:20px;
+      font-size:18px;
       font-weight:900;
       border:1px solid rgba(255,255,255,.16);
       background:rgba(255,255,255,.16);
@@ -412,9 +418,9 @@
     }
 
     .touch-btn.big{
-      width:68px;
-      height:68px;
-      font-size:22px;
+      width:58px;
+      height:58px;
+      font-size:20px;
     }
 
     .touch-btn.active,
@@ -428,7 +434,7 @@
       inset:0;
       display:none;
       z-index:80;
-      background:#000;
+      background:rgba(0,0,0,.92);
       align-items:center;
       justify-content:center;
       text-align:center;
@@ -436,10 +442,10 @@
       font-size:clamp(22px,5vw,42px);
       font-weight:900;
       letter-spacing:.05em;
+      pointer-events:none;
     }
 
     .tiny{ font-size:12px; color:var(--muted); }
-
     #resultScreen .panel{ max-width:780px; }
     #resultTitle{
       font-size:clamp(34px,7vw,64px);
@@ -456,20 +462,48 @@
       #mobileControls{ display:flex; }
       .pick-grid{ grid-template-columns:1fr; }
 
-      .fighter-panel{
-        width:min(32vw,220px);
-        padding:8px 8px 7px;
+      .panel{
+        width:min(96vw,1000px);
+        max-height:96dvh;
+        padding:14px;
+        border-radius:20px;
       }
 
-      .fighter-name{ font-size:11px; }
-      .small-info{ font-size:10px; }
-      .bar-wrap{ height:15px; }
+      h1{ font-size:clamp(26px,7vw,40px); }
+      h2{ font-size:clamp(20px,5vw,30px); }
+      p{ font-size:13px; line-height:1.45; }
+      .sub{ font-size:11px; margin-bottom:10px; }
+      .stack{ gap:8px; }
+      .row{ gap:8px; margin-top:8px; }
 
-      button,select,input{ min-width:180px; }
-    }
+      button,select,input{
+        min-width:0;
+        width:100%;
+        padding:12px 14px;
+        font-size:16px;
+        border-radius:14px;
+      }
 
-    @media (orientation:portrait) and (max-width:1200px){
-      #rotateNotice{ display:flex; }
+      .box{
+        padding:12px;
+        margin:10px 0;
+        border-radius:14px;
+      }
+
+      .room-code{
+        font-size:clamp(24px,8vw,38px);
+        margin:6px 0;
+      }
+
+      .fighter-panel{
+        width:min(30vw,170px);
+        padding:6px;
+        border-radius:14px;
+      }
+
+      .fighter-name{ font-size:10px; margin-bottom:6px; }
+      .bar-wrap{ height:12px; }
+      .small-info{ font-size:9px; margin-top:4px; }
     }
   </style>
 </head>
@@ -477,8 +511,8 @@
 <div id="app">
   <div id="menuScreen" class="screen show">
     <div class="panel">
-      <h1>FIGHT GAME v12</h1>
-      <div class="sub">オンライン再戦 / 観戦 / 技追加 / CPU超強化 / 横画面改善版</div>
+      <h1>FIGHT GAME v13</h1>
+      <div class="sub">オンライン修正版 / 観戦 / キャラ追加 / スマホ縮小最適化</div>
       <div class="stack">
         <button id="startCpuBtn">CPU対戦</button>
         <button id="openOnlineBtn" class="green">オンライン対戦</button>
@@ -501,6 +535,7 @@
         <button id="characterBtn" class="secondary">キャラクター選択</button>
         <button id="rankingBtn" class="secondary">ランキング</button>
         <button id="helpBtn" class="secondary">操作説明</button>
+        <p id="firebaseStatus" class="tiny">Firebase接続確認中...</p>
       </div>
     </div>
   </div>
@@ -556,7 +591,7 @@
   <div id="characterScreen" class="screen">
     <div class="panel">
       <h2>キャラクター選択</h2>
-      <p>昔ながらの2D格闘ゲーム風に寄せた体格差とモーション差を強化しています。</p>
+      <p>アニメ風オリジナルキャラを追加済みです。</p>
       <div class="pick-grid" id="characterGrid"></div>
       <div class="row">
         <button id="characterBackBtn" class="secondary">戻る</button>
@@ -594,7 +629,7 @@
       <div class="fighter-panel">
         <div class="fighter-name" id="leftName">PLAYER 1</div>
         <div class="bar-wrap"><div id="playerHpBar" class="bar player"></div></div>
-        <div class="bar-wrap" style="margin-top:8px;height:9px;"><div id="playerSuperBar" class="bar super"></div></div>
+        <div class="bar-wrap" style="margin-top:6px;height:8px;"><div id="playerSuperBar" class="bar super"></div></div>
         <div class="small-info">
           <span id="playerHpText">HP 100 / 100</span>
           <span id="comboText">COMBO 0</span>
@@ -608,7 +643,7 @@
       <div class="fighter-panel">
         <div class="fighter-name" id="rightName" style="text-align:right;">PLAYER 2</div>
         <div class="bar-wrap"><div id="enemyHpBar" class="bar enemy"></div></div>
-        <div class="bar-wrap" style="margin-top:8px;height:9px;"><div id="enemySuperBar" class="bar super"></div></div>
+        <div class="bar-wrap" style="margin-top:6px;height:8px;"><div id="enemySuperBar" class="bar super"></div></div>
         <div class="small-info">
           <span id="difficultyText">CPU / ONLINE</span>
           <span id="enemyHpText">HP 100 / 100</span>
@@ -665,9 +700,6 @@ import {
   onDisconnect
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-/* =========================
-   Firebase
-========================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBkY-kHndDPPZjqr7F52oPyvg5gAJs3Ipk",
   authDomain: "fight-game-5abcb.firebaseapp.com",
@@ -686,17 +718,6 @@ const rtdb = getDatabase(firebaseApp);
 let firebaseReady = false;
 let firebaseUserId = "guest";
 
-try {
-  const cred = await signInAnonymously(auth);
-  firebaseReady = true;
-  firebaseUserId = cred.user?.uid || "guest";
-} catch (err) {
-  console.error("Firebase auth error", err);
-}
-
-/* =========================
-   Data
-========================= */
 const CHARACTERS = {
   ryu: {
     key:"ryu", name:"RYU", style:"王道バランス",
@@ -722,6 +743,21 @@ const CHARACTERS = {
     key:"valkyrie", name:"VALKYRIE", style:"対空制圧",
     color:"#3fe0c7", accent:"#d7fff7", hair:"#f7f4ff", aura:"#79ffe7", scarf:"#6ff0d5",
     speed:4.9, jump:18.2, atk:0.99, def:0.99, superGain:1.04, specialName:"スカイランサー", silhouette:"lancer"
+  },
+  phoenix: {
+    key:"phoenix", name:"PHOENIX", style:"炎圧ラッシュ",
+    color:"#ff7a3d", accent:"#ffe0c8", hair:"#7a1600", aura:"#ffb066", scarf:"#ffd27a",
+    speed:5.1, jump:17.0, atk:1.07, def:0.95, superGain:1.08, specialName:"クリムゾンバースト", silhouette:"martial"
+  },
+  frost: {
+    key:"frost", name:"FROST", style:"氷結牽制",
+    color:"#7ce6ff", accent:"#e4fbff", hair:"#dff8ff", aura:"#bdf7ff", scarf:"#b8efff",
+    speed:4.7, jump:16.8, atk:1.02, def:1.02, superGain:1.06, specialName:"アイスノヴァ", silhouette:"lancer"
+  },
+  oni: {
+    key:"oni", name:"ONI", style:"豪腕爆発",
+    color:"#9f4dff", accent:"#efe0ff", hair:"#1e0d33", aura:"#cf8cff", scarf:"#7d54d9",
+    speed:4.4, jump:15.2, atk:1.18, def:1.05, superGain:0.96, specialName:"滅鬼震", silhouette:"heavy"
   }
 };
 
@@ -730,31 +766,28 @@ const STAGES = {
     label:"DOJO",
     skyTop:"#32405f", skyBottom:"#121822",
     floor:"#34221b", line:"#6e4c3b", glow:"rgba(255,204,170,.08)",
-    buff:{ ryu:{atk:1.08}, blade:{atk:0.98}, titan:{atk:1.0}, shadow:{atk:1.0}, valkyrie:{atk:1.0} }
+    buff:{ ryu:{atk:1.08}, blade:{atk:0.98}, titan:{atk:1.0}, shadow:{atk:1.0}, valkyrie:{atk:1.0}, phoenix:{atk:1.06}, frost:{atk:0.98}, oni:{atk:1.04} }
   },
   ruins: {
     label:"RUINS",
     skyTop:"#4d3f34", skyBottom:"#17110f",
     floor:"#53453a", line:"#917c69", glow:"rgba(255,224,170,.08)",
-    buff:{ ryu:{atk:0.98}, blade:{atk:1.0}, titan:{atk:1.12}, shadow:{atk:1.0}, valkyrie:{atk:0.98} }
+    buff:{ ryu:{atk:0.98}, blade:{atk:1.0}, titan:{atk:1.12}, shadow:{atk:1.0}, valkyrie:{atk:0.98}, phoenix:{atk:1.0}, frost:{atk:1.0}, oni:{atk:1.10} }
   },
   neon: {
     label:"NEON CITY",
     skyTop:"#251f5f", skyBottom:"#060813",
     floor:"#1d2747", line:"#4e77b9", glow:"rgba(116,196,255,.12)",
-    buff:{ ryu:{atk:1.0}, blade:{atk:1.08}, titan:{atk:0.98}, shadow:{atk:1.06}, valkyrie:{atk:1.02} }
+    buff:{ ryu:{atk:1.0}, blade:{atk:1.08}, titan:{atk:0.98}, shadow:{atk:1.06}, valkyrie:{atk:1.02}, phoenix:{atk:1.03}, frost:{atk:1.04}, oni:{atk:0.98} }
   },
   moon: {
     label:"MOON BASE",
     skyTop:"#455167", skyBottom:"#0c1018",
     floor:"#57606c", line:"#b0c0d6", glow:"rgba(220,240,255,.10)",
-    buff:{ ryu:{atk:1.0}, blade:{atk:1.0}, titan:{atk:1.0}, shadow:{atk:1.04}, valkyrie:{atk:1.08} }
+    buff:{ ryu:{atk:1.0}, blade:{atk:1.0}, titan:{atk:1.0}, shadow:{atk:1.04}, valkyrie:{atk:1.08}, phoenix:{atk:0.98}, frost:{atk:1.08}, oni:{atk:1.02} }
   }
 };
 
-/* =========================
-   DOM
-========================= */
 const root = document.documentElement;
 const menuScreen = document.getElementById("menuScreen");
 const onlineScreen = document.getElementById("onlineScreen");
@@ -795,6 +828,7 @@ const lobbyPlayers = document.getElementById("lobbyPlayers");
 const resultTitle = document.getElementById("resultTitle");
 const resultSub = document.getElementById("resultSub");
 const lobbyActionRow = document.getElementById("lobbyActionRow");
+const firebaseStatus = document.getElementById("firebaseStatus");
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -816,6 +850,7 @@ const mobileControls = document.getElementById("mobileControls");
 const topButtons = document.getElementById("topButtons");
 const backMenuBtn = document.getElementById("backMenuBtn");
 const gameFullscreenBtn = document.getElementById("gameFullscreenBtn");
+const rotateNotice = document.getElementById("rotateNotice");
 
 const touchButtons = {
   left: document.getElementById("leftBtn"),
@@ -829,9 +864,6 @@ const touchButtons = {
 const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 const isMobile = matchMedia("(max-width: 940px)").matches || isTouch;
 
-/* =========================
-   Layout
-========================= */
 function fitCanvas() {
   const vv = window.visualViewport;
   const w = vv ? Math.round(vv.width) : window.innerWidth;
@@ -845,61 +877,35 @@ function fitCanvas() {
 function applyViewportSafeLayout() {
   const vv = window.visualViewport;
   if (!vv) {
-    root.style.setProperty("--hudTop", "16px");
-    root.style.setProperty("--controlLift", "6px");
-    root.style.setProperty("--gameScale", isMobile ? "0.86" : "1");
-    root.style.setProperty("--bottomSafePad", isMobile ? "82px" : "74px");
+    root.style.setProperty("--hudTop", "10px");
+    root.style.setProperty("--controlLift", "0px");
+    root.style.setProperty("--gameScale", isMobile ? "0.78" : "1");
+    root.style.setProperty("--bottomSafePad", isMobile ? "58px" : "74px");
     mobileControls.style.bottom = "0px";
     return;
   }
 
   const hiddenBottom = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
   const hiddenTop = Math.max(0, vv.offsetTop);
-
-  const extraHudTop = Math.min(44, hiddenTop + 6);
-  const controlLift = hiddenBottom > 0 ? Math.min(52, hiddenBottom + 8) : 6;
-
+  const extraHudTop = Math.min(18, hiddenTop + 2);
+  const controlLift = hiddenBottom > 0 ? Math.min(18, hiddenBottom + 2) : 0;
   let gameScale = 1;
-  if (isMobile) gameScale = hiddenBottom > 0 ? 0.82 : 0.86;
+  if (isMobile) gameScale = hiddenBottom > 0 ? 0.74 : 0.78;
 
-  root.style.setProperty("--hudTop", `${14 + extraHudTop}px`);
+  root.style.setProperty("--hudTop", `${8 + extraHudTop}px`);
   root.style.setProperty("--controlLift", `${controlLift}px`);
   root.style.setProperty("--gameScale", `${gameScale}`);
-  root.style.setProperty("--bottomSafePad", isMobile ? "86px" : "74px");
+  root.style.setProperty("--bottomSafePad", isMobile ? "58px" : "74px");
   mobileControls.style.bottom = `${hiddenBottom}px`;
 }
 
-fitCanvas();
-applyViewportSafeLayout();
-
-window.addEventListener("resize", () => {
-  fitCanvas();
-  applyViewportSafeLayout();
-});
-window.addEventListener("orientationchange", () => {
-  setTimeout(() => {
-    fitCanvas();
-    applyViewportSafeLayout();
-  }, 250);
-});
-if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", applyViewportSafeLayout);
-  window.visualViewport.addEventListener("scroll", applyViewportSafeLayout);
+function updateRotateNotice() {
+  const portrait = window.matchMedia("(orientation: portrait)").matches;
+  const playing = gameRunning;
+  rotateNotice.style.display = (isMobile && portrait && playing) ? "flex" : "none";
 }
 
-document.addEventListener("gesturestart", (e) => e.preventDefault());
-document.addEventListener("gesturechange", (e) => e.preventDefault());
-document.addEventListener("gestureend", (e) => e.preventDefault());
-document.addEventListener("contextmenu", (e) => e.preventDefault());
-document.addEventListener("selectstart", (e) => e.preventDefault());
-document.addEventListener("dragstart", (e) => e.preventDefault());
-
-/* =========================
-   Helpers
-========================= */
-function clamp(v, min, max) {
-  return Math.max(min, Math.min(max, v));
-}
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 function clearScreens() {
   menuScreen.classList.remove("show");
   onlineScreen.classList.remove("show");
@@ -929,7 +935,7 @@ function randomRoomCode() {
   for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
   return s;
 }
-function groundY() { return canvas.height - 150; }
+function groundY() { return canvas.height - 130; }
 function distX(a,b) { return Math.abs((a.x + a.w/2) - (b.x + b.w/2)); }
 function facingUpdate(a,b) { a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1; }
 function getBodyRect(f) { return { x:f.x, y:f.y, w:f.w, h:f.h }; }
@@ -937,11 +943,56 @@ function rectsOverlap(a,b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-/* =========================
-   Help / Character UI
-========================= */
-let selectedCharacter = "ryu";
+function fullscreenSupported() {
+  const el = document.documentElement;
+  return !!(el.requestFullscreen || el.webkitRequestFullscreen);
+}
+function refreshFullscreenButtons() {
+  const ok = fullscreenSupported();
+  fullscreenBtn.style.display = ok ? "inline-block" : "none";
+  gameFullscreenBtn.style.display = ok ? "inline-flex" : "none";
+}
+async function enterFullscreenIfPossible() {
+  try {
+    const el = document.documentElement;
+    if (!fullscreenSupported()) return false;
+    if (document.fullscreenElement) return true;
+    if (el.requestFullscreen) {
+      await el.requestFullscreen({ navigationUI:"hide" });
+      return true;
+    }
+    if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+      return true;
+    }
+    return false;
+  } catch (e) {
+    console.log("fullscreen unavailable", e);
+    return false;
+  }
+}
 
+function setOnlineAvailability(enabled, text) {
+  openOnlineBtn.disabled = !enabled;
+  createRoomBtn.disabled = !enabled;
+  joinRoomBtn.disabled = !enabled;
+  firebaseStatus.textContent = text;
+}
+
+setOnlineAvailability(false, "Firebase接続確認中...");
+refreshFullscreenButtons();
+
+try {
+  const cred = await signInAnonymously(auth);
+  firebaseReady = true;
+  firebaseUserId = cred.user?.uid || "guest";
+  setOnlineAvailability(true, "オンライン使用可能");
+} catch (err) {
+  console.error("Firebase auth error", err);
+  setOnlineAvailability(false, "オンライン未使用: Anonymous認証 / 承認済みドメイン / Realtime Database rules を確認してください");
+}
+
+let selectedCharacter = "ryu";
 function setHelpText() {
   helpContent.innerHTML = isMobile ? `
     <p><strong>スマホ操作</strong></p>
@@ -951,7 +1002,6 @@ function setHelpText() {
     <p>↓↘→ + P : 波動系ショット</p>
     <p>→↓↘ + K : 昇竜系アッパー</p>
     <p>←ため→ + K : 突進系スラスト</p>
-    <p>ボタン位置は前より低くしています。</p>
   ` : `
     <p><strong>PC操作</strong></p>
     <p>← → : 移動 / ↑ : ジャンプ / Z : パンチ / X : キック / C : 必殺技</p>
@@ -985,9 +1035,6 @@ function renderCharacterCards() {
 }
 renderCharacterCards();
 
-/* =========================
-   Ranking
-========================= */
 async function loadRanking() {
   rankingList.innerHTML = "読み込み中...";
   try {
@@ -1034,26 +1081,6 @@ async function saveRanking(score) {
   }
 }
 
-/* =========================
-   Fullscreen
-========================= */
-async function enterFullscreenIfPossible() {
-  try {
-    const el = document.documentElement;
-    if (document.fullscreenElement) return;
-    if (el.requestFullscreen) {
-      await el.requestFullscreen({ navigationUI:"hide" });
-      return;
-    }
-    if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-  } catch (e) {
-    console.log("fullscreen unavailable", e);
-  }
-}
-
-/* =========================
-   Game config
-========================= */
 function difficultyConfig() {
   const v = difficultySelect.value;
   if (v === "boss") return { label:"BOSS", speed:5.8, react:0.995, defend:0.55, aggro:1.8 };
@@ -1061,12 +1088,10 @@ function difficultyConfig() {
   if (v === "hard") return { label:"HARD", speed:4.5, react:0.82, defend:0.24, aggro:1.08 };
   return { label:"NORMAL", speed:3.8, react:0.66, defend:0.14, aggro:0.86 };
 }
-
 function stageBuff(characterKey) {
   const st = STAGES[stageSelect.value];
   return st.buff[characterKey] || { atk:1.0 };
 }
-
 function baseStatsFromCharacter(characterKey) {
   const ch = CHARACTERS[characterKey];
   const sb = stageBuff(characterKey);
@@ -1086,21 +1111,13 @@ function baseStatsFromCharacter(characterKey) {
     silhouette: ch.silhouette
   };
 }
-
 function pickEnemyCharacter() {
   const keys = Object.keys(CHARACTERS).filter(k => k !== selectedCharacter);
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
-/* =========================
-   State
-========================= */
-const keys = {
-  left:false, right:false, jump:false,
-  punch:false, kick:false, special:false
-};
+const keys = { left:false, right:false, jump:false, punch:false, kick:false, special:false };
 let pressedThisFrame = { punch:false, kick:false, special:false };
-
 let gameRunning = false;
 let gameOver = false;
 let animationId = 0;
@@ -1112,14 +1129,12 @@ let particles = [];
 let commandBuffer = [];
 let roundTimer = 99;
 let resultSaved = false;
-let gameMode = "cpu"; // cpu / online-host / online-guest / spectator
+let gameMode = "cpu";
 let onlineGameStarted = false;
 let pendingResult = null;
 let lastBattleMode = "cpu";
 let lastBattleEnemyCharacter = null;
 let onlineResultRoomCode = "";
-let pendingRematchMessage = "";
-
 const gravity = 0.9;
 
 function createFighter(characterKey, isPlayer) {
@@ -1128,10 +1143,10 @@ function createFighter(characterKey, isPlayer) {
     characterKey,
     name: st.name,
     specialName: st.specialName,
-    x: isPlayer ? 170 : canvas.width - 250,
-    y: groundY() - 144,
-    w: 80,
-    h: 144,
+    x: isPlayer ? 130 : canvas.width - 210,
+    y: groundY() - 128,
+    w: 72,
+    h: 128,
     vx: 0,
     vy: 0,
     dir: isPlayer ? 1 : -1,
@@ -1171,9 +1186,7 @@ function createFighter(characterKey, isPlayer) {
 
 let player = createFighter(selectedCharacter, true);
 let enemy = createFighter(pickEnemyCharacter(), false);
-
 function fighterToPlain(f) { return { ...f }; }
-
 function applyRemoteState(state) {
   if (!state) return;
   if (state.player) player = { ...player, ...state.player };
@@ -1202,7 +1215,6 @@ function resetBattle(enemyCharacter = null) {
   gameOver = false;
   resultSaved = false;
   pendingResult = null;
-  pendingRematchMessage = "";
 
   leftName.textContent = player.name;
   rightName.textContent = enemy.name;
@@ -1215,6 +1227,12 @@ function resetBattle(enemyCharacter = null) {
   showMessage("READY", 800);
 }
 
+function resetInput() {
+  Object.keys(keys).forEach(k => keys[k] = false);
+  Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
+  Object.values(touchButtons).forEach(btn => btn.classList.remove("active"));
+}
+
 function stopGame() {
   gameRunning = false;
   cancelAnimationFrame(animationId);
@@ -1223,12 +1241,7 @@ function stopGame() {
   topButtons.style.display = "none";
   resetInput();
   onlineGameStarted = false;
-}
-
-function resetInput() {
-  Object.keys(keys).forEach(k => keys[k] = false);
-  Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
-  Object.values(touchButtons).forEach(btn => btn.classList.remove("active"));
+  updateRotateNotice();
 }
 
 async function startCpuGame() {
@@ -1245,6 +1258,7 @@ async function startCpuGame() {
   cancelAnimationFrame(animationId);
   animationId = requestAnimationFrame(loop);
   applyViewportSafeLayout();
+  updateRotateNotice();
 }
 
 async function startOnlineGameAsRole(role, remoteCharacterKey) {
@@ -1262,6 +1276,7 @@ async function startOnlineGameAsRole(role, remoteCharacterKey) {
   cancelAnimationFrame(animationId);
   animationId = requestAnimationFrame(loop);
   applyViewportSafeLayout();
+  updateRotateNotice();
   showMessage(role === "spectator" ? "WATCH" : "FIGHT", 900);
 }
 
@@ -1283,9 +1298,6 @@ function showResultScreen(title, sub) {
   resultScreen.classList.add("show");
 }
 
-/* =========================
-   Commands / attacks
-========================= */
 function recordCommand(dir) {
   const now = performance.now();
   commandBuffer.push({ dir, time: now });
@@ -1297,21 +1309,18 @@ function commandMatched(sequence) {
   const tail = arr.slice(-sequence.length).join(",");
   return tail === sequence.join(",");
 }
-
 function getAttackRect(f) {
   let range = 0, height = 0, yOffset = 0;
   if (f.attackType === "punch") { range = 36; height = 24; yOffset = 40; }
-  if (f.attackType === "kick") { range = 58; height = 34; yOffset = 78; }
+  if (f.attackType === "kick") { range = 58; height = 34; yOffset = 72; }
   if (f.attackType === "dashPunch") { range = 84; height = 30; yOffset = 38; }
-  if (f.attackType === "special") { range = 126; height = 50; yOffset = 28; }
+  if (f.attackType === "special") { range = 126; height = 50; yOffset = 24; }
   if (f.attackType === "fireball") { range = 116; height = 34; yOffset = 42; }
   if (f.attackType === "uppercut") { range = 42; height = 62; yOffset = 8; }
-  if (f.attackType === "chargeKick") { range = 96; height = 38; yOffset = 70; }
-
+  if (f.attackType === "chargeKick") { range = 96; height = 38; yOffset = 66; }
   if (f.dir === 1) return { x:f.x + f.w - 4, y:f.y + yOffset, w:range, h:height };
   return { x:f.x - range + 4, y:f.y + yOffset, w:range, h:height };
 }
-
 function attackData(type) {
   if (type === "punch") return { timer:11, cooldown:12, damage:6, kb:10, superGain:8 };
   if (type === "kick") return { timer:16, cooldown:18, damage:10, kb:15, superGain:11 };
@@ -1322,7 +1331,6 @@ function attackData(type) {
   if (type === "special") return { timer:28, cooldown:36, damage:18, kb:26, superGain:0, cost:50 };
   return { timer:0, cooldown:0, damage:0, kb:0, superGain:0 };
 }
-
 function attackActiveFrame(type, timer) {
   if (type === "punch") return timer >= 5 && timer <= 7;
   if (type === "kick") return timer >= 8 && timer <= 12;
@@ -1333,55 +1341,33 @@ function attackActiveFrame(type, timer) {
   if (type === "special") return timer >= 10 && timer <= 20;
   return false;
 }
-
 function spawnImpact(x, y, color, count=8) {
   for (let i = 0; i < count; i++) {
-    particles.push({
-      x, y,
-      vx:(Math.random()-0.5)*6,
-      vy:(Math.random()-0.5)*6 - 1,
-      life:18 + Math.random()*12,
-      size:3 + Math.random()*4,
-      color
-    });
+    particles.push({ x, y, vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*6 - 1, life:18 + Math.random()*12, size:3 + Math.random()*4, color });
   }
 }
-
 function spawnAuraBurst(x, y, color) {
   for (let i = 0; i < 18; i++) {
-    particles.push({
-      x, y,
-      vx:(Math.random()-0.5)*11,
-      vy:(Math.random()-0.5)*8 - 1,
-      life:22 + Math.random()*12,
-      size:4 + Math.random()*5,
-      color
-    });
+    particles.push({ x, y, vx:(Math.random()-0.5)*11, vy:(Math.random()-0.5)*8 - 1, life:22 + Math.random()*12, size:4 + Math.random()*5, color });
   }
 }
-
 function tryStartAttack(f, type) {
   if (f.dead || f.hitstun > 0) return false;
   if (f.attackTimer > 0 || f.attackCooldown > 0) return false;
-
   const data = attackData(type);
   if (type === "special" && f.super < data.cost) return false;
-
   if (type === "special") {
     f.super = clamp(f.super - data.cost, 0, f.maxSuper);
     spawnAuraBurst(f.x + f.w/2, f.y + 50, f.aura);
   }
-
   f.attackType = type;
   f.attackTimer = data.timer;
   f.attackCooldown = data.cooldown;
   f.state = "attack";
   f.hasHitCurrentAttack = false;
-
   if (type === "dashPunch") f.vx = 7.4 * f.dir;
   if (type === "uppercut") f.vy = -7.4;
   if (type === "chargeKick") f.vx = 6.8 * f.dir;
-
   if (f.isPlayer) {
     if (type === "special") showMessage(f.specialName, 500);
     else if (type === "fireball") showMessage("FIRE SHOT", 280);
@@ -1391,15 +1377,8 @@ function tryStartAttack(f, type) {
   }
   return true;
 }
-
-function gainSuper(f, value) {
-  f.super = clamp(f.super + value * f.superGain, 0, f.maxSuper);
-}
-
-function facingProperForGuard(target, attacker) {
-  return target.dir === -attacker.dir;
-}
-
+function gainSuper(f, value) { f.super = clamp(f.super + value * f.superGain, 0, f.maxSuper); }
+function facingProperForGuard(target, attacker) { return target.dir === -attacker.dir; }
 function maybeSaveWinRanking() {
   if (!resultSaved && gameMode !== "online-guest" && gameMode !== "spectator") {
     resultSaved = true;
@@ -1407,49 +1386,27 @@ function maybeSaveWinRanking() {
     saveRanking(score);
   }
 }
-
 async function finishMatch(attackerIsPlayer, reasonText) {
   if (pendingResult) return;
-
   gameOver = true;
-  pendingResult = {
-    title: attackerIsPlayer ? "YOU WIN" : "YOU LOSE",
-    sub: reasonText
-  };
-
-  if (attackerIsPlayer) {
-    player.resultPose = "win";
-    enemy.resultPose = "lose";
-  } else {
-    player.resultPose = "lose";
-    enemy.resultPose = "win";
-  }
-
+  pendingResult = { title: attackerIsPlayer ? "YOU WIN" : "YOU LOSE", sub: reasonText };
+  if (attackerIsPlayer) { player.resultPose = "win"; enemy.resultPose = "lose"; }
+  else { player.resultPose = "lose"; enemy.resultPose = "win"; }
   showMessage(pendingResult.title, 1700);
-
   if (gameMode === "cpu") {
     if (attackerIsPlayer) maybeSaveWinRanking();
     setTimeout(() => showResultScreen(pendingResult.title, pendingResult.sub), 1750);
     return;
   }
-
-  if (gameMode.startsWith("online") || gameMode === "spectator") {
-    if (gameMode === "online-host" && attackerIsPlayer) maybeSaveWinRanking();
-    setTimeout(() => {
-      onlineResultRoomCode = onlineInfo.roomCode || onlineResultRoomCode;
-      showResultScreen(
-        pendingResult.title,
-        pendingResult.sub + (gameMode === "spectator" ? " / 観戦中" : " / オンライン再戦申請できます")
-      );
-    }, 1750);
-  }
+  setTimeout(() => {
+    onlineResultRoomCode = onlineInfo.roomCode || onlineResultRoomCode;
+    showResultScreen(pendingResult.title, pendingResult.sub + (gameMode === "spectator" ? " / 観戦中" : " / オンライン再戦申請できます"));
+  }, 1750);
 }
-
 function applyDamage(attacker, target) {
   const data = attackData(attacker.attackType);
   let damage = data.damage * attacker.atkMul / target.defMul;
   let kb = data.kb;
-
   if (target.guardTimer > 0 && facingProperForGuard(target, attacker)) {
     damage *= 0.35;
     kb *= 0.5;
@@ -1461,47 +1418,38 @@ function applyDamage(attacker, target) {
     target.invuln = attacker.attackType === "special" ? 14 : 9;
     spawnImpact(target.x + target.w/2, target.y + 36, "#ffffff", attacker.attackType === "special" ? 14 : 8);
   }
-
   target.hp = clamp(target.hp - damage, 0, target.maxHp);
   target.hurtFlash = 8;
   target.x += kb * (attacker.dir === 1 ? 1 : -1);
   target.vx = kb * 0.18 * (attacker.dir === 1 ? 1 : -1);
   if (attacker.attackType === "special" || attacker.attackType === "uppercut") target.vy = -4.7;
-
   gainSuper(attacker, data.superGain || 0);
   gainSuper(target, 4);
-
   attacker.hasHitCurrentAttack = true;
   cameraShake = attacker.attackType === "special" ? 12 : 4.5;
-
   if (attacker.isPlayer) {
     const now = performance.now();
     combo = (now - lastHitTime < 1200) ? combo + 1 : 1;
     lastHitTime = now;
     comboText.textContent = "COMBO " + combo;
   }
-
   if (target.hp <= 0) {
     target.dead = true;
     finishMatch(attacker.isPlayer, "KO");
   }
 }
-
 function resolveAttackHit(attacker, target) {
   if (!attacker.attackType || attacker.hasHitCurrentAttack) return;
   if (!attackActiveFrame(attacker.attackType, attacker.attackTimer)) return;
   if (target.invuln > 0) return;
-
   const atk = getAttackRect(attacker);
   const body = getBodyRect(target);
   if (rectsOverlap(atk, body)) applyDamage(attacker, target);
 }
-
 function updateCommandInputsForFighter(fighter, pressedFrame) {
   const justPunch = !!pressedFrame.punch;
   const justKick = !!pressedFrame.kick;
   const justSpecial = !!pressedFrame.special;
-
   if (justPunch) {
     if (fighter.isPlayer && commandMatched(["R","R"])) {
       if (tryStartAttack(fighter, "dashPunch")) { commandBuffer = []; return; }
@@ -1511,7 +1459,6 @@ function updateCommandInputsForFighter(fighter, pressedFrame) {
     }
     tryStartAttack(fighter, "punch");
   }
-
   if (justKick) {
     if (fighter.isPlayer && commandMatched(["R","D","DR"])) {
       if (tryStartAttack(fighter, "uppercut")) { commandBuffer = []; return; }
@@ -1525,33 +1472,26 @@ function updateCommandInputsForFighter(fighter, pressedFrame) {
     }
     tryStartAttack(fighter, "kick");
   }
-
   if (justSpecial) tryStartAttack(fighter, "special");
 }
-
 function animateCommon(f, dt) {
   f.animPhase += dt * 0.006;
   const moving = Math.abs(f.vx) > 0.5;
   if (moving && f.onGround) f.runPhase += dt * 0.018;
 }
-
 function updateFighterByInput(f, input, dt) {
   if (!input) input = {};
   if (f.dead) return;
-
   const opponent = f === player ? enemy : player;
   facingUpdate(f, opponent);
   animateCommon(f, dt);
-
   if (f.invuln > 0) f.invuln--;
   if (f.hitstun > 0) f.hitstun--;
   if (f.guardTimer > 0) f.guardTimer--;
   if (f.attackCooldown > 0) f.attackCooldown--;
   if (f.hurtFlash > 0) f.hurtFlash--;
-
   if (input.left && !input.right && f.dir === -1) f.chargeBackFrames = Math.min(60, f.chargeBackFrames + 1);
   else if (!input.left) f.chargeBackFrames = Math.max(0, f.chargeBackFrames - 1);
-
   if (f.attackTimer > 0) {
     f.attackTimer--;
     if (f.attackType === "dashPunch") f.vx = 5.4 * f.dir;
@@ -1562,30 +1502,22 @@ function updateFighterByInput(f, input, dt) {
       f.hasHitCurrentAttack = false;
     }
   }
-
   if (f.hitstun <= 0 && f.attackTimer <= 0) {
     if (input.left && !input.right) f.vx = -f.speed;
     else if (input.right && !input.left) f.vx = f.speed;
     else f.vx *= 0.72;
-
     if (input.jump && f.onGround) {
       f.vy = -f.jumpPower;
       f.onGround = false;
     }
-
-    updateCommandInputsForFighter(f, {
-      punch: !!input.punch,
-      kick: !!input.kick,
-      special: !!input.special
-    });
+    updateCommandInputsForFighter(f, { punch:!!input.punch, kick:!!input.kick, special:!!input.special });
+    if (input.left || input.right) f.guardTimer = 0;
   } else if (f.hitstun > 0) {
     f.vx *= 0.9;
   }
-
   f.vy += gravity;
   f.x += f.vx;
   f.y += f.vy;
-
   if (f.y >= groundY() - f.h) {
     f.y = groundY() - f.h;
     f.vy = 0;
@@ -1593,38 +1525,24 @@ function updateFighterByInput(f, input, dt) {
   } else {
     f.onGround = false;
   }
-
   f.x = clamp(f.x, 16, canvas.width - f.w - 16);
 }
-
 function updatePlayerOffline(dt) {
-  updateFighterByInput(player, {
-    left:keys.left,
-    right:keys.right,
-    jump:keys.jump,
-    punch:pressedThisFrame.punch,
-    kick:pressedThisFrame.kick,
-    special:pressedThisFrame.special
-  }, dt);
+  updateFighterByInput(player, { left:keys.left, right:keys.right, jump:keys.jump, punch:pressedThisFrame.punch, kick:pressedThisFrame.kick, special:pressedThisFrame.special }, dt);
 }
-
 function aiWantsGuard() {
   const d = distX(enemy, player);
   return d < 104 && Math.random() < difficultyConfig().defend;
 }
-
 function updateEnemyAI(dt) {
   if (enemy.dead) return;
-
   facingUpdate(enemy, player);
   animateCommon(enemy, dt);
-
   if (enemy.invuln > 0) enemy.invuln--;
   if (enemy.hitstun > 0) enemy.hitstun--;
   if (enemy.guardTimer > 0) enemy.guardTimer--;
   if (enemy.attackCooldown > 0) enemy.attackCooldown--;
   if (enemy.hurtFlash > 0) enemy.hurtFlash--;
-
   if (enemy.attackTimer > 0) {
     enemy.attackTimer--;
     if (enemy.attackType === "dashPunch") enemy.vx = 5.7 * enemy.dir;
@@ -1635,114 +1553,64 @@ function updateEnemyAI(dt) {
       enemy.hasHitCurrentAttack = false;
     }
   }
-
   if (enemy.hitstun <= 0 && enemy.attackTimer <= 0) {
     const d = distX(enemy, player);
     const cfg = difficultyConfig();
     enemy.guardTimer = aiWantsGuard() ? 2 : 0;
-
-    if (d > 150) {
-      enemy.vx = enemy.dir === 1 ? cfg.speed : -cfg.speed;
-    } else if (d < 74) {
-      enemy.vx = enemy.dir === 1 ? -cfg.speed * 0.9 : cfg.speed * 0.9;
-    } else {
-      enemy.vx *= 0.6;
-    }
-
+    if (d > 150) enemy.vx = enemy.dir === 1 ? cfg.speed : -cfg.speed;
+    else if (d < 74) enemy.vx = enemy.dir === 1 ? -cfg.speed * 0.9 : cfg.speed * 0.9;
+    else enemy.vx *= 0.6;
     if (enemy.onGround && Math.random() < 0.004 * cfg.aggro && d > 110 && d < 240) {
       enemy.vy = -enemy.jumpPower * 0.98;
       enemy.onGround = false;
     }
-
     const react = cfg.react;
     const aggro = cfg.aggro;
-
-    if (d < 82 && Math.random() < 0.028 * react * aggro) {
-      tryStartAttack(enemy, "punch");
-    } else if (d < 110 && Math.random() < 0.025 * react * aggro) {
-      tryStartAttack(enemy, "kick");
-    } else if (d > 90 && d < 170 && Math.random() < 0.022 * react * aggro) {
-      tryStartAttack(enemy, "dashPunch");
-    } else if (d > 120 && d < 220 && Math.random() < 0.018 * react * aggro) {
-      tryStartAttack(enemy, "fireball");
-    } else if (d < 96 && Math.random() < 0.016 * react * aggro) {
-      tryStartAttack(enemy, "uppercut");
-    } else if (d > 60 && d < 160 && Math.random() < 0.016 * react * aggro) {
-      tryStartAttack(enemy, "chargeKick");
-    } else if (d < 140 && enemy.super >= 50 && Math.random() < 0.014 * react * aggro) {
-      tryStartAttack(enemy, "special");
-    }
+    if (d < 82 && Math.random() < 0.028 * react * aggro) tryStartAttack(enemy, "punch");
+    else if (d < 110 && Math.random() < 0.025 * react * aggro) tryStartAttack(enemy, "kick");
+    else if (d > 90 && d < 170 && Math.random() < 0.022 * react * aggro) tryStartAttack(enemy, "dashPunch");
+    else if (d > 120 && d < 220 && Math.random() < 0.018 * react * aggro) tryStartAttack(enemy, "fireball");
+    else if (d < 96 && Math.random() < 0.016 * react * aggro) tryStartAttack(enemy, "uppercut");
+    else if (d > 60 && d < 160 && Math.random() < 0.016 * react * aggro) tryStartAttack(enemy, "chargeKick");
+    else if (d < 140 && enemy.super >= 50 && Math.random() < 0.014 * react * aggro) tryStartAttack(enemy, "special");
   } else if (enemy.hitstun > 0) {
     enemy.vx *= 0.9;
   }
-
   enemy.vy += gravity;
   enemy.x += enemy.vx;
   enemy.y += enemy.vy;
-
   if (enemy.y >= groundY() - enemy.h) {
     enemy.y = groundY() - enemy.h;
     enemy.vy = 0;
     enemy.onGround = true;
-  } else {
-    enemy.onGround = false;
-  }
-
+  } else enemy.onGround = false;
   enemy.x = clamp(enemy.x, 16, canvas.width - enemy.w - 16);
 }
-
 function resolvePush() {
   const a = getBodyRect(player);
   const b = getBodyRect(enemy);
   if (!rectsOverlap(a, b)) return;
-  const overlap = (a.x + a.w) - b.x;
+  const centerA = a.x + a.w / 2;
+  const centerB = b.x + b.w / 2;
+  const overlap = (a.w / 2 + b.w / 2) - Math.abs(centerA - centerB);
   if (overlap > 0) {
-    player.x -= overlap / 2;
-    enemy.x += overlap / 2;
+    const dir = centerA < centerB ? -1 : 1;
+    player.x += dir * overlap / 2;
+    enemy.x -= dir * overlap / 2;
     player.x = clamp(player.x, 16, canvas.width - player.w - 16);
     enemy.x = clamp(enemy.x, 16, canvas.width - enemy.w - 16);
   }
 }
-
 function updateParticles() {
-  particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.18;
-    p.life -= 1;
-  });
+  particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += 0.18; p.life -= 1; });
   particles = particles.filter(p => p.life > 0);
 }
-
 function getOnlineLocalInput() {
-  return {
-    left: !!keys.left,
-    right: !!keys.right,
-    jump: !!keys.jump,
-    punch: !!pressedThisFrame.punch,
-    kick: !!pressedThisFrame.kick,
-    special: !!pressedThisFrame.special,
-    ts: Date.now()
-  };
+  return { left:!!keys.left, right:!!keys.right, jump:!!keys.jump, punch:!!pressedThisFrame.punch, kick:!!pressedThisFrame.kick, special:!!pressedThisFrame.special, ts:Date.now() };
 }
-function consumePressedThisFrame() {
-  Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
-}
+function consumePressedThisFrame() { Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false); }
 
-/* =========================
-   Online room
-========================= */
-let onlineInfo = {
-  roomCode:"",
-  role:"",
-  roomRef:null,
-  roomUnsub:null,
-  stateUnsub:null,
-  inputUnsub:null,
-  rematchUnsub:null,
-  remoteInput:null
-};
-
+let onlineInfo = { roomCode:"", role:"", roomRef:null, roomUnsub:null, stateUnsub:null, inputUnsub:null, rematchUnsub:null, remoteInput:null };
 function cleanupRoomListeners() {
   if (onlineInfo.roomUnsub) onlineInfo.roomUnsub();
   if (onlineInfo.stateUnsub) onlineInfo.stateUnsub();
@@ -1753,10 +1621,9 @@ function cleanupRoomListeners() {
   onlineInfo.inputUnsub = null;
   onlineInfo.rematchUnsub = null;
 }
-
 async function pushSharedOnlineState() {
   if (!onlineInfo.roomCode || gameMode !== "online-host") return;
-  const stateRef = ref(rtdb, `fight_game_v12/rooms/${onlineInfo.roomCode}/state`);
+  const stateRef = ref(rtdb, `fight_game_v13/rooms/${onlineInfo.roomCode}/state`);
   try {
     await update(stateRef, {
       player: fighterToPlain(player),
@@ -1772,11 +1639,10 @@ async function pushSharedOnlineState() {
     console.error("push shared state failed", e);
   }
 }
-
 async function pushOnlineInput() {
   if (!onlineInfo.roomCode || !(gameMode === "online-host" || gameMode === "online-guest")) return;
   const slot = onlineInfo.role === "host" ? "host" : "guest";
-  const inputRef = ref(rtdb, `fight_game_v12/rooms/${onlineInfo.roomCode}/players/${slot}/input`);
+  const inputRef = ref(rtdb, `fight_game_v13/rooms/${onlineInfo.roomCode}/players/${slot}/input`);
   try {
     await set(inputRef, getOnlineLocalInput());
   } catch (e) {
@@ -1786,112 +1652,97 @@ async function pushOnlineInput() {
 
 async function createOnlineRoom() {
   if (!firebaseReady) {
-    alert("Firebase匿名認証がまだ完了していません。");
+    alert("Firebase匿名認証が未完了です。Authentication の Anonymous と承認済みドメインを確認してください。");
     return;
   }
-
-  const roomCode = randomRoomCode();
-  const roomRef = ref(rtdb, `fight_game_v12/rooms/${roomCode}`);
-  onlineInfo.roomCode = roomCode;
-  onlineInfo.role = "host";
-  onlineInfo.roomRef = roomRef;
-  onlineResultRoomCode = roomCode;
-
-  await set(roomRef, {
-    createdAt: Date.now(),
-    status: "lobby",
-    stage: stageSelect.value,
-    hostCharacter: selectedCharacter,
-    guestCharacter: "",
-    hostUid: firebaseUserId,
-    guestUid: "",
-    rematch: { host:false, guest:false },
-    spectators: {},
-    players: {
-      host: {
-        uid: firebaseUserId,
-        connected: true,
-        ready: false,
-        character: selectedCharacter,
-        input: { left:false,right:false,jump:false,punch:false,kick:false,special:false,ts:Date.now() }
-      },
-      guest: {
-        uid: "",
-        connected: false,
-        ready: false,
-        character: "",
-        input: { left:false,right:false,jump:false,punch:false,kick:false,special:false,ts:Date.now() }
+  try {
+    const roomCode = randomRoomCode();
+    const roomRef = ref(rtdb, `fight_game_v13/rooms/${roomCode}`);
+    onlineInfo.roomCode = roomCode;
+    onlineInfo.role = "host";
+    onlineInfo.roomRef = roomRef;
+    onlineResultRoomCode = roomCode;
+    await set(roomRef, {
+      createdAt: Date.now(),
+      status: "lobby",
+      stage: stageSelect.value,
+      hostCharacter: selectedCharacter,
+      guestCharacter: "",
+      hostUid: firebaseUserId,
+      guestUid: "",
+      rematch: { host:false, guest:false },
+      spectators: {},
+      players: {
+        host: { uid: firebaseUserId, connected: true, ready: false, character: selectedCharacter, input: { left:false,right:false,jump:false,punch:false,kick:false,special:false,ts:Date.now() } },
+        guest: { uid: "", connected: false, ready: false, character: "", input: { left:false,right:false,jump:false,punch:false,kick:false,special:false,ts:Date.now() } }
       }
-    }
-  });
-
-  onDisconnect(ref(rtdb, `fight_game_v12/rooms/${roomCode}/players/host/connected`)).set(false);
-  watchRoom(roomCode);
-
-  clearScreens();
-  lobbyScreen.classList.add("show");
-  roomCodeLabel.textContent = roomCode;
+    });
+    try { onDisconnect(ref(rtdb, `fight_game_v13/rooms/${roomCode}/players/host/connected`)).set(false); } catch {}
+    watchRoom(roomCode);
+    clearScreens();
+    lobbyScreen.classList.add("show");
+    roomCodeLabel.textContent = roomCode;
+    lobbyStatus.textContent = "ルーム作成完了";
+  } catch (e) {
+    console.error("create room failed", e);
+    alert("ルーム作成に失敗しました。Realtime Database の rules と databaseURL を確認してください。");
+  }
 }
 
 async function joinOnlineRoom(codeRaw) {
   if (!firebaseReady) {
-    alert("Firebase匿名認証がまだ完了していません。");
+    alert("Firebase匿名認証が未完了です。");
     return;
   }
-
-  const roomCode = sanitizeRoomCode(codeRaw);
-  roomCodeInput.value = roomCode;
-
-  if (roomCode.length !== 6) {
-    alert("6文字のルームコードを入力してください。");
-    return;
+  try {
+    const roomCode = sanitizeRoomCode(codeRaw);
+    roomCodeInput.value = roomCode;
+    if (roomCode.length !== 6) {
+      alert("6文字のルームコードを入力してください。");
+      return;
+    }
+    const roomRef = ref(rtdb, `fight_game_v13/rooms/${roomCode}`);
+    const snap = await get(roomRef);
+    if (!snap.exists()) {
+      alert("ルームが見つかりません。");
+      return;
+    }
+    const room = snap.val();
+    onlineInfo.roomCode = roomCode;
+    onlineInfo.roomRef = roomRef;
+    onlineResultRoomCode = roomCode;
+    if (!room.players?.guest?.connected) {
+      await update(roomRef, {
+        guestUid: firebaseUserId,
+        guestCharacter: selectedCharacter,
+        "players/guest/uid": firebaseUserId,
+        "players/guest/connected": true,
+        "players/guest/ready": false,
+        "players/guest/character": selectedCharacter
+      });
+      try { onDisconnect(ref(rtdb, `fight_game_v13/rooms/${roomCode}/players/guest/connected`)).set(false); } catch {}
+      onlineInfo.role = "guest";
+    } else {
+      await update(ref(rtdb, `fight_game_v13/rooms/${roomCode}/spectators/${firebaseUserId}`), { joinedAt: Date.now() });
+      try { onDisconnect(ref(rtdb, `fight_game_v13/rooms/${roomCode}/spectators/${firebaseUserId}`)).remove(); } catch {}
+      onlineInfo.role = "spectator";
+    }
+    watchRoom(roomCode);
+    clearScreens();
+    lobbyScreen.classList.add("show");
+    roomCodeLabel.textContent = roomCode;
+  } catch (e) {
+    console.error("join room failed", e);
+    alert("参加に失敗しました。Realtime Database のルールまたは接続設定を確認してください。");
   }
-
-  const roomRef = ref(rtdb, `fight_game_v12/rooms/${roomCode}`);
-  const snap = await get(roomRef);
-
-  if (!snap.exists()) {
-    alert("ルームが見つかりません。");
-    return;
-  }
-
-  const room = snap.val();
-  onlineInfo.roomCode = roomCode;
-  onlineInfo.roomRef = roomRef;
-  onlineResultRoomCode = roomCode;
-
-  if (!room.players?.guest?.connected) {
-    await update(roomRef, {
-      guestUid: firebaseUserId,
-      guestCharacter: selectedCharacter,
-      "players/guest/uid": firebaseUserId,
-      "players/guest/connected": true,
-      "players/guest/ready": false,
-      "players/guest/character": selectedCharacter
-    });
-    onDisconnect(ref(rtdb, `fight_game_v12/rooms/${roomCode}/players/guest/connected`)).set(false);
-    onlineInfo.role = "guest";
-  } else {
-    await update(ref(rtdb, `fight_game_v12/rooms/${roomCode}/spectators/${firebaseUserId}`), {
-      joinedAt: Date.now()
-    });
-    onDisconnect(ref(rtdb, `fight_game_v12/rooms/${roomCode}/spectators/${firebaseUserId}`)).remove();
-    onlineInfo.role = "spectator";
-  }
-
-  watchRoom(roomCode);
-  clearScreens();
-  lobbyScreen.classList.add("show");
-  roomCodeLabel.textContent = roomCode;
 }
 
 function watchRoom(roomCode) {
   cleanupRoomListeners();
-
-  const roomRef = ref(rtdb, `fight_game_v12/rooms/${roomCode}`);
-  const stateRef = ref(rtdb, `fight_game_v12/rooms/${roomCode}/state`);
-  const guestInputRef = ref(rtdb, `fight_game_v12/rooms/${roomCode}/players/guest/input`);
-  const rematchRef = ref(rtdb, `fight_game_v12/rooms/${roomCode}/rematch`);
+  const roomRef = ref(rtdb, `fight_game_v13/rooms/${roomCode}`);
+  const stateRef = ref(rtdb, `fight_game_v13/rooms/${roomCode}/state`);
+  const guestInputRef = ref(rtdb, `fight_game_v13/rooms/${roomCode}/players/guest/input`);
+  const rematchRef = ref(rtdb, `fight_game_v13/rooms/${roomCode}/rematch`);
 
   const roomCb = onValue(roomRef, async (snap) => {
     const room = snap.val();
@@ -1903,31 +1754,21 @@ function watchRoom(roomCode) {
       }
       return;
     }
-
     const spectatorsCount = room.spectators ? Object.keys(room.spectators).length : 0;
     const hostConnected = !!room.players?.host?.connected;
     const guestConnected = !!room.players?.guest?.connected;
     const hostReady = !!room.players?.host?.ready;
     const guestReady = !!room.players?.guest?.ready;
-
     roomCodeLabel.textContent = roomCode;
     lobbyPlayers.textContent = `ホスト: ${hostConnected ? "接続" : "未接続"} / ゲスト: ${guestConnected ? "接続" : "未接続"} / 観戦: ${spectatorsCount}人`;
-
     if (!guestConnected) lobbyStatus.textContent = "接続待ち...";
     else if (!hostReady || !guestReady) lobbyStatus.textContent = "両プレイヤーの開始待ち...";
     else lobbyStatus.textContent = "開始準備完了";
-
     lobbyActionRow.style.display = onlineInfo.role === "spectator" ? "none" : "flex";
-
     if (room.status === "playing" && !onlineGameStarted) {
       stageSelect.value = room.stage || stageSelect.value;
-      const remoteCharacter =
-        onlineInfo.role === "host"
-          ? (room.guestCharacter || "blade")
-          : (room.hostCharacter || "ryu");
-
+      const remoteCharacter = onlineInfo.role === "host" ? (room.guestCharacter || "blade") : (room.hostCharacter || "ryu");
       await startOnlineGameAsRole(onlineInfo.role, remoteCharacter);
-
       if (onlineInfo.role === "host") {
         leftName.textContent = CHARACTERS[room.hostCharacter || selectedCharacter].name;
         rightName.textContent = CHARACTERS[room.guestCharacter || "blade"].name;
@@ -1940,15 +1781,11 @@ function watchRoom(roomCode) {
 
   const stateCb = onValue(stateRef, (snap) => {
     const state = snap.val();
-    if ((gameMode === "online-guest" || gameMode === "spectator") && state) {
-      applyRemoteState(state);
-    }
+    if ((gameMode === "online-guest" || gameMode === "spectator") && state) applyRemoteState(state);
   });
 
   const inputCb = onValue(guestInputRef, (snap) => {
-    if (gameMode === "online-host") {
-      onlineInfo.remoteInput = snap.val() || {};
-    }
+    if (gameMode === "online-host") onlineInfo.remoteInput = snap.val() || {};
   });
 
   const rematchCb = onValue(rematchRef, async (snap) => {
@@ -1957,7 +1794,6 @@ function watchRoom(roomCode) {
       const roomSnap = await get(roomRef);
       const room = roomSnap.val();
       if (!room) return;
-
       await update(roomRef, {
         status: "playing",
         rematch: { host:false, guest:false },
@@ -1967,14 +1803,11 @@ function watchRoom(roomCode) {
         hostCharacter: room.players?.host?.character || selectedCharacter,
         guestCharacter: room.players?.guest?.character || (room.guestCharacter || "blade")
       });
-
       const hostChar = room.players?.host?.character || selectedCharacter;
       const guestChar = room.players?.guest?.character || (room.guestCharacter || "blade");
-
       player = createFighter(hostChar, true);
       enemy = createFighter(guestChar, false);
-
-      await update(ref(rtdb, `fight_game_v12/rooms/${onlineInfo.roomCode}/state`), {
+      await update(ref(rtdb, `fight_game_v13/rooms/${onlineInfo.roomCode}/state`), {
         player: fighterToPlain(player),
         enemy: fighterToPlain(enemy),
         roundTimer: 99,
@@ -1984,7 +1817,6 @@ function watchRoom(roomCode) {
         centerInfo: "FIGHT",
         updatedAt: Date.now()
       });
-
       pendingResult = null;
       resultScreen.classList.remove("show");
       clearScreens();
@@ -1995,6 +1827,7 @@ function watchRoom(roomCode) {
       onlineGameStarted = true;
       lastTime = performance.now();
       animationId = requestAnimationFrame(loop);
+      updateRotateNotice();
       showMessage("REMATCH", 900);
     }
   });
@@ -2007,21 +1840,13 @@ function watchRoom(roomCode) {
 
 async function markReadyAndStartIfPossible() {
   if (!onlineInfo.roomCode || !onlineInfo.role || onlineInfo.role === "spectator") return;
-
   const slot = onlineInfo.role === "host" ? "host" : "guest";
-  const roomRef = ref(rtdb, `fight_game_v12/rooms/${onlineInfo.roomCode}`);
-
-  await update(roomRef, {
-    [`players/${slot}/ready`]: true
-  });
-
+  const roomRef = ref(rtdb, `fight_game_v13/rooms/${onlineInfo.roomCode}`);
+  await update(roomRef, { [`players/${slot}/ready`]: true });
   const snap = await get(roomRef);
   const room = snap.val();
   if (!room) return;
-
-  const canStart = room.players?.host?.connected && room.players?.guest?.connected &&
-                   room.players?.host?.ready && room.players?.guest?.ready;
-
+  const canStart = room.players?.host?.connected && room.players?.guest?.connected && room.players?.host?.ready && room.players?.guest?.ready;
   if (canStart && onlineInfo.role === "host") {
     await update(roomRef, {
       status: "playing",
@@ -2030,11 +1855,9 @@ async function markReadyAndStartIfPossible() {
       guestCharacter: room.players.guest.character || "blade",
       rematch: { host:false, guest:false }
     });
-
     player = createFighter(room.players.host.character || selectedCharacter, true);
     enemy = createFighter(room.players.guest.character || "blade", false);
-
-    await update(ref(rtdb, `fight_game_v12/rooms/${onlineInfo.roomCode}/state`), {
+    await update(ref(rtdb, `fight_game_v13/rooms/${onlineInfo.roomCode}/state`), {
       player: fighterToPlain(player),
       enemy: fighterToPlain(enemy),
       roundTimer: 99,
@@ -2053,20 +1876,16 @@ async function requestOnlineRematch() {
     return;
   }
   const key = onlineInfo.role === "host" ? "host" : "guest";
-  await update(ref(rtdb, `fight_game_v12/rooms/${onlineInfo.roomCode}/rematch`), {
-    [key]: true
-  });
+  await update(ref(rtdb, `fight_game_v13/rooms/${onlineInfo.roomCode}/rematch`), { [key]: true });
   resultSub.textContent = "再戦申請済み。相手の申請を待っています。";
 }
 
 async function leaveOnlineRoom(removeAll = true) {
   try {
     cleanupRoomListeners();
-
     if (onlineInfo.roomCode && onlineInfo.role) {
-      const roomPath = `fight_game_v12/rooms/${onlineInfo.roomCode}`;
+      const roomPath = `fight_game_v13/rooms/${onlineInfo.roomCode}`;
       const roomRef = ref(rtdb, roomPath);
-
       if (removeAll && onlineInfo.role === "host") {
         await remove(roomRef);
       } else if (onlineInfo.role === "guest") {
@@ -2088,7 +1907,6 @@ async function leaveOnlineRoom(removeAll = true) {
   } catch (e) {
     console.error("leave room failed", e);
   }
-
   onlineInfo.roomCode = "";
   onlineInfo.role = "";
   onlineInfo.roomRef = null;
@@ -2096,125 +1914,77 @@ async function leaveOnlineRoom(removeAll = true) {
   onlineGameStarted = false;
 }
 
-/* =========================
-   Update loop
-========================= */
 function updateOnlineHost(dt) {
   if (gameOver) return;
-
   roundTimer -= dt / 1000;
   if (roundTimer < 0) roundTimer = 0;
   centerInfo.textContent = `${STAGES[stageSelect.value].label} / ${Math.ceil(roundTimer)}`;
-
   const hostInput = getOnlineLocalInput();
   const guestInput = onlineInfo.remoteInput || {};
-
   updateFighterByInput(player, hostInput, dt);
   updateFighterByInput(enemy, guestInput, dt);
-
   resolvePush();
   resolveAttackHit(player, enemy);
   resolveAttackHit(enemy, player);
   updateParticles();
-
   if (performance.now() - lastHitTime > 1300 && combo !== 0) {
     combo = 0;
     comboText.textContent = "COMBO 0";
   }
-
   if (!gameOver && roundTimer <= 0) {
-    if (player.hp > enemy.hp) {
-      maybeSaveWinRanking();
-      finishMatch(true, "TIME UP");
-    } else if (enemy.hp > player.hp) {
-      finishMatch(false, "TIME UP");
-    } else {
-      finishMatch(true, "DRAW扱い終了");
-    }
+    if (player.hp > enemy.hp) { maybeSaveWinRanking(); finishMatch(true, "TIME UP"); }
+    else if (enemy.hp > player.hp) finishMatch(false, "TIME UP");
+    else finishMatch(true, "DRAW扱い終了");
   }
-
   pushSharedOnlineState();
+  pushOnlineInput();
   consumePressedThisFrame();
 }
 
 function updateGame(dt) {
-  if (gameMode === "online-host") {
-    updateOnlineHost(dt);
-    return;
-  }
-
-  if (gameMode === "online-guest") {
-    pushOnlineInput();
-    updateParticles();
-    consumePressedThisFrame();
-    return;
-  }
-
-  if (gameMode === "spectator") {
-    updateParticles();
-    consumePressedThisFrame();
-    return;
-  }
-
+  if (gameMode === "online-host") { updateOnlineHost(dt); return; }
+  if (gameMode === "online-guest") { pushOnlineInput(); updateParticles(); consumePressedThisFrame(); return; }
+  if (gameMode === "spectator") { updateParticles(); consumePressedThisFrame(); return; }
   if (gameOver) return;
-
   roundTimer -= dt / 1000;
   if (roundTimer < 0) roundTimer = 0;
   centerInfo.textContent = `${STAGES[stageSelect.value].label} / ${Math.ceil(roundTimer)}`;
-
   updatePlayerOffline(dt);
   updateEnemyAI(dt);
-
   resolvePush();
   resolveAttackHit(player, enemy);
   resolveAttackHit(enemy, player);
   updateParticles();
-
   if (performance.now() - lastHitTime > 1300 && combo !== 0) {
     combo = 0;
     comboText.textContent = "COMBO 0";
   }
-
   if (!gameOver && roundTimer <= 0) {
-    if (player.hp > enemy.hp) {
-      maybeSaveWinRanking();
-      finishMatch(true, "TIME UP");
-    } else if (enemy.hp > player.hp) {
-      finishMatch(false, "TIME UP");
-    } else {
-      finishMatch(true, "DRAW扱い終了");
-    }
+    if (player.hp > enemy.hp) { maybeSaveWinRanking(); finishMatch(true, "TIME UP"); }
+    else if (enemy.hp > player.hp) finishMatch(false, "TIME UP");
+    else finishMatch(true, "DRAW扱い終了");
   }
-
   consumePressedThisFrame();
 }
-
 function loop(now) {
   const dt = Math.min(32, now - lastTime);
   lastTime = now;
-
   if (!gameRunning) return;
   updateGame(dt);
   render();
   animationId = requestAnimationFrame(loop);
 }
 
-/* =========================
-   Draw
-========================= */
 function drawBackground() {
   const st = STAGES[stageSelect.value];
   const horizon = canvas.height * 0.56;
-
   const grad = ctx.createLinearGradient(0, 0, 0, horizon);
   grad.addColorStop(0, st.skyTop);
   grad.addColorStop(1, st.skyBottom);
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, canvas.width, horizon);
-
   ctx.fillStyle = st.glow;
   ctx.fillRect(0, 0, canvas.width, horizon);
-
   if (stageSelect.value === "neon") {
     for (let i = 0; i < 12; i++) {
       ctx.fillStyle = i % 2 ? "rgba(116,196,255,.12)" : "rgba(255,90,180,.08)";
@@ -2235,21 +2005,11 @@ function drawBackground() {
       ctx.fillRect(bx, by, bw, bh);
     }
   }
-
   ctx.fillStyle = st.floor;
   ctx.fillRect(0, horizon, canvas.width, canvas.height - horizon);
-
   ctx.fillStyle = st.line;
-  for (let i = 0; i < canvas.width; i += 76) {
-    ctx.fillRect(i, horizon + 28, 44, 3);
-  }
-
-  ctx.fillStyle = "rgba(255,255,255,.04)";
-  for (let i = 0; i < canvas.width; i += 48) {
-    ctx.fillRect(i, horizon + 48, 1, canvas.height - horizon - 48);
-  }
+  for (let i = 0; i < canvas.width; i += 76) ctx.fillRect(i, horizon + 28, 44, 3);
 }
-
 function drawAura(f, x, y) {
   if (f.super < 50) return;
   const pulse = 0.65 + Math.sin(performance.now() * 0.01 + f.animPhase) * 0.08;
@@ -2261,7 +2021,6 @@ function drawAura(f, x, y) {
   ctx.fill();
   ctx.restore();
 }
-
 function drawFighter(f) {
   const x = Math.round(f.x);
   const y = Math.round(f.y);
@@ -2271,148 +2030,97 @@ function drawFighter(f) {
   const runSwing2 = Math.sin(f.runPhase + Math.PI) * 12;
   const attackStretch = f.attackTimer > 0 ? 1 + 0.04 * Math.sin(f.attackTimer) : 1;
   const moving = Math.abs(f.vx) > 0.5 && f.onGround;
-
   ctx.save();
   drawAura(f, x, y);
-
   if (f.hurtFlash > 0) ctx.globalAlpha = 0.82;
-
   ctx.fillStyle = "rgba(0,0,0,.28)";
   ctx.beginPath();
-  ctx.ellipse(x + f.w / 2, groundY() - 3, 34, 10, 0, 0, Math.PI * 2);
+  ctx.ellipse(x + f.w / 2, groundY() - 3, 28, 9, 0, 0, Math.PI * 2);
   ctx.fill();
-
-  const bodyX = x + 12;
-  const bodyY = y + 20 + breathe;
-  const bodyW = f.w - 24;
-  const bodyH = f.h - 40;
-
+  const bodyX = x + 10;
+  const bodyY = y + 18 + breathe;
+  const bodyW = f.w - 20;
+  const bodyH = f.h - 36;
   if (f.resultPose === "win") ctx.translate(0, -4);
   if (f.resultPose === "lose") ctx.rotate(-0.08 * f.dir);
-
   ctx.fillStyle = f.scarf;
   ctx.globalAlpha = 0.28;
   ctx.beginPath();
   ctx.moveTo(bodyX + bodyW/2, bodyY + 22);
-  ctx.quadraticCurveTo(bodyX + bodyW/2 - 16 * f.dir, bodyY + 38, bodyX + bodyW/2 - 6 * f.dir, bodyY + 66 + runSwing * 0.15);
+  ctx.quadraticCurveTo(bodyX + bodyW/2 - 16 * f.dir, bodyY + 38, bodyX + bodyW/2 - 6 * f.dir, bodyY + 60 + runSwing * 0.15);
   ctx.lineTo(bodyX + bodyW/2 + 11 * f.dir, bodyY + 30);
   ctx.closePath();
   ctx.fill();
   ctx.globalAlpha = 1;
-
   ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
   ctx.strokeStyle = f.accent;
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.roundRect(bodyX, bodyY, bodyW, bodyH * attackStretch, 18);
+  ctx.roundRect(bodyX, bodyY, bodyW, bodyH * attackStretch, 16);
   ctx.fill();
   ctx.stroke();
-
   ctx.fillStyle = "rgba(255,255,255,.18)";
-  ctx.fillRect(bodyX + 8, bodyY + 30, bodyW - 16, 8);
+  ctx.fillRect(bodyX + 8, bodyY + 28, bodyW - 16, 8);
   ctx.fillStyle = "rgba(0,0,0,.16)";
-  ctx.fillRect(bodyX + 8, bodyY + 70, bodyW - 16, 10);
-
+  ctx.fillRect(bodyX + 8, bodyY + 64, bodyW - 16, 10);
   ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
   ctx.beginPath();
-  ctx.arc(x + f.w/2, y + 14 + breathe, 18, 0, Math.PI * 2);
+  ctx.arc(x + f.w/2, y + 14 + breathe, 17, 0, Math.PI * 2);
   ctx.fill();
   ctx.stroke();
-
   ctx.fillStyle = f.hair;
   ctx.beginPath();
-  if (f.silhouette === "heavy") {
-    ctx.ellipse(x + f.w/2, y + 8 + breathe, 20, 11, 0, Math.PI, 0, true);
-  } else if (f.silhouette === "ninja") {
-    ctx.moveTo(x + f.w/2 - 16, y + 14 + breathe);
-    ctx.lineTo(x + f.w/2 + 8, y - 4 + breathe);
-    ctx.lineTo(x + f.w/2 + 16, y + 14 + breathe);
-    ctx.closePath();
-  } else if (f.silhouette === "assassin") {
-    ctx.moveTo(x + f.w/2 - 16, y + 10 + breathe);
-    ctx.lineTo(x + f.w/2, y - 8 + breathe);
-    ctx.lineTo(x + f.w/2 + 16, y + 10 + breathe);
-    ctx.closePath();
-  } else if (f.silhouette === "lancer") {
-    ctx.ellipse(x + f.w/2, y + 7 + breathe, 17, 10, 0, Math.PI, 0, true);
-  } else {
-    ctx.ellipse(x + f.w/2, y + 9 + breathe, 17, 9, 0, Math.PI, 0, true);
-  }
+  if (f.silhouette === "heavy") ctx.ellipse(x + f.w/2, y + 8 + breathe, 19, 10, 0, Math.PI, 0, true);
+  else if (f.silhouette === "ninja") { ctx.moveTo(x + f.w/2 - 16, y + 14 + breathe); ctx.lineTo(x + f.w/2 + 8, y - 4 + breathe); ctx.lineTo(x + f.w/2 + 16, y + 14 + breathe); ctx.closePath(); }
+  else if (f.silhouette === "assassin") { ctx.moveTo(x + f.w/2 - 16, y + 10 + breathe); ctx.lineTo(x + f.w/2, y - 8 + breathe); ctx.lineTo(x + f.w/2 + 16, y + 10 + breathe); ctx.closePath(); }
+  else ctx.ellipse(x + f.w/2, y + 9 + breathe, 16, 9, 0, Math.PI, 0, true);
   ctx.fill();
-
   ctx.fillStyle = "#101624";
   ctx.fillRect(x + f.w/2 - 7, y + 14 + breathe, 4, 2);
   ctx.fillRect(x + f.w/2 + 3, y + 14 + breathe, 4, 2);
-
   const cx = x + f.w/2;
-  const armY = y + 48 + breathe;
+  const armY = y + 46 + breathe;
   const legY = y + f.h - 24;
   const footY = y + f.h - 2;
   const forward = f.dir === 1 ? 1 : -1;
-
   const backArmOffset = moving ? runSwing2 * 0.45 : 6;
   const frontArmOffset = moving ? runSwing * 0.45 : 8;
   const frontLegOffset = moving ? runSwing : 0;
   const backLegOffset = moving ? runSwing2 : 0;
-
   ctx.strokeStyle = f.accent;
   ctx.lineWidth = 8;
   ctx.lineCap = "round";
-
   ctx.beginPath();
   ctx.moveTo(cx, armY);
-  if (f.resultPose === "win") {
-    ctx.lineTo(cx + 10 * forward, armY - 30);
-  } else if (f.attackTimer > 0) {
-    const len =
-      f.attackType === "punch" ? 38 :
-      f.attackType === "kick" ? 18 :
-      f.attackType === "dashPunch" ? 52 :
-      f.attackType === "fireball" ? 46 :
-      f.attackType === "uppercut" ? 18 :
-      f.attackType === "chargeKick" ? 30 : 64;
+  if (f.resultPose === "win") ctx.lineTo(cx + 10 * forward, armY - 30);
+  else if (f.attackTimer > 0) {
+    const len = f.attackType === "punch" ? 38 : f.attackType === "kick" ? 18 : f.attackType === "dashPunch" ? 52 : f.attackType === "fireball" ? 46 : f.attackType === "uppercut" ? 18 : f.attackType === "chargeKick" ? 30 : 64;
     const rise = f.attackType === "special" ? -10 : f.attackType === "uppercut" ? -28 : -2;
     ctx.lineTo(cx + len * forward, armY + rise);
-  } else {
-    ctx.lineTo(cx + (16 + frontArmOffset) * forward, armY + 12);
-  }
+  } else ctx.lineTo(cx + (16 + frontArmOffset) * forward, armY + 12);
   ctx.stroke();
-
   ctx.beginPath();
   ctx.moveTo(cx, armY);
-  if (f.resultPose === "lose") {
-    ctx.lineTo(cx - 10 * forward, armY + 18);
-  } else {
-    ctx.lineTo(cx - (16 + backArmOffset) * forward, armY + 12);
-  }
+  if (f.resultPose === "lose") ctx.lineTo(cx - 10 * forward, armY + 18);
+  else ctx.lineTo(cx - (16 + backArmOffset) * forward, armY + 12);
   ctx.stroke();
-
   ctx.beginPath();
   ctx.moveTo(cx, legY);
-  if (f.attackTimer > 0 && (f.attackType === "kick" || f.attackType === "chargeKick")) {
-    ctx.lineTo(cx + 48 * forward, legY + 4);
-  } else {
-    ctx.lineTo(cx + 12 + frontLegOffset * 0.35, footY);
-  }
+  if (f.attackTimer > 0 && (f.attackType === "kick" || f.attackType === "chargeKick")) ctx.lineTo(cx + 48 * forward, legY + 4);
+  else ctx.lineTo(cx + 12 + frontLegOffset * 0.35, footY);
   ctx.stroke();
-
   ctx.beginPath();
   ctx.moveTo(cx, legY);
-  if (f.resultPose === "lose") {
-    ctx.lineTo(cx - 4, footY + 3);
-  } else {
-    ctx.lineTo(cx - 12 + backLegOffset * 0.35, footY);
-  }
+  if (f.resultPose === "lose") ctx.lineTo(cx - 4, footY + 3);
+  else ctx.lineTo(cx - 12 + backLegOffset * 0.35, footY);
   ctx.stroke();
-
   if (f.guardTimer > 0) {
     ctx.strokeStyle = "rgba(165,220,255,.72)";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.arc(cx, y + 45, 36, 0, Math.PI * 2);
+    ctx.arc(cx, y + 45, 34, 0, Math.PI * 2);
     ctx.stroke();
   }
-
   if (f.attackTimer > 0) {
     const atk = getAttackRect(f);
     if (f.attackType === "special" || f.attackType === "fireball") {
@@ -2423,7 +2131,6 @@ function drawFighter(f) {
       ctx.roundRect(atk.x, atk.y, atk.w, atk.h, 18);
       ctx.fill();
       ctx.stroke();
-
       ctx.globalAlpha = 0.4;
       ctx.fillStyle = f.aura;
       ctx.beginPath();
@@ -2437,10 +2144,8 @@ function drawFighter(f) {
       ctx.fill();
     }
   }
-
   ctx.restore();
 }
-
 function drawParticles() {
   particles.forEach(p => {
     ctx.globalAlpha = Math.max(0, p.life / 32);
@@ -2451,7 +2156,6 @@ function drawParticles() {
   });
   ctx.globalAlpha = 1;
 }
-
 function drawHud() {
   playerHpBar.style.width = ((player.hp / player.maxHp) * 100) + "%";
   enemyHpBar.style.width = ((enemy.hp / enemy.maxHp) * 100) + "%";
@@ -2460,54 +2164,39 @@ function drawHud() {
   playerHpText.textContent = `HP ${Math.ceil(player.hp)} / ${player.maxHp} | SUPER ${Math.floor(player.super)}`;
   enemyHpText.textContent = `HP ${Math.ceil(enemy.hp)} / ${enemy.maxHp} | SUPER ${Math.floor(enemy.super)}`;
 }
-
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   const shakeX = cameraShake > 0 ? (Math.random() - 0.5) * cameraShake : 0;
   const shakeY = cameraShake > 0 ? (Math.random() - 0.5) * cameraShake : 0;
   const scale = parseFloat(getComputedStyle(root).getPropertyValue("--gameScale")) || 1;
-
   ctx.save();
   ctx.translate(shakeX, shakeY);
-
   if (scale !== 1) {
-    const topMargin = 36;
+    const topMargin = 18;
     ctx.translate((canvas.width - canvas.width * scale) / 2, topMargin);
     ctx.scale(scale, scale);
   }
-
   drawBackground();
   drawFighter(player);
   drawFighter(enemy);
   drawParticles();
-
   ctx.restore();
-
   if (cameraShake > 0) cameraShake *= 0.82;
   if (cameraShake < 0.3) cameraShake = 0;
-
   drawHud();
 }
 
-/* =========================
-   Input
-========================= */
 function setKeyFromCode(code, pressed) {
   if (code === "ArrowLeft") {
     if (pressed && !keys.left) recordCommand("L");
     keys.left = pressed;
-    if (pressed) recordCommand("L");
   }
   if (code === "ArrowRight") {
     if (pressed && !keys.right) recordCommand("R");
     keys.right = pressed;
-    if (pressed) recordCommand("R");
   }
   if (code === "ArrowUp") keys.jump = pressed;
-
   if (code === "ArrowDown" && pressed) recordCommand("D");
-
   if (code === "KeyZ") {
     if (pressed) pressedThisFrame.punch = true;
     keys.punch = pressed;
@@ -2521,17 +2210,11 @@ function setKeyFromCode(code, pressed) {
     keys.special = pressed;
   }
 }
-
 window.addEventListener("keydown", (e) => {
-  if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","KeyZ","KeyX","KeyC","Space"].includes(e.code)) {
-    e.preventDefault();
-  }
+  if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","KeyZ","KeyX","KeyC","Space"].includes(e.code)) e.preventDefault();
   setKeyFromCode(e.code, true);
 }, { passive:false });
-
-window.addEventListener("keyup", (e) => {
-  setKeyFromCode(e.code, false);
-});
+window.addEventListener("keyup", (e) => setKeyFromCode(e.code, false));
 
 function bindTouchButton(el, keyName, recordDir = null) {
   const on = (e) => {
@@ -2543,19 +2226,16 @@ function bindTouchButton(el, keyName, recordDir = null) {
     if (keyName === "special") pressedThisFrame.special = true;
     el.classList.add("active");
   };
-
   const off = (e) => {
     e.preventDefault();
     keys[keyName] = false;
     el.classList.remove("active");
   };
-
   el.addEventListener("pointerdown", on, { passive:false });
   el.addEventListener("pointerup", off, { passive:false });
   el.addEventListener("pointercancel", off, { passive:false });
   el.addEventListener("pointerleave", off, { passive:false });
 }
-
 bindTouchButton(touchButtons.left, "left", "L");
 bindTouchButton(touchButtons.right, "right", "R");
 bindTouchButton(touchButtons.jump, "jump");
@@ -2563,9 +2243,6 @@ bindTouchButton(touchButtons.punch, "punch");
 bindTouchButton(touchButtons.kick, "kick");
 bindTouchButton(touchButtons.special, "special");
 
-/* =========================
-   Events
-========================= */
 startCpuBtn.addEventListener("click", startCpuGame);
 openOnlineBtn.addEventListener("click", () => {
   clearScreens();
@@ -2573,78 +2250,49 @@ openOnlineBtn.addEventListener("click", () => {
 });
 fullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
 gameFullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
-
 createRoomBtn.addEventListener("click", createOnlineRoom);
 joinRoomBtn.addEventListener("click", () => joinOnlineRoom(roomCodeInput.value));
-roomCodeInput.addEventListener("input", () => {
-  roomCodeInput.value = sanitizeRoomCode(roomCodeInput.value);
-});
+roomCodeInput.addEventListener("input", () => { roomCodeInput.value = sanitizeRoomCode(roomCodeInput.value); });
 roomCodeInput.addEventListener("keydown", (e) => e.stopPropagation());
-
-onlineBackBtn.addEventListener("click", () => {
-  clearScreens();
-  menuScreen.classList.add("show");
-});
-
+onlineBackBtn.addEventListener("click", () => { clearScreens(); menuScreen.classList.add("show"); });
 readyOnlineBtn.addEventListener("click", markReadyAndStartIfPossible);
-
 leaveRoomBtn.addEventListener("click", async () => {
   await leaveOnlineRoom(true);
   clearScreens();
   onlineScreen.classList.add("show");
 });
-
 backMenuBtn.addEventListener("click", async () => {
-  if (gameMode.startsWith("online") || gameMode === "spectator") {
-    await leaveOnlineRoom(gameMode === "online-host");
-  }
+  if (gameMode.startsWith("online") || gameMode === "spectator") await leaveOnlineRoom(gameMode === "online-host");
   showMenu();
 });
-
-helpBtn.addEventListener("click", () => {
-  clearScreens();
-  setHelpText();
-  helpScreen.classList.add("show");
-});
-
-helpBackBtn.addEventListener("click", () => {
-  clearScreens();
-  menuScreen.classList.add("show");
-});
-
-characterBtn.addEventListener("click", () => {
-  clearScreens();
-  renderCharacterCards();
-  characterScreen.classList.add("show");
-});
-
-characterBackBtn.addEventListener("click", () => {
-  clearScreens();
-  menuScreen.classList.add("show");
-});
-
-rankingBtn.addEventListener("click", async () => {
-  clearScreens();
-  rankingScreen.classList.add("show");
-  await loadRanking();
-});
-
+helpBtn.addEventListener("click", () => { clearScreens(); setHelpText(); helpScreen.classList.add("show"); });
+helpBackBtn.addEventListener("click", () => { clearScreens(); menuScreen.classList.add("show"); });
+characterBtn.addEventListener("click", () => { clearScreens(); renderCharacterCards(); characterScreen.classList.add("show"); });
+characterBackBtn.addEventListener("click", () => { clearScreens(); menuScreen.classList.add("show"); });
+rankingBtn.addEventListener("click", async () => { clearScreens(); rankingScreen.classList.add("show"); await loadRanking(); });
 rankingReloadBtn.addEventListener("click", loadRanking);
-
-rankingBackBtn.addEventListener("click", () => {
-  clearScreens();
-  menuScreen.classList.add("show");
-});
-
+rankingBackBtn.addEventListener("click", () => { clearScreens(); menuScreen.classList.add("show"); });
 rematchBtn.addEventListener("click", rematchLastBattle);
 onlineRematchBtn.addEventListener("click", requestOnlineRematch);
 resultMenuBtn.addEventListener("click", showMenu);
-
 window.addEventListener("beforeunload", async () => {
-  if (gameMode.startsWith("online") || gameMode === "spectator") {
-    await leaveOnlineRoom(gameMode === "online-host");
-  }
+  if (gameMode.startsWith("online") || gameMode === "spectator") await leaveOnlineRoom(gameMode === "online-host");
 });
+
+fitCanvas();
+applyViewportSafeLayout();
+window.addEventListener("resize", () => { fitCanvas(); applyViewportSafeLayout(); updateRotateNotice(); });
+window.addEventListener("orientationchange", () => { setTimeout(() => { fitCanvas(); applyViewportSafeLayout(); updateRotateNotice(); }, 250); });
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", () => { applyViewportSafeLayout(); updateRotateNotice(); });
+  window.visualViewport.addEventListener("scroll", () => { applyViewportSafeLayout(); updateRotateNotice(); });
+}
+document.addEventListener("gesturestart", (e) => e.preventDefault());
+document.addEventListener("gesturechange", (e) => e.preventDefault());
+document.addEventListener("gestureend", (e) => e.preventDefault());
+document.addEventListener("contextmenu", (e) => e.preventDefault());
+document.addEventListener("selectstart", (e) => e.preventDefault());
+document.addEventListener("dragstart", (e) => e.preventDefault());
 
 showMenu();
 </script>
