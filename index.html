@@ -7,7 +7,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#05070d">
-  <title>Fight Game v100 Hyper Ultimate</title>
+  <title>Fight Game v100.改 Hyper Ultimate Boss Form</title>
   <style>
     :root{
       --bg1:#09101d;
@@ -30,10 +30,10 @@
       --shadow:0 18px 50px rgba(0,0,0,.44);
       --hudTop:6px;
       --controlLift:0px;
-      --gameScale:.86;
-      --mobileBtn:30px;
-      --mobileBtnBig:36px;
-      --mobileGap:5px;
+      --gameScale:.84;
+      --mobileBtn:26px;
+      --mobileBtnBig:31px;
+      --mobileGap:4px;
     }
 
     *{
@@ -102,7 +102,7 @@
     .screen.show{ display:flex; }
 
     .panel{
-      width:min(96vw,1180px);
+      width:min(96vw,1200px);
       max-height:95dvh;
       overflow:auto;
       background:var(--panel);
@@ -171,7 +171,7 @@
     }
 
     .hero-title{
-      font-size:clamp(34px,7vw,82px);
+      font-size:clamp(32px,7vw,80px);
       font-weight:1000;
       letter-spacing:.10em;
       margin:6px 0 2px;
@@ -235,7 +235,7 @@
     .main-big-btn{
       min-width:0;
       width:100%;
-      min-height:60px;
+      min-height:58px;
       border-radius:18px;
       font-size:16px;
       font-weight:1000;
@@ -358,7 +358,6 @@
       background:linear-gradient(180deg,var(--red1),var(--red2));
       cursor:pointer;
     }
-
     button:disabled{
       opacity:.55;
       cursor:not-allowed;
@@ -399,6 +398,7 @@
       cursor:pointer;
       transition:transform .15s ease, border-color .15s ease;
     }
+
     .card:hover{ transform:translateY(-2px); }
     .card.active{
       border-color:rgba(255,255,255,.38);
@@ -468,15 +468,15 @@
       left:0;
       top:var(--hudTop);
       width:100%;
-      padding:0 6px;
+      padding:0 4px;
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
-      gap:6px;
+      gap:4px;
     }
 
     .fighter-panel{
-      width:min(28vw,160px);
+      width:min(28vw,152px);
       background:rgba(0,0,0,.42);
       border:1px solid rgba(255,255,255,.12);
       border-radius:14px;
@@ -486,7 +486,7 @@
     }
 
     .fighter-name{
-      font-size:9px;
+      font-size:8px;
       font-weight:900;
       margin-bottom:4px;
       letter-spacing:.05em;
@@ -494,7 +494,7 @@
 
     .bar-wrap{
       width:100%;
-      height:9px;
+      height:8px;
       border-radius:999px;
       overflow:hidden;
       background:rgba(255,255,255,.09);
@@ -518,13 +518,13 @@
       display:flex;
       justify-content:space-between;
       gap:6px;
-      font-size:7px;
+      font-size:6px;
       color:var(--muted);
     }
 
     #centerWrap{
       padding-top:2px;
-      min-width:58px;
+      min-width:54px;
       text-align:center;
     }
 
@@ -533,22 +533,22 @@
       letter-spacing:.06em;
       text-align:center;
       text-shadow:0 4px 18px rgba(0,0,0,.5);
-      font-size:clamp(10px,2vw,14px);
+      font-size:clamp(9px,2vw,13px);
     }
 
     #message{
       position:absolute;
       left:50%;
-      top:calc(var(--hudTop) + 34px);
+      top:calc(var(--hudTop) + 30px);
       transform:translateX(-50%);
-      min-width:100px;
+      min-width:90px;
       max-width:80vw;
       text-align:center;
-      padding:5px 8px;
+      padding:4px 8px;
       border-radius:14px;
       background:rgba(0,0,0,.55);
       border:1px solid var(--line);
-      font-size:clamp(11px,3vw,16px);
+      font-size:clamp(10px,3vw,15px);
       font-weight:900;
       opacity:0;
       transition:opacity .2s ease;
@@ -568,11 +568,11 @@
 
     .mini-btn{
       min-width:auto;
-      width:32px;
-      height:32px;
+      width:30px;
+      height:30px;
       padding:0;
       border-radius:50%;
-      font-size:13px;
+      font-size:12px;
       background:linear-gradient(180deg,#5b6885,#2a3246);
     }
 
@@ -586,9 +586,9 @@
       align-items:flex-end;
       padding:
         2px
-        max(8px, env(safe-area-inset-right))
-        calc(6px + env(safe-area-inset-bottom))
-        max(8px, env(safe-area-inset-left));
+        max(6px, env(safe-area-inset-right))
+        calc(4px + env(safe-area-inset-bottom))
+        max(6px, env(safe-area-inset-left));
       z-index:18;
       pointer-events:none;
       transform:translateY(calc(-1 * var(--controlLift)));
@@ -611,10 +611,10 @@
       align-items:center;
       justify-content:center;
       color:#fff;
-      font-size:11px;
+      font-size:10px;
       font-weight:900;
       border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.16);
+      background:rgba(255,255,255,.14);
       backdrop-filter:blur(8px);
       box-shadow:var(--shadow);
       pointer-events:auto;
@@ -624,7 +624,7 @@
     .touch-btn.big{
       width:var(--mobileBtnBig);
       height:var(--mobileBtnBig);
-      font-size:12px;
+      font-size:11px;
     }
 
     .touch-btn.active,
@@ -649,8 +649,124 @@
       pointer-events:none;
     }
 
+    #transformOverlay{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:65;
+      pointer-events:none;
+      background:radial-gradient(circle at center, rgba(255,255,255,.18), rgba(0,0,0,.35) 40%, rgba(0,0,0,.0) 70%);
+      text-align:center;
+    }
+
+    #transformOverlay.show{ display:flex; }
+
+    #transformText{
+      font-size:clamp(28px,7vw,72px);
+      font-weight:1000;
+      letter-spacing:.10em;
+      text-shadow:0 0 24px rgba(255,255,255,.38), 0 8px 24px rgba(0,0,0,.55);
+      background:linear-gradient(90deg,#fff,#ffe89f,#ffd1d9,#fff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    #cutinOverlay{
+      position:absolute;
+      inset:0;
+      display:none;
+      z-index:66;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    #cutinOverlay.show{ display:block; }
+
+    .cutin-bg{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(115deg, rgba(255,255,255,.10), transparent 25%, transparent 75%, rgba(255,255,255,.10)),
+        linear-gradient(180deg, rgba(6,10,20,.18), rgba(0,0,0,.58));
+    }
+
+    .cutin-slash{
+      position:absolute;
+      inset:-20% -30%;
+      background:linear-gradient(100deg, transparent 35%, rgba(255,255,255,.26) 48%, transparent 62%);
+      transform:skewX(-25deg);
+      animation:cutinSlash .75s ease-out forwards;
+    }
+
+    @keyframes cutinSlash{
+      from{ transform:translateX(-45%) skewX(-25deg); opacity:0; }
+      20%{ opacity:1; }
+      to{ transform:translateX(28%) skewX(-25deg); opacity:0; }
+    }
+
+    .cutin-body{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:8vw 6vw;
+      gap:20px;
+    }
+
+    .cutin-art{
+      flex:1;
+      min-height:40vh;
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,.26), transparent 20%),
+        radial-gradient(circle at 65% 65%, rgba(255,255,255,.18), transparent 24%),
+        linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .cutin-art::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 35%, var(--cutinColor, rgba(255,120,140,.55)), transparent 22%),
+        linear-gradient(180deg, rgba(255,255,255,.10), transparent 45%);
+    }
+
+    .cutin-text{
+      flex:1;
+      text-align:right;
+    }
+
+    .cutin-win{
+      font-size:clamp(26px,5vw,62px);
+      font-weight:1000;
+      letter-spacing:.14em;
+      color:#fff;
+      text-shadow:0 0 24px rgba(255,255,255,.18), 0 8px 20px rgba(0,0,0,.45);
+    }
+
+    .cutin-name{
+      font-size:clamp(34px,7vw,86px);
+      font-weight:1000;
+      letter-spacing:.10em;
+      margin-top:8px;
+      background:linear-gradient(90deg,#fff,#ffe9a0,#ffd3d8);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow:0 8px 22px rgba(0,0,0,.35);
+    }
+
     .tiny{ font-size:11px; color:var(--muted); }
-    #resultScreen .panel{ max-width:820px; }
+    #resultScreen .panel{ max-width:860px; }
     #resultTitle{
       font-size:clamp(28px,7vw,54px);
       font-weight:900;
@@ -672,19 +788,9 @@
         border-radius:18px;
       }
 
-      .menu-grid{
-        grid-template-columns:1fr;
-        gap:10px;
-      }
-
-      .menu-btn-grid{
-        grid-template-columns:1fr;
-      }
-
-      .mode-showcase{
-        grid-template-columns:1fr;
-      }
-
+      .menu-grid{ grid-template-columns:1fr; gap:10px; }
+      .menu-btn-grid{ grid-template-columns:1fr; }
+      .mode-showcase{ grid-template-columns:1fr; }
       .pick-grid{ grid-template-columns:1fr; }
 
       button,select,input{
@@ -696,7 +802,7 @@
       }
 
       .main-big-btn{
-        min-height:48px;
+        min-height:46px;
         font-size:14px;
       }
 
@@ -709,54 +815,67 @@
         grid-template-columns:42px 1fr 58px 70px;
         font-size:11px;
       }
+
+      .cutin-body{
+        flex-direction:column;
+        justify-content:center;
+      }
+
+      .cutin-text{
+        text-align:center;
+      }
+
+      .cutin-art{
+        width:100%;
+        min-height:26vh;
+      }
     }
 
     @media (max-width:700px){
       :root{
-        --gameScale:.60;
-        --mobileBtn:27px;
-        --mobileBtnBig:33px;
-        --mobileGap:4px;
+        --gameScale:.52;
+        --mobileBtn:22px;
+        --mobileBtnBig:27px;
+        --mobileGap:3px;
       }
 
       .hero-badge-row{ display:none; }
-      .hero-title{ font-size:clamp(26px,8vw,38px); letter-spacing:.06em; }
-      .hero-sub{ font-size:11px; }
+      .hero-title{ font-size:clamp(24px,8vw,36px); letter-spacing:.05em; }
+      .hero-sub{ font-size:10px; }
       .menu-head{ margin-bottom:6px; }
-      .menu-col{ padding:10px; border-radius:18px; }
+      .menu-col{ padding:9px; border-radius:18px; }
       .mode-showcase{ display:none; }
       .mini-grid{ grid-template-columns:1fr 1fr; }
       .command-preview{ gap:6px; }
-      .command-row{
-        padding:8px 10px;
-        border-radius:12px;
-      }
-      .command-row strong{ font-size:11px; }
-      .command-row span{ font-size:10px; }
-      .fighter-panel{ width:min(30vw,104px); }
-      .fighter-name{ font-size:7px; }
-      .small-info{ font-size:6px; }
-      .bar-wrap{ height:7px; }
-      #centerInfo{ font-size:10px; }
-      #message{ font-size:10px; top:calc(var(--hudTop) + 28px); }
+      .command-row{ padding:8px 10px; border-radius:12px; }
+      .command-row strong{ font-size:10px; }
+      .command-row span{ font-size:9px; }
+      .fighter-panel{ width:min(30vw,92px); }
+      .fighter-name{ font-size:6.5px; }
+      .small-info{ font-size:5px; }
+      .bar-wrap{ height:6px; }
+      #centerInfo{ font-size:9px; }
+      #message{ font-size:9px; top:calc(var(--hudTop) + 26px); }
+      .touch-btn{ font-size:9px; }
+      .touch-btn.big{ font-size:10px; }
     }
 
     @media (max-width:480px){
       :root{
-        --gameScale:.52;
-        --mobileBtn:24px;
-        --mobileBtnBig:30px;
-        --mobileGap:4px;
+        --gameScale:.45;
+        --mobileBtn:20px;
+        --mobileBtnBig:24px;
+        --mobileGap:3px;
       }
 
       .hero-sub{ display:none; }
       .mini-grid{ gap:6px; }
-      .mini-tile{ font-size:10px; padding:8px; }
-      .touch-btn{ font-size:10px; }
-      .touch-btn.big{ font-size:11px; }
-      .fighter-panel{ width:min(31vw,92px); }
-      .small-info{ font-size:5.5px; }
-      #centerWrap{ min-width:44px; }
+      .mini-tile{ font-size:9px; padding:7px; }
+      .fighter-panel{ width:min(31vw,82px); }
+      .small-info{ font-size:4.5px; }
+      #centerWrap{ min-width:42px; }
+      .top-ui{ padding:0 2px; gap:2px; }
+      #message{ max-width:74vw; }
     }
   </style>
 </head>
@@ -765,18 +884,17 @@
   <div id="menuScreen" class="screen show">
     <div class="panel menu-panel">
       <div class="menu-head">
-        <div class="menu-kicker">HYPER ULTIMATE BATTLE SYSTEM</div>
+        <div class="menu-kicker">HYPER ULTIMATE BATTLE SYSTEM KAI</div>
         <div class="hero-badge-row">
-          <div class="hero-badge">AWAKENING</div>
-          <div class="hero-badge">BURST ARTS</div>
-          <div class="hero-badge">PROJECTILE CLASH</div>
-          <div class="hero-badge">ONLINE</div>
-          <div class="hero-badge">MUSOU</div>
-          <div class="hero-badge">MOBILE FIX</div>
+          <div class="hero-badge">TRANSFORM</div>
+          <div class="hero-badge">WIN CUT-IN</div>
+          <div class="hero-badge">STAGE GIMMICK</div>
+          <div class="hero-badge">BOSS 2ND FORM</div>
+          <div class="hero-badge">MOBILE MINI</div>
         </div>
-        <div class="hero-title">FIGHT GAME v100</div>
+        <div class="hero-title">FIGHT GAME v100.改</div>
         <div class="hero-sub">
-          v100級の超盛り版。覚醒、バースト、飛び道具相殺、強化ガード演出、固有コマンド、無双、オンライン、ランキングまで全部入り。
+          変身演出、勝利カットイン、ステージギミック、BOSS専用第2形態、さらにスマホ版を小型化した超強化版です。
         </div>
       </div>
 
@@ -809,28 +927,28 @@
 
           <div class="mode-showcase">
             <div class="mode-tile">
-              <h4>覚醒システム</h4>
-              <p>HP35以下で自動覚醒。移動・攻撃・オーラが強化。</p>
+              <h4>変身演出</h4>
+              <p>覚醒時に全画面変身カット演出が発生。</p>
             </div>
             <div class="mode-tile">
-              <h4>バースト必殺</h4>
-              <p>ゲージ100でS長押し級の超演出バースト技。</p>
+              <h4>勝利カットイン</h4>
+              <p>勝者決定時に専用カットインを表示。</p>
             </div>
             <div class="mode-tile">
-              <h4>飛び道具相殺</h4>
-              <p>ショット同士が衝突すると爆発して消滅。</p>
+              <h4>ステージギミック</h4>
+              <p>NEON雷撃、RUINS落石、MOON低重力など。</p>
             </div>
             <div class="mode-tile">
-              <h4>スマホ最適化</h4>
-              <p>画面縮小、軽量メニュー、小型ボタンで操作性改善。</p>
+              <h4>Boss第2形態</h4>
+              <p>BOSS難度の敵が瀕死で超強化変身。</p>
             </div>
           </div>
 
           <div class="mini-grid">
-            <div class="mini-tile">AWAKEN SYSTEM</div>
-            <div class="mini-tile">BURST FINISH</div>
-            <div class="mini-tile">PROJECTILE CLASH</div>
-            <div class="mini-tile">ONLINE + MUSOU</div>
+            <div class="mini-tile">TRANSFORMATION</div>
+            <div class="mini-tile">VICTORY CUT-IN</div>
+            <div class="mini-tile">STAGE GIMMICKS</div>
+            <div class="mini-tile">BOSS FORM II</div>
           </div>
         </div>
 
@@ -949,8 +1067,8 @@
       <div class="fighter-panel">
         <div class="fighter-name" id="leftName">PLAYER 1</div>
         <div class="bar-wrap"><div id="playerHpBar" class="bar player"></div></div>
-        <div class="bar-wrap" style="margin-top:4px;height:7px;"><div id="playerSuperBar" class="bar super"></div></div>
-        <div class="bar-wrap" style="margin-top:4px;height:6px;"><div id="playerAwakenBar" class="bar awaken"></div></div>
+        <div class="bar-wrap" style="margin-top:4px;height:6px;"><div id="playerSuperBar" class="bar super"></div></div>
+        <div class="bar-wrap" style="margin-top:4px;height:5px;"><div id="playerAwakenBar" class="bar awaken"></div></div>
         <div class="small-info">
           <span id="playerHpText">HP 100 / 100</span>
           <span id="comboText">COMBO 0</span>
@@ -964,15 +1082,14 @@
       <div class="fighter-panel">
         <div class="fighter-name" id="rightName" style="text-align:right;">PLAYER 2</div>
         <div class="bar-wrap"><div id="enemyHpBar" class="bar enemy"></div></div>
-        <div class="bar-wrap" style="margin-top:4px;height:7px;"><div id="enemySuperBar" class="bar super"></div></div>
-        <div class="bar-wrap" style="margin-top:4px;height:6px;"><div id="enemyAwakenBar" class="bar awaken"></div></div>
+        <div class="bar-wrap" style="margin-top:4px;height:6px;"><div id="enemySuperBar" class="bar super"></div></div>
+        <div class="bar-wrap" style="margin-top:4px;height:5px;"><div id="enemyAwakenBar" class="bar awaken"></div></div>
         <div class="small-info">
           <span id="difficultyText">CPU / ONLINE</span>
           <span id="enemyHpText">HP 100 / 100</span>
         </div>
       </div>
     </div>
-
     <div id="message"></div>
   </div>
 
@@ -991,6 +1108,20 @@
       <div class="touch-btn" id="punchBtn">P</div>
       <div class="touch-btn" id="kickBtn">K</div>
       <div class="touch-btn big" id="specialBtn">S</div>
+    </div>
+  </div>
+
+  <div id="transformOverlay"><div id="transformText">AWAKENING</div></div>
+
+  <div id="cutinOverlay">
+    <div class="cutin-bg"></div>
+    <div class="cutin-slash"></div>
+    <div class="cutin-body">
+      <div class="cutin-art" id="cutinArt"></div>
+      <div class="cutin-text">
+        <div class="cutin-win">VICTORY</div>
+        <div class="cutin-name" id="cutinName">RYU</div>
+      </div>
     </div>
   </div>
 
@@ -1023,7 +1154,9 @@ import {
   onDisconnect
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-/* Firebase */
+/* =========================
+   Firebase
+========================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBkY-kHndDPPZjqr7F52oPyvg5gAJs3Ipk",
   authDomain: "fight-game-5abcb.firebaseapp.com",
@@ -1033,14 +1166,18 @@ const firebaseConfig = {
   messagingSenderId: "875972972511",
   appId: "1:875972972511:web:c78d67bcd5a31010f1be6a"
 };
+
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 const rtdb = getDatabase(firebaseApp);
+
 let firebaseReady = false;
 let firebaseUserId = "guest";
 
-/* Data */
+/* =========================
+   Data
+========================= */
 const CHARACTERS = {
   ryu:{ key:"ryu", name:"RYU", style:"王道バランス", color:"#ff5a62", accent:"#ffd3d7", hair:"#2a2030", aura:"#ff7b89", scarf:"#ffffff", speed:4.8, jump:16.5, atk:1.00, def:1.00, superGain:1.00, specialName:"波動閃", burstName:"真・神龍波", silhouette:"martial", commands:[{input:"→→ + P",name:"ダッシュパンチ"},{input:"↓→ + P",name:"波動弾"},{input:"→↓ + K",name:"昇龍脚"},{input:"S",name:"波動閃"}] },
   blade:{ key:"blade", name:"BLADE", style:"高速足技", color:"#4fa7ff", accent:"#d4e7ff", hair:"#d0f0ff", aura:"#74c3ff", scarf:"#79d2ff", speed:5.45, jump:17.2, atk:0.95, def:0.94, superGain:1.14, specialName:"ソニックラッシュ", burstName:"ゼロシフト", silhouette:"ninja", commands:[{input:"→→ + K",name:"フラッシュキック"},{input:"←→ + P",name:"シャドウステップ"},{input:"↓↓ + P",name:"スプリットバースト"},{input:"S",name:"ソニックラッシュ"}] },
@@ -1053,10 +1190,10 @@ const CHARACTERS = {
 };
 
 const STAGES = {
-  dojo:{ label:"DOJO", skyTop:"#32405f", skyBottom:"#121822", floor:"#34221b", line:"#6e4c3b", glow:"rgba(255,204,170,.08)", buff:{ ryu:{atk:1.08}, blade:{atk:0.98}, titan:{atk:1.0}, shadow:{atk:1.0}, valkyrie:{atk:1.0}, phoenix:{atk:1.06}, frost:{atk:0.98}, oni:{atk:1.04} } },
-  ruins:{ label:"RUINS", skyTop:"#4d3f34", skyBottom:"#17110f", floor:"#53453a", line:"#917c69", glow:"rgba(255,224,170,.08)", buff:{ ryu:{atk:0.98}, blade:{atk:1.0}, titan:{atk:1.12}, shadow:{atk:1.0}, valkyrie:{atk:0.98}, phoenix:{atk:1.0}, frost:{atk:1.0}, oni:{atk:1.10} } },
-  neon:{ label:"NEON CITY", skyTop:"#251f5f", skyBottom:"#060813", floor:"#1d2747", line:"#4e77b9", glow:"rgba(116,196,255,.12)", buff:{ ryu:{atk:1.0}, blade:{atk:1.08}, titan:{atk:0.98}, shadow:{atk:1.06}, valkyrie:{atk:1.02}, phoenix:{atk:1.03}, frost:{atk:1.04}, oni:{atk:0.98} } },
-  moon:{ label:"MOON BASE", skyTop:"#455167", skyBottom:"#0c1018", floor:"#57606c", line:"#b0c0d6", glow:"rgba(220,240,255,.10)", buff:{ ryu:{atk:1.0}, blade:{atk:1.0}, titan:{atk:1.0}, shadow:{atk:1.04}, valkyrie:{atk:1.08}, phoenix:{atk:0.98}, frost:{atk:1.08}, oni:{atk:1.02} } }
+  dojo:{ label:"DOJO", skyTop:"#32405f", skyBottom:"#121822", floor:"#34221b", line:"#6e4c3b", glow:"rgba(255,204,170,.08)", gimmick:"spirit", buff:{ ryu:{atk:1.08}, blade:{atk:0.98}, titan:{atk:1.0}, shadow:{atk:1.0}, valkyrie:{atk:1.0}, phoenix:{atk:1.06}, frost:{atk:0.98}, oni:{atk:1.04} } },
+  ruins:{ label:"RUINS", skyTop:"#4d3f34", skyBottom:"#17110f", floor:"#53453a", line:"#917c69", glow:"rgba(255,224,170,.08)", gimmick:"rock", buff:{ ryu:{atk:0.98}, blade:{atk:1.0}, titan:{atk:1.12}, shadow:{atk:1.0}, valkyrie:{atk:0.98}, phoenix:{atk:1.0}, frost:{atk:1.0}, oni:{atk:1.10} } },
+  neon:{ label:"NEON CITY", skyTop:"#251f5f", skyBottom:"#060813", floor:"#1d2747", line:"#4e77b9", glow:"rgba(116,196,255,.12)", gimmick:"lightning", buff:{ ryu:{atk:1.0}, blade:{atk:1.08}, titan:{atk:0.98}, shadow:{atk:1.06}, valkyrie:{atk:1.02}, phoenix:{atk:1.03}, frost:{atk:1.04}, oni:{atk:0.98} } },
+  moon:{ label:"MOON BASE", skyTop:"#455167", skyBottom:"#0c1018", floor:"#57606c", line:"#b0c0d6", glow:"rgba(220,240,255,.10)", gimmick:"gravity", buff:{ ryu:{atk:1.0}, blade:{atk:1.0}, titan:{atk:1.0}, shadow:{atk:1.04}, valkyrie:{atk:1.08}, phoenix:{atk:0.98}, frost:{atk:1.08}, oni:{atk:1.02} } }
 };
 
 const PROJECTILE_STYLE = {
@@ -1067,7 +1204,9 @@ const PROJECTILE_STYLE = {
   gold:{ fill:"rgba(255,212,110,.88)", glow:"rgba(255,220,150,.24)" }
 };
 
-/* DOM */
+/* =========================
+   DOM
+========================= */
 const root = document.documentElement;
 const menuScreen = document.getElementById("menuScreen");
 const onlineScreen = document.getElementById("onlineScreen");
@@ -1138,6 +1277,11 @@ const topButtons = document.getElementById("topButtons");
 const backMenuBtn = document.getElementById("backMenuBtn");
 const gameFullscreenBtn = document.getElementById("gameFullscreenBtn");
 const rotateNotice = document.getElementById("rotateNotice");
+const transformOverlay = document.getElementById("transformOverlay");
+const transformText = document.getElementById("transformText");
+const cutinOverlay = document.getElementById("cutinOverlay");
+const cutinName = document.getElementById("cutinName");
+const cutinArt = document.getElementById("cutinArt");
 
 const touchButtons = {
   left: document.getElementById("leftBtn"),
@@ -1151,7 +1295,9 @@ const touchButtons = {
 const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 const isMobile = matchMedia("(max-width: 940px)").matches || isTouch;
 
-/* Firebase status */
+/* =========================
+   Firebase status
+========================= */
 function setOnlineAvailability(enabled, text) {
   openOnlineBtn.disabled = !enabled;
   createRoomBtn.disabled = !enabled;
@@ -1159,7 +1305,9 @@ function setOnlineAvailability(enabled, text) {
   firebaseStatus.textContent = text;
 }
 
-/* Layout */
+/* =========================
+   Layout
+========================= */
 function fitCanvas() {
   const vv = window.visualViewport;
   const w = vv ? Math.round(vv.width) : window.innerWidth;
@@ -1169,6 +1317,7 @@ function fitCanvas() {
   canvas.style.width = w + "px";
   canvas.style.height = h + "px";
 }
+
 function applyViewportSafeLayout() {
   const vv = window.visualViewport;
   const w = vv ? vv.width : window.innerWidth;
@@ -1182,21 +1331,24 @@ function applyViewportSafeLayout() {
   const controlLift = hiddenBottom > 0 ? Math.min(12, hiddenBottom + 2) : 0;
 
   let scaleDesktop = 0.90;
-  let scaleMobile = 0.70;
-  if (window.innerWidth <= 700) scaleMobile = 0.60;
-  if (window.innerWidth <= 480) scaleMobile = 0.52;
+  let scaleMobile = 0.66;
+  if (window.innerWidth <= 700) scaleMobile = 0.52;
+  if (window.innerWidth <= 480) scaleMobile = 0.45;
 
   root.style.setProperty("--hudTop", `${hudTop}px`);
   root.style.setProperty("--controlLift", `${controlLift}px`);
   root.style.setProperty("--gameScale", isMobile ? `${scaleMobile}` : `${scaleDesktop}`);
   mobileControls.style.bottom = `${hiddenBottom}px`;
 }
+
 function updateRotateNotice() {
   const portrait = window.matchMedia("(orientation: portrait)").matches;
   rotateNotice.style.display = (isMobile && portrait && gameRunning) ? "flex" : "none";
 }
 
-/* Helpers */
+/* =========================
+   Helpers
+========================= */
 function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 function clearScreens() {
   menuScreen.classList.remove("show");
@@ -1235,8 +1387,11 @@ function getBodyRect(f) { return { x:f.x, y:f.y, w:f.w, h:f.h }; }
 function rectsOverlap(a,b) {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
+function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
-/* Fullscreen */
+/* =========================
+   Fullscreen
+========================= */
 function fullscreenSupported() {
   const el = document.documentElement;
   return !!(el.requestFullscreen || el.webkitRequestFullscreen);
@@ -1266,7 +1421,9 @@ async function enterFullscreenIfPossible() {
   }
 }
 
-/* UI */
+/* =========================
+   UI / Help
+========================= */
 let selectedCharacter = "ryu";
 let rankingModeFilter = "battle";
 
@@ -1300,12 +1457,12 @@ function setHelpText() {
     <p>${commonKeys}</p>
     <p><strong>${CHARACTERS[selectedCharacter].name} 固有コマンド</strong></p>
     ${cmdLines}
-    <p><strong>覚醒</strong></p>
-    <p>HP35以下で自動発動。移動速度・攻撃が上昇しオーラが強化されます。</p>
-    <p><strong>飛び道具相殺</strong></p>
-    <p>ショット同士がぶつかると爆発して消滅します。</p>
-    <p><strong>ガード強化演出</strong></p>
-    <p>防御成功でシールドリングと青白い光が発生します。</p>
+    <p><strong>覚醒変身</strong></p>
+    <p>HP35以下で自動変身。速度・攻撃・オーラが強化されます。</p>
+    <p><strong>ボス第2形態</strong></p>
+    <p>BOSS難度の敵は瀕死時にさらに変身して強くなります。</p>
+    <p><strong>ステージギミック</strong></p>
+    <p>DOJO: 霊気 / RUINS: 落石 / NEON: 雷撃 / MOON: 低重力。</p>
   `;
 }
 function renderCharacterCards() {
@@ -1335,9 +1492,12 @@ renderCharacterCards();
 renderMenuCommands();
 setHelpText();
 
-/* Firebase login */
+/* =========================
+   Firebase login
+========================= */
 setOnlineAvailability(false, "Firebase接続確認中...");
 refreshFullscreenButtons();
+
 try {
   const cred = await signInAnonymously(auth);
   firebaseReady = true;
@@ -1348,7 +1508,9 @@ try {
   setOnlineAvailability(false, "オンライン未使用: Firebase認証失敗");
 }
 
-/* Ranking */
+/* =========================
+   Ranking
+========================= */
 async function loadRanking() {
   rankingList.innerHTML = "読み込み中...";
   try {
@@ -1399,7 +1561,9 @@ async function saveRanking(score, mode = "battle") {
   }
 }
 
-/* Game config */
+/* =========================
+   Config / game data
+========================= */
 function difficultyConfig() {
   const v = difficultySelect.value;
   if (v === "boss") return { label:"BOSS", speed:5.8, react:0.995, defend:0.55, aggro:1.9 };
@@ -1436,7 +1600,9 @@ function pickEnemyCharacter() {
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
-/* State */
+/* =========================
+   State
+========================= */
 const keys = { left:false, right:false, jump:false, punch:false, kick:false, special:false };
 let pressedThisFrame = { punch:false, kick:false, special:false };
 let gameRunning = false;
@@ -1450,6 +1616,7 @@ let particles = [];
 let commandBuffer = [];
 let projectiles = [];
 let guardRings = [];
+let hazards = [];
 let roundTimer = 99;
 let resultSaved = false;
 let gameMode = "cpu";
@@ -1457,6 +1624,8 @@ let onlineGameStarted = false;
 let pendingResult = null;
 let lastBattleMode = "cpu";
 let onlineResultRoomCode = "";
+let transformLock = false;
+let cutinPlaying = false;
 
 let musou = { active:false, score:0, wins:0, wave:1 };
 const gravity = 0.9;
@@ -1472,15 +1641,18 @@ function createFighter(characterKey, isPlayer) {
     y: groundY() - 120,
     w: 64,
     h: 120,
-    vx: 0, vy: 0,
+    vx: 0,
+    vy: 0,
     dir: isPlayer ? 1 : -1,
     speed: st.speed,
     jumpPower: st.jump,
-    hp: 100, maxHp: 100,
-    super: 0, maxSuper: 100,
+    hp: 100,
+    maxHp: 100,
+    super: 0,
+    maxSuper: 100,
     awaken:0,
-    awakenReady:false,
     awakened:false,
+    bossForm2:false,
     atkMul: st.atk,
     defMul: st.def,
     superGain: st.superGain,
@@ -1502,7 +1674,7 @@ function createFighter(characterKey, isPlayer) {
     hurtFlash:0,
     hasHitCurrentAttack:false,
     isPlayer,
-    animPhase:Math.random()*Math.PI*2,
+    animPhase:Math.random() * Math.PI * 2,
     runPhase:0,
     resultPose:"",
     chargeBackFrames:0
@@ -1545,18 +1717,23 @@ function resetBattle(enemyCharacter = null) {
   particles = [];
   projectiles = [];
   guardRings = [];
+  hazards = [];
   commandBuffer = [];
   roundTimer = musou.active ? 60 : 99;
   gameOver = false;
   resultSaved = false;
   pendingResult = null;
+  transformLock = false;
+  cutinPlaying = false;
 
   leftName.textContent = player.name;
   rightName.textContent = enemy.name;
   difficultyText.textContent =
     gameMode.startsWith("online") || gameMode === "spectator"
       ? (gameMode === "spectator" ? "SPECTATE / " : "ONLINE / ") + STAGES[stageSelect.value].label
-      : musou.active ? `MUSOU W${musou.wave}` : difficultyConfig().label + " / " + STAGES[stageSelect.value].label;
+      : musou.active
+        ? `MUSOU W${musou.wave}`
+        : difficultyConfig().label + " / " + STAGES[stageSelect.value].label;
 
   centerInfo.textContent = "READY";
   comboText.textContent = "COMBO 0";
@@ -1580,6 +1757,33 @@ function stopGame() {
   updateRotateNotice();
 }
 
+/* =========================
+   Overlays
+========================= */
+async function playTransformOverlay(text, color) {
+  transformText.textContent = text;
+  transformText.style.background = `linear-gradient(90deg,#fff,${color},#fff)`;
+  transformText.style.webkitBackgroundClip = "text";
+  transformText.style.backgroundClip = "text";
+  transformText.style.color = "transparent";
+  transformOverlay.classList.add("show");
+  await delay(700);
+  transformOverlay.classList.remove("show");
+}
+async function playVictoryCutin(fighter) {
+  if (cutinPlaying) return;
+  cutinPlaying = true;
+  cutinName.textContent = fighter.name;
+  cutinArt.style.setProperty("--cutinColor", fighter.aura);
+  cutinOverlay.classList.add("show");
+  await delay(1200);
+  cutinOverlay.classList.remove("show");
+  cutinPlaying = false;
+}
+
+/* =========================
+   Start / result
+========================= */
 async function startCpuGame() {
   resetMusou();
   gameMode = "cpu";
@@ -1597,6 +1801,7 @@ async function startCpuGame() {
   applyViewportSafeLayout();
   updateRotateNotice();
 }
+
 async function startMusouGame() {
   musou.active = true;
   musou.score = 0;
@@ -1618,6 +1823,7 @@ async function startMusouGame() {
   updateRotateNotice();
   showMessage("MUSOU START", 1000);
 }
+
 async function startOnlineGameAsRole(role, remoteCharacterKey) {
   resetMusou();
   gameMode = role === "host" ? "online-host" : role === "guest" ? "online-guest" : "spectator";
@@ -1637,11 +1843,19 @@ async function startOnlineGameAsRole(role, remoteCharacterKey) {
   updateRotateNotice();
   showMessage(role === "spectator" ? "WATCH" : "FIGHT", 900);
 }
+
 async function rematchLastBattle() {
-  if (musou.active) return startMusouGame();
-  if (lastBattleMode === "cpu") return startCpuGame();
+  if (musou.active) {
+    await startMusouGame();
+    return;
+  }
+  if (lastBattleMode === "cpu") {
+    await startCpuGame();
+    return;
+  }
   showMenu();
 }
+
 function showResultScreen(title, sub) {
   stopGame();
   resultTitle.textContent = title;
@@ -1652,7 +1866,9 @@ function showResultScreen(title, sub) {
   resultScreen.classList.add("show");
 }
 
-/* Combat */
+/* =========================
+   Commands / combat
+========================= */
 function recordCommand(dir) {
   const now = performance.now();
   commandBuffer.push({ dir, time: now });
@@ -1663,6 +1879,7 @@ function commandMatched(sequence) {
   const arr = commandBuffer.map(v => v.dir);
   return arr.slice(-sequence.length).join(",") === sequence.join(",");
 }
+
 function attackData(type) {
   if (type === "punch") return { timer:11, cooldown:12, damage:6, kb:10, superGain:8 };
   if (type === "kick") return { timer:16, cooldown:18, damage:10, kb:15, superGain:11 };
@@ -1677,6 +1894,7 @@ function attackData(type) {
   if (type === "projectile") return { timer:18, cooldown:20, damage:11, kb:18, superGain:12 };
   return { timer:0, cooldown:0, damage:0, kb:0, superGain:0 };
 }
+
 function getAttackRect(f) {
   let range = 0, height = 0, yOffset = 0;
   if (f.attackType === "punch") { range = 32; height = 22; yOffset = 38; }
@@ -1692,6 +1910,7 @@ function getAttackRect(f) {
   if (f.dir === 1) return { x:f.x + f.w - 4, y:f.y + yOffset, w:range, h:height };
   return { x:f.x - range + 4, y:f.y + yOffset, w:range, h:height };
 }
+
 function attackActiveFrame(type, timer) {
   if (type === "punch") return timer >= 5 && timer <= 7;
   if (type === "kick") return timer >= 8 && timer <= 12;
@@ -1705,29 +1924,48 @@ function attackActiveFrame(type, timer) {
   if (type === "burst") return timer >= 12 && timer <= 28;
   return false;
 }
+
 function spawnImpact(x, y, color, count=8) {
   for (let i = 0; i < count; i++) {
     particles.push({ x, y, vx:(Math.random()-0.5)*6, vy:(Math.random()-0.5)*6 - 1, life:18 + Math.random()*12, size:2 + Math.random()*3, color });
   }
 }
+
 function spawnAuraBurst(x, y, color) {
   for (let i = 0; i < 18; i++) {
     particles.push({ x, y, vx:(Math.random()-0.5)*9, vy:(Math.random()-0.5)*7 - 1, life:22 + Math.random()*12, size:3 + Math.random()*4, color });
   }
 }
+
 function spawnGuardRing(x, y, color="#aee1ff") {
   guardRings.push({ x, y, r:20, maxR:48, alpha:0.9, color });
   for (let i = 0; i < 10; i++) {
-    particles.push({ x, y, vx:(Math.random()-0.5)*7, vy:(Math.random()-0.5)*7, life:14 + Math.random()*10, size:2 + Math.random()*2.5, color });
+    particles.push({
+      x, y,
+      vx:(Math.random()-0.5)*7,
+      vy:(Math.random()-0.5)*7,
+      life:14 + Math.random()*10,
+      size:2 + Math.random()*2.5,
+      color
+    });
   }
 }
+
 function spawnClashEffect(x, y) {
   for (let i = 0; i < 20; i++) {
-    particles.push({ x, y, vx:(Math.random()-0.5)*10, vy:(Math.random()-0.5)*10, life:18 + Math.random()*12, size:2 + Math.random()*3, color: i % 2 ? "#ffd59e" : "#cce7ff" });
+    particles.push({
+      x, y,
+      vx:(Math.random()-0.5)*10,
+      vy:(Math.random()-0.5)*10,
+      life:18 + Math.random()*12,
+      size:2 + Math.random()*3,
+      color: i % 2 ? "#ffd59e" : "#cce7ff"
+    });
   }
   guardRings.push({ x, y, r:18, maxR:56, alpha:0.85, color:"#ffffff" });
   cameraShake = Math.max(cameraShake, 6);
 }
+
 function getProjectileSpec(f) {
   const key = f.characterKey;
   if (key === "ryu") return { name:"波動弾", colorKey:"fire", speed:7.2, size:16 };
@@ -1740,6 +1978,7 @@ function getProjectileSpec(f) {
   if (key === "oni") return { name:"鬼炎弾", colorKey:"dark", speed:6.8, size:18 };
   return { name:"ショット", colorKey:"fire", speed:7.0, size:16 };
 }
+
 function spawnProjectile(owner, target) {
   const spec = getProjectileSpec(owner);
   const damage = attackData("projectile").damage * owner.atkMul / target.defMul;
@@ -1762,8 +2001,9 @@ function spawnProjectile(owner, target) {
   spawnAuraBurst(bodyX, bodyY, owner.aura);
   if (owner.isPlayer) showMessage(spec.name, 240);
 }
+
 function tryStartAttack(f, type) {
-  if (f.dead || f.hitstun > 0) return false;
+  if (f.dead || f.hitstun > 0 || transformLock) return false;
   if (f.attackTimer > 0 || f.attackCooldown > 0) return false;
   const data = attackData(type);
   if ((type === "special" || type === "burst") && f.super < data.cost) return false;
@@ -1805,19 +2045,42 @@ function tryStartAttack(f, type) {
   }
   return true;
 }
+
 function gainSuper(f, value) { f.super = clamp(f.super + value * f.superGain, 0, f.maxSuper); }
 function facingProperForGuard(target, attacker) { return target.dir === -attacker.dir; }
 
-function updateAwaken(f) {
+async function triggerAwaken(f) {
+  if (f.awakened) return;
+  f.awakened = true;
+  f.speed += 0.45;
+  f.atkMul *= 1.12;
+  transformLock = true;
+  await playTransformOverlay(f.isPlayer ? "AWAKENING" : "ENEMY AWAKEN", f.aura);
+  spawnAuraBurst(f.x + f.w/2, f.y + 40, f.aura);
+  transformLock = false;
+}
+
+async function triggerBossForm2(f) {
+  if (f.bossForm2) return;
+  f.bossForm2 = true;
+  f.maxHp += 35;
+  f.hp = Math.min(f.maxHp, f.hp + 22);
+  f.speed += 0.6;
+  f.atkMul *= 1.18;
+  f.defMul *= 1.08;
+  f.super = clamp(f.super + 40, 0, 100);
+  f.aura = "#ffea7a";
+  transformLock = true;
+  await playTransformOverlay("BOSS FORM II", "#ffdb7f");
+  spawnAuraBurst(f.x + f.w/2, f.y + 40, "#fff0a8");
+  transformLock = false;
+}
+
+function updateAwakenAsync(f) {
   const hpRate = f.hp / f.maxHp;
   f.awaken = clamp((1 - hpRate - 0.65) / 0.35, 0, 1);
-  if (!f.awakened && hpRate <= 0.35) {
-    f.awakened = true;
-    f.speed += 0.45;
-    f.atkMul *= 1.12;
-    spawnAuraBurst(f.x + f.w/2, f.y + 40, f.aura);
-    if (f.isPlayer) showMessage("AWAKENING", 900);
-  }
+  if (!f.awakened && hpRate <= 0.35) triggerAwaken(f);
+  if (!f.isPlayer && difficultySelect.value === "boss" && !f.bossForm2 && hpRate <= 0.40) triggerBossForm2(f);
 }
 
 async function advanceMusouRound() {
@@ -1849,12 +2112,14 @@ async function advanceMusouRound() {
 
   projectiles = [];
   guardRings = [];
+  hazards = [];
   roundTimer = 60;
   combo = 0;
   comboText.textContent = "COMBO 0";
   difficultyText.textContent = `MUSOU W${musou.wave}`;
   rightName.textContent = enemy.name;
 }
+
 function maybeSaveWinRanking() {
   if (musou.active) return;
   if (!resultSaved && gameMode !== "online-guest" && gameMode !== "spectator") {
@@ -1863,11 +2128,13 @@ function maybeSaveWinRanking() {
     saveRanking(score, "battle");
   }
 }
+
 async function saveMusouIfNeeded() {
   if (!musou.active || resultSaved) return;
   resultSaved = true;
   await saveRanking(musou.score, "musou");
 }
+
 async function finishMatch(attackerIsPlayer, reasonText) {
   if (pendingResult) return;
 
@@ -1889,27 +2156,29 @@ async function finishMatch(attackerIsPlayer, reasonText) {
 
   showMessage(pendingResult.title, 1600);
 
+  const winner = attackerIsPlayer ? player : enemy;
+  await playVictoryCutin(winner);
+
   if (musou.active) {
     await saveMusouIfNeeded();
     const sub = `${reasonText} / 撃破数 ${musou.wins} / SCORE ${musou.score}`;
-    setTimeout(() => showResultScreen(attackerIsPlayer ? "MUSOU CLEAR" : "MUSOU END", sub), 1600);
+    showResultScreen(attackerIsPlayer ? "MUSOU CLEAR" : "MUSOU END", sub);
     return;
   }
 
   if (gameMode === "cpu") {
     if (attackerIsPlayer) maybeSaveWinRanking();
-    setTimeout(() => showResultScreen(pendingResult.title, pendingResult.sub), 1600);
+    showResultScreen(pendingResult.title, pendingResult.sub);
     return;
   }
 
-  setTimeout(() => {
-    onlineResultRoomCode = onlineInfo.roomCode || onlineResultRoomCode;
-    showResultScreen(
-      pendingResult.title,
-      pendingResult.sub + (gameMode === "spectator" ? " / 観戦中" : " / オンライン再戦申請できます")
-    );
-  }, 1600);
+  onlineResultRoomCode = onlineInfo.roomCode || onlineResultRoomCode;
+  showResultScreen(
+    pendingResult.title,
+    pendingResult.sub + (gameMode === "spectator" ? " / 観戦中" : " / オンライン再戦申請できます")
+  );
 }
+
 function applyDamage(attacker, target, attackType = null, overrideDamage = null, overrideKb = null) {
   const type = attackType || attacker.attackType;
   const data = attackData(type === "projectile" ? "projectile" : type);
@@ -1954,6 +2223,21 @@ function applyDamage(attacker, target, attackType = null, overrideDamage = null,
     finishMatch(attacker.isPlayer, "KO");
   }
 }
+
+function applyStageDamage(target, damage, label, color) {
+  if (target.invuln > 0 || target.dead) return;
+  target.hp = clamp(target.hp - damage, 0, target.maxHp);
+  target.hurtFlash = 8;
+  target.hitstun = 7;
+  target.invuln = 10;
+  spawnImpact(target.x + target.w/2, target.y + 40, color, 10);
+  showMessage(label, 280);
+  if (target.hp <= 0) {
+    target.dead = true;
+    finishMatch(target !== player, "GIMMICK KO");
+  }
+}
+
 function resolveAttackHit(attacker, target) {
   if (!attacker.attackType || attacker.hasHitCurrentAttack) return;
   if (!attackActiveFrame(attacker.attackType, attacker.attackTimer)) return;
@@ -1962,6 +2246,7 @@ function resolveAttackHit(attacker, target) {
   const body = getBodyRect(target);
   if (rectsOverlap(atk, body)) applyDamage(attacker, target);
 }
+
 function resolveProjectileClash() {
   for (let i = 0; i < projectiles.length; i++) {
     const a = projectiles[i];
@@ -1984,6 +2269,7 @@ function resolveProjectileClash() {
     }
   }
 }
+
 function resolveProjectiles() {
   resolveProjectileClash();
 
@@ -1993,6 +2279,7 @@ function resolveProjectiles() {
 
     const target = p.owner === "player" ? enemy : player;
     const pseudoAttacker = p.owner === "player" ? player : enemy;
+
     const rect = { x:p.x - p.r/2, y:p.y - p.r/2, w:p.r, h:p.r };
     const body = getBodyRect(target);
 
@@ -2010,6 +2297,7 @@ function resolveProjectiles() {
 
   projectiles = projectiles.filter(p => p.life > 0);
 }
+
 function updateGuardRings() {
   guardRings.forEach(g => {
     g.r += 2.8;
@@ -2017,6 +2305,82 @@ function updateGuardRings() {
   });
   guardRings = guardRings.filter(g => g.alpha > 0.04 && g.r < g.maxR);
 }
+
+/* =========================
+   Stage gimmicks
+========================= */
+let gimmickTimer = 0;
+
+function spawnStageGimmick() {
+  const gimmick = STAGES[stageSelect.value].gimmick;
+  if (gimmick === "lightning") {
+    const x = 80 + Math.random() * (canvas.width - 160);
+    hazards.push({ type:"lightning", x, y:0, w:28, h:groundY(), life:34 });
+  } else if (gimmick === "rock") {
+    const x = 40 + Math.random() * (canvas.width - 80);
+    hazards.push({ type:"rock", x, y:-30, w:32, h:32, vy:5.5, life:150 });
+  } else if (gimmick === "spirit") {
+    hazards.push({ type:"spirit", x:canvas.width/2, y:groundY()-60, w:220, h:90, life:50 });
+  }
+}
+
+function updateHazards() {
+  const gimmick = STAGES[stageSelect.value].gimmick;
+  gimmickTimer++;
+  const interval = gimmick === "lightning" ? 320 : gimmick === "rock" ? 280 : gimmick === "spirit" ? 420 : 999999;
+  if (gimmick !== "gravity" && gimmickTimer >= interval) {
+    gimmickTimer = 0;
+    spawnStageGimmick();
+  }
+
+  hazards.forEach(h => {
+    if (h.type === "rock") {
+      h.y += h.vy;
+      h.vy += 0.18;
+      if (h.y >= groundY() - h.h) {
+        h.y = groundY() - h.h;
+        h.life = 0;
+        spawnImpact(h.x + h.w/2, h.y + h.h/2, "#d8b68a", 14);
+      }
+      const rect = { x:h.x, y:h.y, w:h.w, h:h.h };
+      if (rectsOverlap(rect, getBodyRect(player))) {
+        applyStageDamage(player, 8, "ROCK HIT", "#d9c2a0");
+        h.life = 0;
+      }
+      if (rectsOverlap(rect, getBodyRect(enemy))) {
+        applyStageDamage(enemy, 8, "ROCK HIT", "#d9c2a0");
+        h.life = 0;
+      }
+    }
+
+    if (h.type === "lightning") {
+      h.life--;
+      const active = h.life > 8 && h.life < 28;
+      if (active) {
+        const rect = { x:h.x, y:0, w:h.w, h:groundY() };
+        if (rectsOverlap(rect, getBodyRect(player))) applyStageDamage(player, 5, "THUNDER", "#baf4ff");
+        if (rectsOverlap(rect, getBodyRect(enemy))) applyStageDamage(enemy, 5, "THUNDER", "#baf4ff");
+      }
+    }
+
+    if (h.type === "spirit") {
+      h.life--;
+      const rect = { x:h.x - h.w/2, y:h.y - h.h/2, w:h.w, h:h.h };
+      if (rectsOverlap(rect, getBodyRect(player))) player.super = clamp(player.super + 0.7, 0, 100);
+      if (rectsOverlap(rect, getBodyRect(enemy))) enemy.super = clamp(enemy.super + 0.7, 0, 100);
+    }
+  });
+
+  hazards = hazards.filter(h => h.life > 0);
+}
+
+function moonGravityModifier() {
+  return STAGES[stageSelect.value].gimmick === "gravity" ? 0.72 : 1;
+}
+
+/* =========================
+   Command resolution
+========================= */
 function tryProjectileCommand(fighter) {
   const target = fighter === player ? enemy : player;
   spawnProjectile(fighter, target);
@@ -2027,6 +2391,7 @@ function tryProjectileCommand(fighter) {
   fighter.hasHitCurrentAttack = true;
   return true;
 }
+
 function updateCommandInputsForFighter(fighter, pressedFrame) {
   const justPunch = !!pressedFrame.punch;
   const justKick = !!pressedFrame.kick;
@@ -2079,18 +2444,23 @@ function updateCommandInputsForFighter(fighter, pressedFrame) {
     tryStartAttack(fighter, "special");
   }
 }
+
+/* =========================
+   Fighter update
+========================= */
 function animateCommon(f, dt) {
   f.animPhase += dt * 0.006;
   const moving = Math.abs(f.vx) > 0.5;
   if (moving && f.onGround) f.runPhase += dt * 0.018;
 }
+
 function updateFighterByInput(f, input, dt) {
   if (!input) input = {};
   if (f.dead) return;
   const opponent = f === player ? enemy : player;
   facingUpdate(f, opponent);
   animateCommon(f, dt);
-  updateAwaken(f);
+  updateAwakenAsync(f);
 
   if (f.invuln > 0) f.invuln--;
   if (f.hitstun > 0) f.hitstun--;
@@ -2114,15 +2484,16 @@ function updateFighterByInput(f, input, dt) {
     }
   }
 
-  const spd = f.speed + (f.awakened ? 0.35 : 0);
+  const spd = f.speed + (f.awakened ? 0.35 : 0) + (f.bossForm2 ? 0.25 : 0);
+  const grav = gravity * moonGravityModifier();
 
-  if (f.hitstun <= 0 && f.attackTimer <= 0) {
+  if (f.hitstun <= 0 && f.attackTimer <= 0 && !transformLock) {
     if (input.left && !input.right) f.vx = -spd;
     else if (input.right && !input.left) f.vx = spd;
     else f.vx *= 0.72;
 
     if (input.jump && f.onGround) {
-      f.vy = -(f.jumpPower + (f.awakened ? 0.5 : 0));
+      f.vy = -(f.jumpPower + (f.awakened ? 0.5 : 0)) * moonGravityModifier();
       f.onGround = false;
     }
 
@@ -2135,7 +2506,7 @@ function updateFighterByInput(f, input, dt) {
     f.vx *= 0.9;
   }
 
-  f.vy += gravity;
+  f.vy += grav;
   f.x += f.vx;
   f.y += f.vy;
 
@@ -2149,6 +2520,7 @@ function updateFighterByInput(f, input, dt) {
 
   f.x = clamp(f.x, 16, canvas.width - f.w - 16);
 }
+
 function updatePlayerOffline(dt) {
   updateFighterByInput(player, {
     left:keys.left,
@@ -2159,10 +2531,12 @@ function updatePlayerOffline(dt) {
     special:pressedThisFrame.special
   }, dt);
 }
+
 function aiWantsGuard() {
   const d = distX(enemy, player);
   return d < 104 && Math.random() < difficultyConfig().defend;
 }
+
 function aiTryCommands() {
   const d = distX(enemy, player);
   const cfg = difficultyConfig();
@@ -2183,11 +2557,12 @@ function aiTryCommands() {
   if (d < 140 && enemy.super >= 50 && Math.random() < 0.014 * react * aggro) return tryStartAttack(enemy, "special");
   return false;
 }
+
 function updateEnemyAI(dt) {
   if (enemy.dead) return;
   facingUpdate(enemy, player);
   animateCommon(enemy, dt);
-  updateAwaken(enemy);
+  updateAwakenAsync(enemy);
 
   if (enemy.invuln > 0) enemy.invuln--;
   if (enemy.hitstun > 0) enemy.hitstun--;
@@ -2208,18 +2583,18 @@ function updateEnemyAI(dt) {
     }
   }
 
-  if (enemy.hitstun <= 0 && enemy.attackTimer <= 0) {
+  if (enemy.hitstun <= 0 && enemy.attackTimer <= 0 && !transformLock) {
     const d = distX(enemy, player);
     const cfg = difficultyConfig();
     enemy.guardTimer = aiWantsGuard() ? 2 : 0;
-    const moveSpd = cfg.speed + (enemy.awakened ? 0.35 : 0);
+    const moveSpd = cfg.speed + (enemy.awakened ? 0.35 : 0) + (enemy.bossForm2 ? 0.25 : 0);
 
     if (d > 150) enemy.vx = enemy.dir === 1 ? moveSpd : -moveSpd;
     else if (d < 74) enemy.vx = enemy.dir === 1 ? -moveSpd * 0.9 : moveSpd * 0.9;
     else enemy.vx *= 0.6;
 
     if (enemy.onGround && Math.random() < 0.004 * cfg.aggro && d > 110 && d < 240) {
-      enemy.vy = -(enemy.jumpPower * 0.98 + (enemy.awakened ? 0.4 : 0));
+      enemy.vy = -(enemy.jumpPower * 0.98 + (enemy.awakened ? 0.4 : 0)) * moonGravityModifier();
       enemy.onGround = false;
     }
 
@@ -2228,7 +2603,7 @@ function updateEnemyAI(dt) {
     enemy.vx *= 0.9;
   }
 
-  enemy.vy += gravity;
+  enemy.vy += gravity * moonGravityModifier();
   enemy.x += enemy.vx;
   enemy.y += enemy.vy;
 
@@ -2240,6 +2615,7 @@ function updateEnemyAI(dt) {
 
   enemy.x = clamp(enemy.x, 16, canvas.width - enemy.w - 16);
 }
+
 function resolvePush() {
   const a = getBodyRect(player);
   const b = getBodyRect(enemy);
@@ -2255,6 +2631,7 @@ function resolvePush() {
     enemy.x = clamp(enemy.x, 16, canvas.width - enemy.w - 16);
   }
 }
+
 function updateParticles() {
   particles.forEach(p => {
     p.x += p.vx;
@@ -2264,6 +2641,7 @@ function updateParticles() {
   });
   particles = particles.filter(p => p.life > 0);
 }
+
 function getOnlineLocalInput() {
   return {
     left:!!keys.left,
@@ -2277,8 +2655,11 @@ function getOnlineLocalInput() {
 }
 function consumePressedThisFrame() { Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false); }
 
-/* Online */
+/* =========================
+   Online room
+========================= */
 let onlineInfo = { roomCode:"", role:"", roomRef:null, roomUnsub:null, stateUnsub:null, inputUnsub:null, rematchUnsub:null, remoteInput:null };
+
 function cleanupRoomListeners() {
   if (onlineInfo.roomUnsub) onlineInfo.roomUnsub();
   if (onlineInfo.stateUnsub) onlineInfo.stateUnsub();
@@ -2291,7 +2672,7 @@ function cleanupRoomListeners() {
 }
 async function pushSharedOnlineState() {
   if (!onlineInfo.roomCode || gameMode !== "online-host") return;
-  const stateRef = ref(rtdb, `fight_game_v100/rooms/${onlineInfo.roomCode}/state`);
+  const stateRef = ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/state`);
   try {
     await update(stateRef, {
       player: fighterToPlain(player),
@@ -2311,7 +2692,7 @@ async function pushSharedOnlineState() {
 async function pushOnlineInput() {
   if (!onlineInfo.roomCode || !(gameMode === "online-host" || gameMode === "online-guest")) return;
   const slot = onlineInfo.role === "host" ? "host" : "guest";
-  const inputRef = ref(rtdb, `fight_game_v100/rooms/${onlineInfo.roomCode}/players/${slot}/input`);
+  const inputRef = ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/players/${slot}/input`);
   try {
     await set(inputRef, getOnlineLocalInput());
   } catch (e) {
@@ -2325,7 +2706,7 @@ async function createOnlineRoom() {
   }
   try {
     const roomCode = randomRoomCode();
-    const roomRef = ref(rtdb, `fight_game_v100/rooms/${roomCode}`);
+    const roomRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}`);
     onlineInfo.roomCode = roomCode;
     onlineInfo.role = "host";
     onlineInfo.roomRef = roomRef;
@@ -2345,7 +2726,7 @@ async function createOnlineRoom() {
         guest: { uid: "", connected: false, ready: false, character: "", input: { left:false,right:false,jump:false,punch:false,kick:false,special:false,ts:Date.now() } }
       }
     });
-    try { onDisconnect(ref(rtdb, `fight_game_v100/rooms/${roomCode}/players/host/connected`)).set(false); } catch {}
+    try { onDisconnect(ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/players/host/connected`)).set(false); } catch {}
     watchRoom(roomCode);
     clearScreens();
     lobbyScreen.classList.add("show");
@@ -2368,7 +2749,7 @@ async function joinOnlineRoom(codeRaw) {
       alert("6文字のルームコードを入力してください。");
       return;
     }
-    const roomRef = ref(rtdb, `fight_game_v100/rooms/${roomCode}`);
+    const roomRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}`);
     const snap = await get(roomRef);
     if (!snap.exists()) {
       alert("ルームが見つかりません。");
@@ -2387,11 +2768,11 @@ async function joinOnlineRoom(codeRaw) {
         "players/guest/ready": false,
         "players/guest/character": selectedCharacter
       });
-      try { onDisconnect(ref(rtdb, `fight_game_v100/rooms/${roomCode}/players/guest/connected`)).set(false); } catch {}
+      try { onDisconnect(ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/players/guest/connected`)).set(false); } catch {}
       onlineInfo.role = "guest";
     } else {
-      await update(ref(rtdb, `fight_game_v100/rooms/${roomCode}/spectators/${firebaseUserId}`), { joinedAt: Date.now() });
-      try { onDisconnect(ref(rtdb, `fight_game_v100/rooms/${roomCode}/spectators/${firebaseUserId}`)).remove(); } catch {}
+      await update(ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/spectators/${firebaseUserId}`), { joinedAt: Date.now() });
+      try { onDisconnect(ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/spectators/${firebaseUserId}`)).remove(); } catch {}
       onlineInfo.role = "spectator";
     }
     watchRoom(roomCode);
@@ -2405,10 +2786,10 @@ async function joinOnlineRoom(codeRaw) {
 }
 function watchRoom(roomCode) {
   cleanupRoomListeners();
-  const roomRef = ref(rtdb, `fight_game_v100/rooms/${roomCode}`);
-  const stateRef = ref(rtdb, `fight_game_v100/rooms/${roomCode}/state`);
-  const guestInputRef = ref(rtdb, `fight_game_v100/rooms/${roomCode}/players/guest/input`);
-  const rematchRef = ref(rtdb, `fight_game_v100/rooms/${roomCode}/rematch`);
+  const roomRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}`);
+  const stateRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/state`);
+  const guestInputRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/players/guest/input`);
+  const rematchRef = ref(rtdb, `fight_game_v100_kai/rooms/${roomCode}/rematch`);
 
   const roomCb = onValue(roomRef, async (snap) => {
     const room = snap.val();
@@ -2482,8 +2863,9 @@ function watchRoom(roomCode) {
       enemy = createFighter(guestChar, false);
       projectiles = [];
       guardRings = [];
+      hazards = [];
 
-      await update(ref(rtdb, `fight_game_v100/rooms/${onlineInfo.roomCode}/state`), {
+      await update(ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/state`), {
         player: fighterToPlain(player),
         enemy: fighterToPlain(enemy),
         projectiles: [],
@@ -2518,7 +2900,7 @@ function watchRoom(roomCode) {
 async function markReadyAndStartIfPossible() {
   if (!onlineInfo.roomCode || !onlineInfo.role || onlineInfo.role === "spectator") return;
   const slot = onlineInfo.role === "host" ? "host" : "guest";
-  const roomRef = ref(rtdb, `fight_game_v100/rooms/${onlineInfo.roomCode}`);
+  const roomRef = ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}`);
   await update(roomRef, { [`players/${slot}/ready`]: true });
   const snap = await get(roomRef);
   const room = snap.val();
@@ -2538,8 +2920,9 @@ async function markReadyAndStartIfPossible() {
     enemy = createFighter(room.players.guest.character || "blade", false);
     projectiles = [];
     guardRings = [];
+    hazards = [];
 
-    await update(ref(rtdb, `fight_game_v100/rooms/${onlineInfo.roomCode}/state`), {
+    await update(ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/state`), {
       player: fighterToPlain(player),
       enemy: fighterToPlain(enemy),
       projectiles: [],
@@ -2558,14 +2941,14 @@ async function requestOnlineRematch() {
     return;
   }
   const key = onlineInfo.role === "host" ? "host" : "guest";
-  await update(ref(rtdb, `fight_game_v100/rooms/${onlineInfo.roomCode}/rematch`), { [key]: true });
+  await update(ref(rtdb, `fight_game_v100_kai/rooms/${onlineInfo.roomCode}/rematch`), { [key]: true });
   resultSub.textContent = "再戦申請済み。相手の申請を待っています。";
 }
 async function leaveOnlineRoom(removeAll = true) {
   try {
     cleanupRoomListeners();
     if (onlineInfo.roomCode && onlineInfo.role) {
-      const roomPath = `fight_game_v100/rooms/${onlineInfo.roomCode}`;
+      const roomPath = `fight_game_v100_kai/rooms/${onlineInfo.roomCode}`;
       const roomRef = ref(rtdb, roomPath);
       if (removeAll && onlineInfo.role === "host") {
         await remove(roomRef);
@@ -2595,7 +2978,9 @@ async function leaveOnlineRoom(removeAll = true) {
   onlineGameStarted = false;
 }
 
-/* Loop */
+/* =========================
+   Update loop
+========================= */
 function updateOnlineHost(dt) {
   if (gameOver) return;
   roundTimer -= dt / 1000;
@@ -2607,6 +2992,7 @@ function updateOnlineHost(dt) {
   updateFighterByInput(player, hostInput, dt);
   updateFighterByInput(enemy, guestInput, dt);
 
+  updateHazards();
   resolvePush();
   resolveAttackHit(player, enemy);
   resolveAttackHit(enemy, player);
@@ -2629,6 +3015,7 @@ function updateOnlineHost(dt) {
   pushOnlineInput();
   consumePressedThisFrame();
 }
+
 function updateGame(dt) {
   if (gameMode === "online-host") { updateOnlineHost(dt); return; }
   if (gameMode === "online-guest") { pushOnlineInput(); updateParticles(); updateGuardRings(); consumePressedThisFrame(); return; }
@@ -2644,6 +3031,7 @@ function updateGame(dt) {
   updatePlayerOffline(dt);
   updateEnemyAI(dt);
 
+  updateHazards();
   resolvePush();
   resolveAttackHit(player, enemy);
   resolveAttackHit(enemy, player);
@@ -2668,6 +3056,7 @@ function updateGame(dt) {
 
   consumePressedThisFrame();
 }
+
 function loop(now) {
   const dt = Math.min(32, now - lastTime);
   lastTime = now;
@@ -2677,7 +3066,9 @@ function loop(now) {
   animationId = requestAnimationFrame(loop);
 }
 
-/* Draw */
+/* =========================
+   Draw
+========================= */
 function drawBackground() {
   const st = STAGES[stageSelect.value];
   const horizon = canvas.height * 0.56;
@@ -2715,18 +3106,20 @@ function drawBackground() {
   ctx.fillStyle = st.line;
   for (let i = 0; i < canvas.width; i += 76) ctx.fillRect(i, horizon + 28, 44, 3);
 }
+
 function drawAura(f, x, y) {
-  const base = f.super >= 50 || f.awakened;
+  const base = f.super >= 50 || f.awakened || f.bossForm2;
   if (!base) return;
   const pulse = 0.65 + Math.sin(performance.now() * 0.01 + f.animPhase) * 0.08;
   ctx.save();
-  ctx.globalAlpha = f.awakened ? 0.22 : 0.14;
+  ctx.globalAlpha = f.bossForm2 ? 0.30 : (f.awakened ? 0.22 : 0.14);
   ctx.fillStyle = f.aura;
   ctx.beginPath();
-  ctx.ellipse(x + f.w/2, y + f.h/2, (f.awakened ? 36 : 28) * pulse, (f.awakened ? 66 : 54) * pulse, 0, 0, Math.PI * 2);
+  ctx.ellipse(x + f.w/2, y + f.h/2, (f.bossForm2 ? 42 : f.awakened ? 36 : 28) * pulse, (f.bossForm2 ? 74 : f.awakened ? 66 : 54) * pulse, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 }
+
 function drawFighter(f) {
   const x = Math.round(f.x);
   const y = Math.round(f.y);
@@ -2766,7 +3159,7 @@ function drawFighter(f) {
 
   ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
   ctx.strokeStyle = f.accent;
-  ctx.lineWidth = 3;
+  ctx.lineWidth = f.bossForm2 ? 4 : 3;
   ctx.beginPath();
   ctx.roundRect(bodyX, bodyY, bodyW, bodyH * attackStretch, 14);
   ctx.fill();
@@ -2779,7 +3172,7 @@ function drawFighter(f) {
 
   ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
   ctx.beginPath();
-  ctx.arc(x + f.w/2, y + 14 + breathe, 15, 0, Math.PI * 2);
+  ctx.arc(x + f.w/2, y + 14 + breathe, f.bossForm2 ? 16 : 15, 0, Math.PI * 2);
   ctx.fill();
   ctx.stroke();
 
@@ -2899,6 +3292,7 @@ function drawFighter(f) {
   }
   ctx.restore();
 }
+
 function drawProjectiles() {
   projectiles.forEach(p => {
     const st = PROJECTILE_STYLE[p.colorKey] || PROJECTILE_STYLE.fire;
@@ -2924,6 +3318,7 @@ function drawProjectiles() {
     ctx.restore();
   });
 }
+
 function drawGuardRings() {
   guardRings.forEach(g => {
     ctx.save();
@@ -2941,6 +3336,36 @@ function drawGuardRings() {
     ctx.restore();
   });
 }
+
+function drawHazards() {
+  hazards.forEach(h => {
+    if (h.type === "lightning") {
+      ctx.save();
+      ctx.globalAlpha = h.life > 8 && h.life < 28 ? 0.45 : 0.18;
+      ctx.fillStyle = "rgba(160,245,255,.95)";
+      ctx.fillRect(h.x, 0, h.w, groundY());
+      ctx.restore();
+    }
+    if (h.type === "rock") {
+      ctx.save();
+      ctx.fillStyle = "#8a725e";
+      ctx.beginPath();
+      ctx.arc(h.x + h.w/2, h.y + h.h/2, h.w/2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    if (h.type === "spirit") {
+      ctx.save();
+      ctx.globalAlpha = 0.18 + Math.sin(performance.now()*0.01) * 0.04;
+      ctx.fillStyle = "#8ef2ff";
+      ctx.beginPath();
+      ctx.ellipse(h.x, h.y, h.w/2, h.h/2, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+  });
+}
+
 function drawParticles() {
   particles.forEach(p => {
     ctx.globalAlpha = Math.max(0, p.life / 32);
@@ -2951,6 +3376,7 @@ function drawParticles() {
   });
   ctx.globalAlpha = 1;
 }
+
 function drawHud() {
   playerHpBar.style.width = ((player.hp / player.maxHp) * 100) + "%";
   enemyHpBar.style.width = ((enemy.hp / enemy.maxHp) * 100) + "%";
@@ -2961,6 +3387,7 @@ function drawHud() {
   playerHpText.textContent = `HP ${Math.ceil(player.hp)} / ${player.maxHp}`;
   enemyHpText.textContent = musou.active ? `S ${musou.score}` : `HP ${Math.ceil(enemy.hp)} / ${enemy.maxHp}`;
 }
+
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const shakeX = cameraShake > 0 ? (Math.random() - 0.5) * cameraShake : 0;
@@ -2977,6 +3404,7 @@ function render() {
   }
 
   drawBackground();
+  drawHazards();
   drawFighter(player);
   drawFighter(enemy);
   drawProjectiles();
@@ -2989,7 +3417,9 @@ function render() {
   drawHud();
 }
 
-/* Input */
+/* =========================
+   Input
+========================= */
 function setKeyFromCode(code, pressed) {
   if (code === "ArrowLeft") {
     if (pressed && !keys.left) recordCommand("L");
@@ -3047,7 +3477,9 @@ bindTouchButton(touchButtons.punch, "punch");
 bindTouchButton(touchButtons.kick, "kick");
 bindTouchButton(touchButtons.special, "special");
 
-/* Events */
+/* =========================
+   Events
+========================= */
 startCpuBtn.addEventListener("click", startCpuGame);
 startMusouBtn.addEventListener("click", startMusouGame);
 openOnlineBtn.addEventListener("click", () => {
@@ -3100,7 +3532,9 @@ window.addEventListener("beforeunload", async () => {
   if (gameMode.startsWith("online") || gameMode === "spectator") await leaveOnlineRoom(gameMode === "online-host");
 });
 
-/* Boot */
+/* =========================
+   Boot
+========================= */
 fitCanvas();
 applyViewportSafeLayout();
 window.addEventListener("resize", () => { fitCanvas(); applyViewportSafeLayout(); updateRotateNotice(); });
