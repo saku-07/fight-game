@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>格ゲー v120 神 完全版 Fix</title>
+  <title>格ゲー v120 神 完全版 Ratio Fix</title>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -807,7 +807,7 @@
   <div id="menuScreen" class="screen show">
     <div class="panel menu-panel">
       <div class="menu-head">
-        <div class="menu-kicker">FIGHT GAME v120 GOD COMPLETE FIX</div>
+        <div class="menu-kicker">FIGHT GAME v120 GOD COMPLETE RATIO FIX</div>
         <div class="hero-badges">
           <div class="hero-badge">CPU</div>
           <div class="hero-badge">MUSOU</div>
@@ -818,7 +818,7 @@
         </div>
         <div class="hero-title">格ゲー v120 神 完全版</div>
         <div class="hero-sub">
-          CPU戦・無双・オンライン・日本語ランキング・スマホ最適化を全部まとめた完全版。ルームコード表示と接続状態表示を強化した修正版。
+          オンライン時の座標同期を画面比率ベースに修正。PCとスマホで高さが違っても、キャラが上へ飛びにくい版です。
         </div>
       </div>
 
@@ -874,16 +874,16 @@
 
           <div class="mode-showcase">
             <div class="mode-tile">
-              <h4>ルームコード強化</h4>
+              <h4>比率同期</h4>
+              <p>x/y/w/h を端末解像度の比率で送るので、オンライン時の高さズレを軽減。</p>
+            </div>
+            <div class="mode-tile">
+              <h4>ルームコード表示</h4>
               <p>作成した瞬間に大きく表示。入力欄にも同時反映。</p>
             </div>
             <div class="mode-tile">
-              <h4>接続状態強化</h4>
-              <p>未接続のままではなく、失敗時は理由を表示。</p>
-            </div>
-            <div class="mode-tile">
-              <h4>日本語ランキング</h4>
-              <p>入力した名前をそのままローカル保存。</p>
+              <h4>接続状態表示</h4>
+              <p>失敗時は未接続のままではなく、理由を表示。</p>
             </div>
             <div class="mode-tile">
               <h4>スマホ最適化</h4>
@@ -906,10 +906,10 @@
           <div class="info-card">
             <h3>この版の特徴</h3>
             <p>・Firebase設定埋め込み済み</p>
-            <p>・ルームコード表示修正</p>
-            <p>・接続状態表示修正</p>
+            <p>・比率座標同期修正済み</p>
+            <p>・ルームコード表示修正済み</p>
             <p>・GitHub Pages対応</p>
-            <p style="font-size:11px;color:#a9b6d8;">Realtime Database のルール未設定だと接続失敗理由が表示されます</p>
+            <p style="font-size:11px;color:#a9b6d8;">Realtime Database のルールは fight_v120_rooms_fix を許可してください</p>
           </div>
         </div>
       </div>
@@ -1235,16 +1235,16 @@
   }
 
   function saveNameLocal(){
-    localStorage.setItem("fight_v120_player_name_fix", getPlayerName());
+    localStorage.setItem("fight_v120_player_name_ratio_fix", getPlayerName());
   }
 
   function loadNameLocal(){
-    const saved = localStorage.getItem("fight_v120_player_name_fix");
+    const saved = localStorage.getItem("fight_v120_player_name_ratio_fix");
     if (saved) playerNameInput.value = saved;
   }
 
   function saveLocalRanking(score, mode){
-    const key = mode === "musou" ? "fight_v120_rank_musou_fix" : "fight_v120_rank_battle_fix";
+    const key = mode === "musou" ? "fight_v120_rank_musou_ratio_fix" : "fight_v120_rank_battle_ratio_fix";
     const list = JSON.parse(localStorage.getItem(key) || "[]");
     list.push({
       name:getPlayerName(),
@@ -1257,7 +1257,7 @@
   }
 
   function loadLocalRanking(){
-    const key = rankingModeFilter === "musou" ? "fight_v120_rank_musou_fix" : "fight_v120_rank_battle_fix";
+    const key = rankingModeFilter === "musou" ? "fight_v120_rank_musou_ratio_fix" : "fight_v120_rank_battle_ratio_fix";
     const list = JSON.parse(localStorage.getItem(key) || "[]");
     if (!list.length){
       rankingList.innerHTML = "<p>まだランキングがありません。</p>";
@@ -1274,8 +1274,8 @@
   }
 
   function resetLocalRanking(){
-    localStorage.removeItem("fight_v120_rank_battle_fix");
-    localStorage.removeItem("fight_v120_rank_musou_fix");
+    localStorage.removeItem("fight_v120_rank_battle_ratio_fix");
+    localStorage.removeItem("fight_v120_rank_musou_ratio_fix");
     loadLocalRanking();
   }
 
@@ -1312,8 +1312,7 @@
       <p><strong>${CHARACTERS[selectedCharacter].name} 固有コマンド</strong></p>
       ${getCharacterCommands(selectedCharacter).map(c => `<p>${c[0]} : ${c[1]}</p>`).join("")}
       <p><strong>オンライン</strong></p>
-      <p>オンライン作成を押すとルームコードが大きく表示されます。</p>
-      <p>参加側はそのコードを入力してオンライン参加を押してください。</p>
+      <p>座標を比率で同期するので、PCとスマホで高さ差があってもズレにくいです。</p>
     `;
   }
 
@@ -1871,25 +1870,94 @@
     return {
       characterKey:f.characterKey,
       name:f.name,
-      x:f.x, y:f.y, w:f.w, h:f.h,
-      vx:f.vx, vy:f.vy, dir:f.dir,
-      speed:f.speed, jumpPower:f.jumpPower,
-      hp:f.hp, maxHp:f.maxHp,
-      super:f.super, maxSuper:f.maxSuper,
-      awaken:f.awaken, awakened:f.awakened,
-      atkMul:f.atkMul, defMul:f.defMul, superGain:f.superGain,
-      color:f.color, accent:f.accent, hair:f.hair, aura:f.aura, scarf:f.scarf,
-      onGround:f.onGround, dead:f.dead, attackType:f.attackType,
-      attackTimer:f.attackTimer, attackCooldown:f.attackCooldown,
-      hitstun:f.hitstun, invuln:f.invuln, hurtFlash:f.hurtFlash,
+
+      rx: canvas.width ? (f.x / canvas.width) : 0,
+      ry: canvas.height ? (f.y / canvas.height) : 0,
+      rw: canvas.width ? (f.w / canvas.width) : 0,
+      rh: canvas.height ? (f.h / canvas.height) : 0,
+
+      vxRatio: canvas.width ? (f.vx / canvas.width) : 0,
+      vyRatio: canvas.height ? (f.vy / canvas.height) : 0,
+
+      dir:f.dir,
+      speed:f.speed,
+      jumpPower:f.jumpPower,
+      hp:f.hp,
+      maxHp:f.maxHp,
+      super:f.super,
+      maxSuper:f.maxSuper,
+      awaken:f.awaken,
+      awakened:f.awakened,
+      atkMul:f.atkMul,
+      defMul:f.defMul,
+      superGain:f.superGain,
+      color:f.color,
+      accent:f.accent,
+      hair:f.hair,
+      aura:f.aura,
+      scarf:f.scarf,
+      onGround:f.onGround,
+      dead:f.dead,
+      attackType:f.attackType,
+      attackTimer:f.attackTimer,
+      attackCooldown:f.attackCooldown,
+      hitstun:f.hitstun,
+      invuln:f.invuln,
+      hurtFlash:f.hurtFlash,
       hasHit:f.hasHit,
-      isPlayer:f.isPlayer, animPhase:f.animPhase, runPhase:f.runPhase
+      isPlayer:f.isPlayer,
+      animPhase:f.animPhase,
+      runPhase:f.runPhase
     };
   }
 
   function importFighter(target, src){
     if (!src) return;
-    Object.assign(target, src);
+
+    target.characterKey = src.characterKey;
+    target.name = src.name;
+
+    target.w = src.rw != null ? Math.max(40, src.rw * canvas.width) : (src.w ?? target.w);
+    target.h = src.rh != null ? Math.max(80, src.rh * canvas.height) : (src.h ?? target.h);
+
+    target.x = src.rx != null ? src.rx * canvas.width : (src.x ?? target.x);
+    target.y = src.ry != null ? src.ry * canvas.height : (src.y ?? target.y);
+
+    target.vx = src.vxRatio != null ? src.vxRatio * canvas.width : (src.vx ?? target.vx);
+    target.vy = src.vyRatio != null ? src.vyRatio * canvas.height : (src.vy ?? target.vy);
+
+    target.dir = src.dir;
+    target.speed = src.speed;
+    target.jumpPower = src.jumpPower;
+    target.hp = src.hp;
+    target.maxHp = src.maxHp;
+    target.super = src.super;
+    target.maxSuper = src.maxSuper;
+    target.awaken = src.awaken;
+    target.awakened = src.awakened;
+    target.atkMul = src.atkMul;
+    target.defMul = src.defMul;
+    target.superGain = src.superGain;
+    target.color = src.color;
+    target.accent = src.accent;
+    target.hair = src.hair;
+    target.aura = src.aura;
+    target.scarf = src.scarf;
+    target.onGround = src.onGround;
+    target.dead = src.dead;
+    target.attackType = src.attackType;
+    target.attackTimer = src.attackTimer;
+    target.attackCooldown = src.attackCooldown;
+    target.hitstun = src.hitstun;
+    target.invuln = src.invuln;
+    target.hurtFlash = src.hurtFlash;
+    target.hasHit = src.hasHit;
+    target.isPlayer = src.isPlayer;
+    target.animPhase = src.animPhase;
+    target.runPhase = src.runPhase;
+
+    target.x = clamp(target.x, 16, canvas.width - target.w - 16);
+    target.y = clamp(target.y, 0, groundY() - target.h);
   }
 
   function getOnlineInput(){
@@ -2120,6 +2188,9 @@
     online.stateRef.on("value", snap => {
       const s = snap.val();
       if (!s) return;
+
+      fitCanvas();
+
       if (s.roundTimer != null) roundTimer = s.roundTimer;
       if (s.combo != null) combo = s.combo;
       if (s.centerInfo) centerInfo.textContent = s.centerInfo;
