@@ -1325,13 +1325,14 @@
         <span class="tag">${ch.specialName}</span>
         <span class="tag">${ch.burstName}</span>
       `;
-      el.addEventListener("click", () => {
+      el.onclick = () => {
         selectedCharacter = ch.key;
         renderCharacterCards();
         renderCharacterCommands();
         renderMenuCommands();
         setHelpText();
-      });
+        showMessage(`${ch.name} を選択`, 600);
+      };
       characterGrid.appendChild(el);
     });
     renderCharacterCommands();
@@ -2735,53 +2736,61 @@
   bindTouchButton(touchButtons.kick, "kick");
   bindTouchButton(touchButtons.special, "special");
 
-  startCpuBtn.addEventListener("click", startCpuGame);
-  startMusouBtn.addEventListener("click", startMusouGame);
-  rankingBtn.addEventListener("click", () => {
+  startCpuBtn.onclick = startCpuGame;
+  startMusouBtn.onclick = startMusouGame;
+
+  rankingBtn.onclick = () => {
     rankingModeFilter = "battle";
     loadLocalRanking();
     clearScreens();
     rankingScreen.classList.add("show");
-  });
-  helpBtn.addEventListener("click", () => {
+  };
+
+  helpBtn.onclick = () => {
     setHelpText();
     clearScreens();
     helpScreen.classList.add("show");
-  });
-  helpBackBtn.addEventListener("click", () => {
+  };
+
+  helpBackBtn.onclick = () => {
     clearScreens();
     menuScreen.classList.add("show");
-  });
-  characterBtn.addEventListener("click", () => {
+  };
+
+  characterBtn.onclick = () => {
     renderCharacterCards();
     clearScreens();
     characterScreen.classList.add("show");
-  });
-  characterBackBtn.addEventListener("click", () => {
+  };
+
+  characterBackBtn.onclick = () => {
     clearScreens();
     menuScreen.classList.add("show");
-  });
-  rankingBackBtn.addEventListener("click", () => {
+  };
+
+  rankingBackBtn.onclick = () => {
     clearScreens();
     menuScreen.classList.add("show");
-  });
-  rankBattleBtn.addEventListener("click", () => {
+  };
+
+  rankBattleBtn.onclick = () => {
     rankingModeFilter = "battle";
     loadLocalRanking();
-  });
-  rankMusouBtn.addEventListener("click", () => {
+  };
+
+  rankMusouBtn.onclick = () => {
     rankingModeFilter = "musou";
     loadLocalRanking();
-  });
-  rankingResetBtn.addEventListener("click", resetLocalRanking);
-  rematchBtn.addEventListener("click", rematchLastBattle);
-  resultMenuBtn.addEventListener("click", returnToMenu);
-  fullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
-  gameFullscreenBtn.addEventListener("click", enterFullscreenIfPossible);
-  backMenuBtn.addEventListener("click", returnToMenu);
+  };
 
-  createRoomBtn.addEventListener("click", createOnlineRoom);
-  joinRoomBtn.addEventListener("click", joinOnlineRoom);
+  rankingResetBtn.onclick = resetLocalRanking;
+  rematchBtn.onclick = rematchLastBattle;
+  resultMenuBtn.onclick = returnToMenu;
+  fullscreenBtn.onclick = enterFullscreenIfPossible;
+  gameFullscreenBtn.onclick = enterFullscreenIfPossible;
+  backMenuBtn.onclick = returnToMenu;
+  createRoomBtn.onclick = createOnlineRoom;
+  joinRoomBtn.onclick = joinOnlineRoom;
 
   playerNameInput.addEventListener("change", saveNameLocal);
   playerNameInput.addEventListener("blur", saveNameLocal);
