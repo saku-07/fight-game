@@ -2218,7 +2218,16 @@
       if (s.result && s.result.show) {
         if (!gameOver) {
           gameOver = true;
-          showResultScreen(s.result.title || "RESULT", s.result.sub || "試合終了");
+
+          let title = s.result.title || "RESULT";
+          const sub = s.result.sub || "試合終了";
+
+          if (gameMode === "online-guest") {
+            if (title === "YOU WIN") title = "YOU LOSE";
+            else if (title === "YOU LOSE") title = "YOU WIN";
+          }
+
+          showResultScreen(title, sub);
         }
         return;
       }
