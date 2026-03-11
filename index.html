@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>格ゲー v120 神 完全版</title>
+  <title>格ゲー v120 神 完全版 Fix</title>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -100,9 +100,10 @@
       position:absolute;
       inset:0;
       display:none;
-      align-items:center;
+      align-items:flex-start;
       justify-content:center;
       padding:10px;
+      padding-top:clamp(12px, 2vh, 20px);
       overflow:auto;
       -webkit-overflow-scrolling:touch;
       background:
@@ -115,9 +116,8 @@
 
     .panel{
       width:min(96vw,1180px);
-      max-height:95dvh;
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
+      max-height:none;
+      overflow:visible;
       background:var(--panel);
       border:1px solid var(--line);
       border-radius:24px;
@@ -125,13 +125,13 @@
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
       text-align:center;
-      margin:auto;
+      margin:0 auto;
       touch-action:pan-y;
     }
 
     .menu-panel{
       position:relative;
-      overflow:auto;
+      overflow:visible;
       border-radius:30px;
       border:1px solid rgba(255,255,255,.14);
       background:
@@ -141,7 +141,12 @@
         linear-gradient(180deg, rgba(18,28,56,.96), rgba(5,8,18,.96));
     }
 
-    .menu-head{ position:relative; z-index:1; margin-bottom:10px; }
+    .menu-head{
+      position:relative;
+      z-index:1;
+      margin-bottom:10px;
+      padding-top:4px;
+    }
 
     .menu-kicker{
       display:inline-block;
@@ -156,11 +161,12 @@
     }
 
     .hero-title{
-      font-size:clamp(30px,7vw,76px);
+      font-size:clamp(22px,4.6vw,58px);
       font-weight:1000;
-      letter-spacing:.08em;
-      margin:6px 0 2px;
-      line-height:1;
+      letter-spacing:.04em;
+      margin:0 0 6px;
+      line-height:1.05;
+      word-break:keep-all;
       background:linear-gradient(90deg,#fff,#9dd8ff,#ffd8df,#fff0a3);
       -webkit-background-clip:text;
       background-clip:text;
@@ -324,7 +330,31 @@
       width:100%;
     }
 
-    #roomCodeInput{ text-transform:uppercase; letter-spacing:.14em; }
+    #roomCodeInput{
+      text-transform:uppercase;
+      letter-spacing:.14em;
+    }
+
+    #roomCodeView{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:56px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      font-size:clamp(22px,4vw,34px);
+      font-weight:1000;
+      letter-spacing:.18em;
+      color:#fff3ad;
+      text-shadow:0 0 14px rgba(255,222,120,.18);
+    }
+
+    #onlineStatusText{
+      white-space:pre-wrap;
+      line-height:1.5;
+      color:#dbe6ff;
+    }
 
     .pick-grid{
       display:grid;
@@ -695,12 +725,8 @@
       color:transparent;
     }
 
-    .tiny{ font-size:11px; color:var(--muted); }
-
     @media (max-width: 940px){
       body.game-active #mobileControls{ display:flex; }
-      .screen{ align-items:flex-start; padding:8px; }
-      .panel{ width:min(98vw,1180px); max-height:none; margin:0 auto; }
       .menu-grid{ grid-template-columns:1fr; }
       .menu-btn-grid{ grid-template-columns:1fr; }
       .mode-showcase{ grid-template-columns:1fr; }
@@ -734,13 +760,9 @@
         --mobileGap:6px;
       }
       .hero-badges{ display:none; }
-      .hero-title{ font-size:clamp(24px,8vw,36px); letter-spacing:.05em; }
+      .hero-title{ font-size:clamp(20px,6vw,34px); }
       .hero-sub{ font-size:10px; }
-      .menu-col{ padding:10px; }
       .mode-showcase{ display:none; }
-      .command-row{ padding:8px 10px; }
-      .command-row strong{ font-size:10px; }
-      .command-row span{ font-size:9px; }
       .fighter-panel{ width:min(30vw,96px); }
       .fighter-name{ font-size:6.5px; }
       .small-info{ font-size:5px; }
@@ -764,6 +786,20 @@
       .top-ui{ padding:0 2px; gap:2px; }
       #message{ max-width:74vw; }
     }
+
+    @media (max-height: 760px){
+      .hero-title{ font-size:clamp(20px,3.8vw,44px); }
+      .hero-sub{ font-size:11px; margin-bottom:6px; }
+      .menu-kicker{ margin-bottom:6px; }
+      .hero-badges{ display:none; }
+      .menu-panel{ border-radius:22px; }
+    }
+
+    @media (max-height: 620px){
+      .screen{ padding-top:8px; }
+      .hero-title{ font-size:clamp(18px,3.2vw,34px); }
+      .hero-sub{ display:none; }
+    }
   </style>
 </head>
 <body>
@@ -771,7 +807,7 @@
   <div id="menuScreen" class="screen show">
     <div class="panel menu-panel">
       <div class="menu-head">
-        <div class="menu-kicker">FIGHT GAME v120 GOD COMPLETE</div>
+        <div class="menu-kicker">FIGHT GAME v120 GOD COMPLETE FIX</div>
         <div class="hero-badges">
           <div class="hero-badge">CPU</div>
           <div class="hero-badge">MUSOU</div>
@@ -782,7 +818,7 @@
         </div>
         <div class="hero-title">格ゲー v120 神 完全版</div>
         <div class="hero-sub">
-          CPU戦・無双・オンライン・日本語ランキング・スマホ最適化を全部まとめた完全版。GitHub Pagesにそのまま置ける静的HTML版。
+          CPU戦・無双・オンライン・日本語ランキング・スマホ最適化を全部まとめた完全版。ルームコード表示と接続状態表示を強化した修正版。
         </div>
       </div>
 
@@ -802,7 +838,12 @@
           </div>
 
           <div class="row" style="margin-top:8px;">
-            <input id="roomCodeInput" type="text" maxlength="6" placeholder="ルームコード" />
+            <input id="roomCodeInput" type="text" maxlength="6" placeholder="ルームコード入力" />
+          </div>
+
+          <div class="box">
+            <strong>現在のルームコード</strong>
+            <div id="roomCodeView">------</div>
           </div>
 
           <div class="menu-btn-grid" style="margin-top:8px;">
@@ -833,20 +874,20 @@
 
           <div class="mode-showcase">
             <div class="mode-tile">
+              <h4>ルームコード強化</h4>
+              <p>作成した瞬間に大きく表示。入力欄にも同時反映。</p>
+            </div>
+            <div class="mode-tile">
+              <h4>接続状態強化</h4>
+              <p>未接続のままではなく、失敗時は理由を表示。</p>
+            </div>
+            <div class="mode-tile">
+              <h4>日本語ランキング</h4>
+              <p>入力した名前をそのままローカル保存。</p>
+            </div>
+            <div class="mode-tile">
               <h4>スマホ最適化</h4>
-              <p>長押しズーム対策、横向き操作、巨大ボタン対応。</p>
-            </div>
-            <div class="mode-tile">
-              <h4>オンライン</h4>
-              <p>ルーム作成・参加、状態同期、名前表示対応。</p>
-            </div>
-            <div class="mode-tile">
-              <h4>覚醒＆超必殺</h4>
-              <p>体力低下で覚醒。ゲージ100で超必殺発動。</p>
-            </div>
-            <div class="mode-tile">
-              <h4>ランキング</h4>
-              <p>日本語名をそのまま保存。通常戦・無双別保存。</p>
+              <p>長押しズーム対策、横向きUI、大型ボタン対応。</p>
             </div>
           </div>
         </div>
@@ -864,11 +905,11 @@
 
           <div class="info-card">
             <h3>この版の特徴</h3>
-            <p>・Firebase設定済み</p>
-            <p>・GitHub Pagesでも動作</p>
-            <p>・スマホで押しやすいUI</p>
-            <p>・日本語名ランキング対応</p>
-            <p class="tiny">Realtime Database を有効化して使ってください</p>
+            <p>・Firebase設定埋め込み済み</p>
+            <p>・ルームコード表示修正</p>
+            <p>・接続状態表示修正</p>
+            <p>・GitHub Pages対応</p>
+            <p style="font-size:11px;color:#a9b6d8;">Realtime Database のルール未設定だと接続失敗理由が表示されます</p>
           </div>
         </div>
       </div>
@@ -1005,8 +1046,13 @@
     appId: "1:875972972511:web:c78d67bcd5a31010f1be6a"
   };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+  let db = null;
+  try{
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+  }catch(e){
+    console.error(e);
+  }
 
   const CHARACTERS = {
     ryu:{ key:"ryu", name:"RYU", style:"王道バランス", color:"#ff5a62", accent:"#ffd3d7", hair:"#2a2030", aura:"#ff7b89", scarf:"#ffffff", speed:4.9, jump:16.2, atk:1.00, def:1.00, superGain:1.00, specialName:"波動閃", burstName:"真・神龍波", commands:[["→→ + P","ダッシュ"],["↓→ + P","波動弾"],["→↓ + K","昇龍脚"],["S","波動閃"]] },
@@ -1089,6 +1135,7 @@
 
   const playerNameInput = $("playerNameInput");
   const roomCodeInput = $("roomCodeInput");
+  const roomCodeView = $("roomCodeView");
   const createRoomBtn = $("createRoomBtn");
   const joinRoomBtn = $("joinRoomBtn");
   const onlineStatusText = $("onlineStatusText");
@@ -1121,7 +1168,7 @@
   let projectiles = [];
   let transformLock = false;
   let cutinPlaying = false;
-  let gameMode = "cpu"; // cpu / musou / online-host / online-guest
+  let gameMode = "cpu";
 
   const online = {
     code:"",
@@ -1130,6 +1177,7 @@
     stateRef:null,
     localInputRef:null,
     remoteInputRef:null,
+    metaRef:null,
     remoteInput:{},
     localName:"PLAYER",
     remoteName:"GUEST"
@@ -1139,6 +1187,7 @@
 
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
   function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
+
   function clearScreens(){
     menuScreen.classList.remove("show");
     helpScreen.classList.remove("show");
@@ -1146,11 +1195,39 @@
     rankingScreen.classList.remove("show");
     resultScreen.classList.remove("show");
   }
+
   function groundY(){ return canvas.height - 126; }
+
   function rectsOverlap(a,b){
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
   }
-  function facingUpdate(a,b){ a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1; }
+
+  function facingUpdate(a,b){
+    a.dir = (a.x + a.w/2 < b.x + b.w/2) ? 1 : -1;
+  }
+
+  function setRoomCodeDisplay(code){
+    roomCodeView.textContent = code && code.trim() ? code : "------";
+  }
+
+  function setOnlineStatus(text){
+    onlineStatusText.textContent = text;
+  }
+
+  function firebaseReady(){
+    return !!db;
+  }
+
+  function explainFirebaseError(err){
+    if (!err) return "不明なエラー";
+    if (err.code === "PERMISSION_DENIED") {
+      return "PERMISSION_DENIED\nRealtime Database のルールで拒否されています";
+    }
+    if (String(err.message || "").includes("Permission denied")) {
+      return "Permission denied\nRealtime Database のルールを確認してください";
+    }
+    return `${err.code || "ERROR"}\n${err.message || err}`;
+  }
 
   function getPlayerName(){
     const raw = (playerNameInput.value || "").trim();
@@ -1158,16 +1235,16 @@
   }
 
   function saveNameLocal(){
-    localStorage.setItem("fight_v120_player_name", getPlayerName());
+    localStorage.setItem("fight_v120_player_name_fix", getPlayerName());
   }
 
   function loadNameLocal(){
-    const saved = localStorage.getItem("fight_v120_player_name");
+    const saved = localStorage.getItem("fight_v120_player_name_fix");
     if (saved) playerNameInput.value = saved;
   }
 
   function saveLocalRanking(score, mode){
-    const key = mode === "musou" ? "fight_v120_rank_musou" : "fight_v120_rank_battle";
+    const key = mode === "musou" ? "fight_v120_rank_musou_fix" : "fight_v120_rank_battle_fix";
     const list = JSON.parse(localStorage.getItem(key) || "[]");
     list.push({
       name:getPlayerName(),
@@ -1180,7 +1257,7 @@
   }
 
   function loadLocalRanking(){
-    const key = rankingModeFilter === "musou" ? "fight_v120_rank_musou" : "fight_v120_rank_battle";
+    const key = rankingModeFilter === "musou" ? "fight_v120_rank_musou_fix" : "fight_v120_rank_battle_fix";
     const list = JSON.parse(localStorage.getItem(key) || "[]");
     if (!list.length){
       rankingList.innerHTML = "<p>まだランキングがありません。</p>";
@@ -1197,8 +1274,8 @@
   }
 
   function resetLocalRanking(){
-    localStorage.removeItem("fight_v120_rank_battle");
-    localStorage.removeItem("fight_v120_rank_musou");
+    localStorage.removeItem("fight_v120_rank_battle_fix");
+    localStorage.removeItem("fight_v120_rank_musou_fix");
     loadLocalRanking();
   }
 
@@ -1235,7 +1312,8 @@
       <p><strong>${CHARACTERS[selectedCharacter].name} 固有コマンド</strong></p>
       ${getCharacterCommands(selectedCharacter).map(c => `<p>${c[0]} : ${c[1]}</p>`).join("")}
       <p><strong>オンライン</strong></p>
-      <p>作成側がルームコードを作り、参加側が同じコードを入力して参加します。</p>
+      <p>オンライン作成を押すとルームコードが大きく表示されます。</p>
+      <p>参加側はそのコードを入力してオンライン参加を押してください。</p>
     `;
   }
 
@@ -1353,12 +1431,10 @@
       hitstun:0,
       invuln:0,
       hurtFlash:0,
-      guardTimer:0,
       hasHit:false,
       isPlayer,
       animPhase:Math.random() * Math.PI * 2,
-      runPhase:0,
-      resultPose:""
+      runPhase:0
     };
   }
 
@@ -1410,8 +1486,6 @@
   function attackData(type){
     if (type === "punch") return { timer:11, cooldown:12, damage:6, kb:10, superGain:8 };
     if (type === "kick") return { timer:16, cooldown:18, damage:10, kb:15, superGain:11 };
-    if (type === "dash") return { timer:14, cooldown:18, damage:12, kb:18, superGain:14 };
-    if (type === "uppercut") return { timer:18, cooldown:22, damage:15, kb:18, superGain:14 };
     if (type === "special") return { timer:26, cooldown:34, damage:18, kb:26, superGain:0, cost:50 };
     if (type === "burst") return { timer:36, cooldown:44, damage:28, kb:34, superGain:0, cost:100 };
     if (type === "projectile") return { timer:16, cooldown:18, damage:11, kb:18, superGain:12 };
@@ -1422,8 +1496,6 @@
     let range = 0, height = 0, yOffset = 0;
     if (f.attackType === "punch") { range = 32; height = 22; yOffset = 38; }
     if (f.attackType === "kick") { range = 52; height = 30; yOffset = 66; }
-    if (f.attackType === "dash") { range = 74; height = 28; yOffset = 36; }
-    if (f.attackType === "uppercut") { range = 40; height = 56; yOffset = 8; }
     if (f.attackType === "special") { range = 112; height = 42; yOffset = 22; }
     if (f.attackType === "burst") { range = 138; height = 54; yOffset = 16; }
     if (f.dir === 1) return { x:f.x + f.w - 4, y:f.y + yOffset, w:range, h:height };
@@ -1433,8 +1505,6 @@
   function attackActiveFrame(type, timer){
     if (type === "punch") return timer >= 5 && timer <= 7;
     if (type === "kick") return timer >= 8 && timer <= 12;
-    if (type === "dash") return timer >= 6 && timer <= 11;
-    if (type === "uppercut") return timer >= 5 && timer <= 11;
     if (type === "special") return timer >= 10 && timer <= 18;
     if (type === "burst") return timer >= 12 && timer <= 26;
     return false;
@@ -1510,9 +1580,6 @@
     f.attackCooldown = data.cooldown;
     f.hasHit = false;
 
-    if (type === "dash") f.vx = 6.8 * f.dir;
-    if (type === "uppercut") f.vy = -7.0;
-
     if (f.isPlayer){
       if (type === "special") showMessage(CHARACTERS[f.characterKey].specialName, 500);
       if (type === "burst") showMessage(CHARACTERS[f.characterKey].burstName, 700);
@@ -1551,8 +1618,6 @@
     target.invuln = (type === "burst" || type === "special") ? 14 : 8;
     target.x += kb * (attacker.dir === 1 ? 1 : -1);
     target.vx = kb * 0.16 * (attacker.dir === 1 ? 1 : -1);
-    if (type === "special" || type === "burst" || type === "uppercut") target.vy = -4.5;
-
     gainSuper(attacker, data.superGain || 0);
     gainSuper(target, 4);
     attacker.hasHit = true;
@@ -1623,7 +1688,6 @@
 
     if (f.attackTimer > 0){
       f.attackTimer--;
-      if (f.attackType === "dash") f.vx = 5.1 * f.dir;
       if (f.attackTimer === 0){
         f.attackType = "";
         f.hasHit = false;
@@ -1708,7 +1772,6 @@
       else if (d > 120 && d < 240 && Math.random() < 0.018 * react) spawnProjectile(enemy);
       else if (d < 82 && Math.random() < 0.030 * react) tryStartAttack(enemy, "punch");
       else if (d < 112 && Math.random() < 0.024 * react) tryStartAttack(enemy, "kick");
-      else if (d > 80 && d < 160 && Math.random() < 0.016 * react) tryStartAttack(enemy, "dash");
     } else if (enemy.hitstun > 0){
       enemy.vx *= 0.9;
     }
@@ -1785,8 +1848,6 @@
 
     gameOver = true;
     const winner = attackerIsPlayer ? player : enemy;
-    player.resultPose = attackerIsPlayer ? "win" : "lose";
-    enemy.resultPose = attackerIsPlayer ? "lose" : "win";
 
     showMessage(attackerIsPlayer ? "YOU WIN" : "YOU LOSE", 1200);
     await playVictoryCutin(winner);
@@ -1821,9 +1882,8 @@
       onGround:f.onGround, dead:f.dead, attackType:f.attackType,
       attackTimer:f.attackTimer, attackCooldown:f.attackCooldown,
       hitstun:f.hitstun, invuln:f.invuln, hurtFlash:f.hurtFlash,
-      guardTimer:f.guardTimer, hasHit:f.hasHit,
-      isPlayer:f.isPlayer, animPhase:f.animPhase, runPhase:f.runPhase,
-      resultPose:f.resultPose
+      hasHit:f.hasHit,
+      isPlayer:f.isPlayer, animPhase:f.animPhase, runPhase:f.runPhase
     };
   }
 
@@ -1848,10 +1908,12 @@
     try { if (online.stateRef) online.stateRef.off(); } catch(e){}
     try { if (online.localInputRef) online.localInputRef.off(); } catch(e){}
     try { if (online.remoteInputRef) online.remoteInputRef.off(); } catch(e){}
+    try { if (online.metaRef) online.metaRef.off(); } catch(e){}
     online.roomRef = null;
     online.stateRef = null;
     online.localInputRef = null;
     online.remoteInputRef = null;
+    online.metaRef = null;
     online.remoteInput = {};
     online.code = "";
     online.role = "";
@@ -1877,10 +1939,7 @@
     }catch(e){}
     onlineCleanupRefs();
     setOnlineStatus("未接続");
-  }
-
-  function setOnlineStatus(text){
-    onlineStatusText.textContent = text;
+    setRoomCodeDisplay("");
   }
 
   function randomRoomCode(){
@@ -1892,40 +1951,56 @@
 
   async function createOnlineRoom(){
     saveNameLocal();
+
+    if (!firebaseReady()){
+      setOnlineStatus("Firebase初期化失敗\nfirebaseの読込に失敗しています");
+      return;
+    }
+
     await onlineLeave(false);
 
     const code = randomRoomCode();
     const name = getPlayerName();
     const stage = stageSelect.value;
 
+    roomCodeInput.value = code;
+    setRoomCodeDisplay(code);
+    setOnlineStatus("ルーム作成中...");
+
     online.code = code;
     online.role = "host";
     online.localName = name;
     online.remoteName = "GUEST";
-    online.roomRef = db.ref("fight_v120_rooms/" + code);
+    online.roomRef = db.ref("fight_v120_rooms_fix/" + code);
     online.stateRef = online.roomRef.child("state");
     online.localInputRef = online.roomRef.child("hostInput");
     online.remoteInputRef = online.roomRef.child("guestInput");
+    online.metaRef = online.roomRef.child("meta");
 
-    await online.roomRef.set({
-      meta:{
-        status:"waiting",
-        stage,
-        hostName:name,
-        hostChar:selectedCharacter,
-        guestName:null,
-        guestChar:null,
-        createdAt:Date.now()
-      },
-      hostInput:{},
-      guestInput:{},
-      state:null
-    });
+    try{
+      await online.roomRef.set({
+        meta:{
+          status:"waiting",
+          stage,
+          hostName:name,
+          hostChar:selectedCharacter,
+          guestName:null,
+          guestChar:null,
+          createdAt:Date.now()
+        },
+        hostInput:{},
+        guestInput:{},
+        state:null
+      });
 
-    roomCodeInput.value = code;
-    setOnlineStatus("ルーム作成: " + code + " / 参加待ち");
+      setOnlineStatus(`ルーム作成成功\nコード: ${code}\n参加待ち`);
+    }catch(err){
+      console.error(err);
+      setOnlineStatus("ルーム作成失敗\n" + explainFirebaseError(err));
+      return;
+    }
 
-    online.roomRef.child("meta").on("value", async snap => {
+    online.metaRef.on("value", async snap => {
       const meta = snap.val();
       if (!meta) return;
       if (meta.guestName) online.remoteName = meta.guestName;
@@ -1950,7 +2025,7 @@
         lastTime = performance.now();
         animationId = requestAnimationFrame(loop);
         updateRotateNotice();
-        setOnlineStatus("オンライン対戦中");
+        setOnlineStatus(`対戦開始\nコード: ${code}`);
       }
     });
 
@@ -1961,6 +2036,12 @@
 
   async function joinOnlineRoom(){
     saveNameLocal();
+
+    if (!firebaseReady()){
+      setOnlineStatus("Firebase初期化失敗\nfirebaseの読込に失敗しています");
+      return;
+    }
+
     await onlineLeave(false);
 
     const code = (roomCodeInput.value || "").trim().toUpperCase();
@@ -1969,8 +2050,18 @@
       return;
     }
 
-    const roomRef = db.ref("fight_v120_rooms/" + code);
-    const metaSnap = await roomRef.child("meta").get();
+    setRoomCodeDisplay(code);
+    setOnlineStatus("ルーム確認中...");
+
+    const roomRef = db.ref("fight_v120_rooms_fix/" + code);
+    let metaSnap;
+    try{
+      metaSnap = await roomRef.child("meta").get();
+    }catch(err){
+      console.error(err);
+      setOnlineStatus("ルーム確認失敗\n" + explainFirebaseError(err));
+      return;
+    }
 
     if (!metaSnap.exists()){
       setOnlineStatus("そのルームはありません");
@@ -1985,11 +2076,17 @@
 
     const name = getPlayerName();
 
-    await roomRef.child("meta").update({
-      guestName:name,
-      guestChar:selectedCharacter,
-      status:"ready"
-    });
+    try{
+      await roomRef.child("meta").update({
+        guestName:name,
+        guestChar:selectedCharacter,
+        status:"ready"
+      });
+    }catch(err){
+      console.error(err);
+      setOnlineStatus("参加失敗\n" + explainFirebaseError(err));
+      return;
+    }
 
     online.code = code;
     online.role = "guest";
@@ -1999,6 +2096,7 @@
     online.stateRef = roomRef.child("state");
     online.localInputRef = roomRef.child("guestInput");
     online.remoteInputRef = roomRef.child("hostInput");
+    online.metaRef = roomRef.child("meta");
 
     gameMode = "online-guest";
     musou.active = false;
@@ -2038,7 +2136,7 @@
     lastTime = performance.now();
     animationId = requestAnimationFrame(loop);
     updateRotateNotice();
-    setOnlineStatus("オンライン参加完了");
+    setOnlineStatus(`参加成功\nコード: ${code}`);
   }
 
   async function startCpuGame(){
@@ -2104,7 +2202,9 @@
     if (gameOver) return;
 
     if (gameMode === "online-guest"){
-      if (online.localInputRef) online.localInputRef.set(getOnlineInput()).catch(()=>{});
+      if (online.localInputRef) online.localInputRef.set(getOnlineInput()).catch(err => {
+        setOnlineStatus("送信失敗\n" + explainFirebaseError(err));
+      });
       Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
       drawHud();
       return;
@@ -2163,8 +2263,15 @@
         rightName:rightName.textContent,
         player:exportFighter(player),
         enemy:exportFighter(enemy)
-      }).catch(()=>{});
-      if (online.localInputRef) online.localInputRef.set(getOnlineInput()).catch(()=>{});
+      }).catch(err => {
+        setOnlineStatus("状態同期失敗\n" + explainFirebaseError(err));
+      });
+
+      if (online.localInputRef) {
+        online.localInputRef.set(getOnlineInput()).catch(err => {
+          setOnlineStatus("入力同期失敗\n" + explainFirebaseError(err));
+        });
+      }
     }
 
     Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
@@ -2308,10 +2415,8 @@
     if (f.attackTimer > 0){
       const len = f.attackType === "punch" ? 34 :
         f.attackType === "kick" ? 18 :
-        f.attackType === "dash" ? 48 :
-        f.attackType === "uppercut" ? 18 :
         f.attackType === "burst" ? 60 : 54;
-      const rise = f.attackType === "special" ? -10 : f.attackType === "uppercut" ? -26 : f.attackType === "burst" ? -18 : -2;
+      const rise = f.attackType === "special" ? -10 : f.attackType === "burst" ? -18 : -2;
       ctx.lineTo(cx + len * forward, armY + rise);
     } else {
       ctx.lineTo(cx + (14 + frontArmOffset) * forward, armY + 11);
@@ -2334,7 +2439,7 @@
     ctx.lineTo(cx - 10 + backLegOffset * 0.35, footY);
     ctx.stroke();
 
-    if (f.attackTimer > 0 && f.attackType !== "projectile"){
+    if (f.attackTimer > 0){
       const atk = getAttackRect(f);
       if (["special","burst"].includes(f.attackType)){
         ctx.fillStyle = f.attackType === "burst" ? "rgba(255,255,255,.18)" : "rgba(255,210,77,.22)";
@@ -2533,7 +2638,8 @@
   renderMenuCommands();
   setHelpText();
   loadNameLocal();
-  setOnlineStatus("未接続");
+  setRoomCodeDisplay("");
+  setOnlineStatus(db ? "未接続" : "Firebase初期化失敗");
 
   window.addEventListener("resize", () => {
     fitCanvas();
@@ -2587,10 +2693,6 @@
   document.addEventListener("gesturestart", (e) => e.preventDefault(), { passive:false });
   document.addEventListener("gesturechange", (e) => e.preventDefault(), { passive:false });
   document.addEventListener("gestureend", (e) => e.preventDefault(), { passive:false });
-
-  window.addEventListener("beforeunload", () => {
-    onlineCleanupRefs();
-  });
 
   clearScreens();
   menuScreen.classList.add("show");
