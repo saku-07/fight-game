@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>格ゲー v120 神 完全版 Ratio Fix</title>
+  <title>格闘ゲーム</title>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -807,7 +807,7 @@
   <div id="menuScreen" class="screen show">
     <div class="panel menu-panel">
       <div class="menu-head">
-        <div class="menu-kicker">FIGHT GAME v120 GOD COMPLETE RATIO FIX</div>
+        <div class="menu-kicker">FIGHT GAME v120 GOD COMPLETE FULL FIX</div>
         <div class="hero-badges">
           <div class="hero-badge">CPU</div>
           <div class="hero-badge">MUSOU</div>
@@ -816,9 +816,8 @@
           <div class="hero-badge">BURST</div>
           <div class="hero-badge">RANKING</div>
         </div>
-        <div class="hero-title">格ゲー v120 神 完全版</div>
+        <div class="hero-title">格闘ゲーム</div>
         <div class="hero-sub">
-          オンライン時の座標同期を画面比率ベースに修正。PCとスマホで高さが違っても、キャラが上へ飛びにくい版です。
         </div>
       </div>
 
@@ -874,21 +873,7 @@
 
           <div class="mode-showcase">
             <div class="mode-tile">
-              <h4>比率同期</h4>
-              <p>x/y/w/h を端末解像度の比率で送るので、オンライン時の高さズレを軽減。</p>
-            </div>
-            <div class="mode-tile">
-              <h4>ルームコード表示</h4>
-              <p>作成した瞬間に大きく表示。入力欄にも同時反映。</p>
-            </div>
-            <div class="mode-tile">
-              <h4>接続状態表示</h4>
-              <p>失敗時は未接続のままではなく、理由を表示。</p>
-            </div>
-            <div class="mode-tile">
-              <h4>スマホ最適化</h4>
-              <p>長押しズーム対策、横向きUI、大型ボタン対応。</p>
-            </div>
+              
           </div>
         </div>
 
@@ -901,15 +886,6 @@
           <div class="info-card">
             <h3>現在のコマンド</h3>
             <div class="command-preview" id="menuCommandList"></div>
-          </div>
-
-          <div class="info-card">
-            <h3>この版の特徴</h3>
-            <p>・Firebase設定埋め込み済み</p>
-            <p>・比率座標同期修正済み</p>
-            <p>・ルームコード表示修正済み</p>
-            <p>・GitHub Pages対応</p>
-            <p style="font-size:11px;color:#a9b6d8;">Realtime Database のルールは fight_v120_rooms_fix を許可してください</p>
           </div>
         </div>
       </div>
@@ -1048,7 +1024,7 @@
 
   let db = null;
   try{
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     db = firebase.database();
   }catch(e){
     console.error(e);
@@ -1220,12 +1196,8 @@
 
   function explainFirebaseError(err){
     if (!err) return "不明なエラー";
-    if (err.code === "PERMISSION_DENIED") {
-      return "PERMISSION_DENIED\nRealtime Database のルールで拒否されています";
-    }
-    if (String(err.message || "").includes("Permission denied")) {
-      return "Permission denied\nRealtime Database のルールを確認してください";
-    }
+    if (err.code === "PERMISSION_DENIED") return "PERMISSION_DENIED\nRealtime Database のルールで拒否されています";
+    if (String(err.message || "").includes("Permission denied")) return "Permission denied\nRealtime Database のルールを確認してください";
     return `${err.code || "ERROR"}\n${err.message || err}`;
   }
 
@@ -1235,16 +1207,16 @@
   }
 
   function saveNameLocal(){
-    localStorage.setItem("fight_v120_player_name_ratio_fix", getPlayerName());
+    localStorage.setItem("fight_v120_player_name_full_fix", getPlayerName());
   }
 
   function loadNameLocal(){
-    const saved = localStorage.getItem("fight_v120_player_name_ratio_fix");
+    const saved = localStorage.getItem("fight_v120_player_name_full_fix");
     if (saved) playerNameInput.value = saved;
   }
 
   function saveLocalRanking(score, mode){
-    const key = mode === "musou" ? "fight_v120_rank_musou_ratio_fix" : "fight_v120_rank_battle_ratio_fix";
+    const key = mode === "musou" ? "fight_v120_rank_musou_full_fix" : "fight_v120_rank_battle_full_fix";
     const list = JSON.parse(localStorage.getItem(key) || "[]");
     list.push({
       name:getPlayerName(),
@@ -1257,7 +1229,7 @@
   }
 
   function loadLocalRanking(){
-    const key = rankingModeFilter === "musou" ? "fight_v120_rank_musou_ratio_fix" : "fight_v120_rank_battle_ratio_fix";
+    const key = rankingModeFilter === "musou" ? "fight_v120_rank_musou_full_fix" : "fight_v120_rank_battle_full_fix";
     const list = JSON.parse(localStorage.getItem(key) || "[]");
     if (!list.length){
       rankingList.innerHTML = "<p>まだランキングがありません。</p>";
@@ -1274,8 +1246,8 @@
   }
 
   function resetLocalRanking(){
-    localStorage.removeItem("fight_v120_rank_battle_ratio_fix");
-    localStorage.removeItem("fight_v120_rank_musou_ratio_fix");
+    localStorage.removeItem("fight_v120_rank_battle_full_fix");
+    localStorage.removeItem("fight_v120_rank_musou_full_fix");
     loadLocalRanking();
   }
 
@@ -1312,7 +1284,8 @@
       <p><strong>${CHARACTERS[selectedCharacter].name} 固有コマンド</strong></p>
       ${getCharacterCommands(selectedCharacter).map(c => `<p>${c[0]} : ${c[1]}</p>`).join("")}
       <p><strong>オンライン</strong></p>
-      <p>座標を比率で同期するので、PCとスマホで高さ差があってもズレにくいです。</p>
+      <p>作成側がルームを作り、参加側が同じルームコードで参加します。</p>
+      <p>参加側も結果画面が表示されます。</p>
     `;
   }
 
@@ -1606,6 +1579,46 @@
     if (!f.awakened && hpRate <= 0.35) triggerAwaken(f);
   }
 
+  async function finishMatch(attackerIsPlayer, reasonText){
+    if (gameOver) return;
+    if (musou.active && attackerIsPlayer) return advanceMusouRound();
+
+    gameOver = true;
+    const winner = attackerIsPlayer ? player : enemy;
+
+    showMessage(attackerIsPlayer ? "YOU WIN" : "YOU LOSE", 1200);
+
+    if (gameMode === "online-host" && online.stateRef){
+      try{
+        await online.stateRef.update({
+          result: {
+            show: true,
+            title: attackerIsPlayer ? "YOU WIN" : "YOU LOSE",
+            sub: reasonText
+          }
+        });
+      }catch(err){
+        setOnlineStatus("結果同期失敗\n" + explainFirebaseError(err));
+      }
+    }
+
+    await playVictoryCutin(winner);
+
+    if (gameMode === "musou"){
+      saveLocalRanking(musou.score, "musou");
+      showResultScreen(attackerIsPlayer ? "MUSOU CLEAR" : "MUSOU END", `${reasonText} / 撃破数 ${musou.wins} / SCORE ${musou.score}`);
+      return;
+    }
+
+    if ((gameMode === "cpu" || gameMode === "online-host" || gameMode === "online-guest") && attackerIsPlayer && !resultSaved){
+      resultSaved = true;
+      const score = Math.max(0, Math.floor(player.hp * 100 + roundTimer * 10 + combo * 30));
+      saveLocalRanking(score, "battle");
+    }
+
+    showResultScreen(attackerIsPlayer ? "YOU WIN" : "YOU LOSE", reasonText);
+  }
+
   function applyDamage(attacker, target, type, overrideDamage = null, overrideKb = null){
     const data = attackData(type);
     const damage = overrideDamage ?? (data.damage * attacker.atkMul / target.defMul);
@@ -1841,90 +1854,66 @@
     showMessage(`WAVE ${musou.wave} +${gain}`, 1000);
   }
 
-  async function finishMatch(attackerIsPlayer, reasonText){
-    if (gameOver) return;
-    if (musou.active && attackerIsPlayer) return advanceMusouRound();
-
-    gameOver = true;
-    const winner = attackerIsPlayer ? player : enemy;
-
-    showMessage(attackerIsPlayer ? "YOU WIN" : "YOU LOSE", 1200);
-    await playVictoryCutin(winner);
-
-    if (gameMode === "musou"){
-      saveLocalRanking(musou.score, "musou");
-      showResultScreen(attackerIsPlayer ? "MUSOU CLEAR" : "MUSOU END", `${reasonText} / 撃破数 ${musou.wins} / SCORE ${musou.score}`);
-      return;
-    }
-
-    if ((gameMode === "cpu" || gameMode === "online-host" || gameMode === "online-guest") && attackerIsPlayer && !resultSaved){
-      resultSaved = true;
-      const score = Math.max(0, Math.floor(player.hp * 100 + roundTimer * 10 + combo * 30));
-      saveLocalRanking(score, "battle");
-    }
-
-    showResultScreen(attackerIsPlayer ? "YOU WIN" : "YOU LOSE", reasonText);
-  }
-
   function exportFighter(f){
+    const playableW = Math.max(1, canvas.width - 32 - f.w);
+    const playableH = Math.max(1, groundY() - f.h);
+
     return {
-      characterKey:f.characterKey,
-      name:f.name,
-
-      rx: canvas.width ? (f.x / canvas.width) : 0,
-      ry: canvas.height ? (f.y / canvas.height) : 0,
-      rw: canvas.width ? (f.w / canvas.width) : 0,
-      rh: canvas.height ? (f.h / canvas.height) : 0,
-
-      vxRatio: canvas.width ? (f.vx / canvas.width) : 0,
-      vyRatio: canvas.height ? (f.vy / canvas.height) : 0,
-
-      dir:f.dir,
-      speed:f.speed,
-      jumpPower:f.jumpPower,
-      hp:f.hp,
-      maxHp:f.maxHp,
-      super:f.super,
-      maxSuper:f.maxSuper,
-      awaken:f.awaken,
-      awakened:f.awakened,
-      atkMul:f.atkMul,
-      defMul:f.defMul,
-      superGain:f.superGain,
-      color:f.color,
-      accent:f.accent,
-      hair:f.hair,
-      aura:f.aura,
-      scarf:f.scarf,
-      onGround:f.onGround,
-      dead:f.dead,
-      attackType:f.attackType,
-      attackTimer:f.attackTimer,
-      attackCooldown:f.attackCooldown,
-      hitstun:f.hitstun,
-      invuln:f.invuln,
-      hurtFlash:f.hurtFlash,
-      hasHit:f.hasHit,
-      isPlayer:f.isPlayer,
-      animPhase:f.animPhase,
-      runPhase:f.runPhase
+      characterKey: f.characterKey,
+      name: f.name,
+      px: (f.x - 16) / playableW,
+      py: playableH > 0 ? (f.y / playableH) : 0,
+      vxRate: canvas.width ? (f.vx / canvas.width) : 0,
+      vyRate: canvas.height ? (f.vy / canvas.height) : 0,
+      dir: f.dir,
+      speed: f.speed,
+      jumpPower: f.jumpPower,
+      hp: f.hp,
+      maxHp: f.maxHp,
+      super: f.super,
+      maxSuper: f.maxSuper,
+      awaken: f.awaken,
+      awakened: f.awakened,
+      atkMul: f.atkMul,
+      defMul: f.defMul,
+      superGain: f.superGain,
+      color: f.color,
+      accent: f.accent,
+      hair: f.hair,
+      aura: f.aura,
+      scarf: f.scarf,
+      onGround: f.onGround,
+      dead: f.dead,
+      attackType: f.attackType,
+      attackTimer: f.attackTimer,
+      attackCooldown: f.attackCooldown,
+      hitstun: f.hitstun,
+      invuln: f.invuln,
+      hurtFlash: f.hurtFlash,
+      hasHit: f.hasHit,
+      isPlayer: f.isPlayer,
+      animPhase: f.animPhase,
+      runPhase: f.runPhase
     };
   }
 
   function importFighter(target, src){
     if (!src) return;
 
+    const localW = target.w;
+    const localH = target.h;
+
     target.characterKey = src.characterKey;
     target.name = src.name;
 
-    target.w = src.rw != null ? Math.max(40, src.rw * canvas.width) : (src.w ?? target.w);
-    target.h = src.rh != null ? Math.max(80, src.rh * canvas.height) : (src.h ?? target.h);
+    const playableW = Math.max(1, canvas.width - localW - 32);
+    const playableH = Math.max(1, groundY() - localH);
 
-    target.x = src.rx != null ? src.rx * canvas.width : (src.x ?? target.x);
-    target.y = src.ry != null ? src.ry * canvas.height : (src.y ?? target.y);
+    target.x = 16 + clamp((src.px ?? 0) * playableW, 0, playableW);
+    target.y = clamp((src.py ?? 0) * playableH, 0, playableH);
 
-    target.vx = src.vxRatio != null ? src.vxRatio * canvas.width : (src.vx ?? target.vx);
-    target.vy = src.vyRatio != null ? src.vyRatio * canvas.height : (src.vy ?? target.vy);
+    target.vx = src.vxRate != null ? src.vxRate * canvas.width : 0;
+    target.vy = src.vyRate != null ? src.vyRate * canvas.height : 0;
 
     target.dir = src.dir;
     target.speed = src.speed;
@@ -1956,19 +1945,25 @@
     target.animPhase = src.animPhase;
     target.runPhase = src.runPhase;
 
+    target.w = localW;
+    target.h = localH;
+
     target.x = clamp(target.x, 16, canvas.width - target.w - 16);
     target.y = clamp(target.y, 0, groundY() - target.h);
   }
 
   function getOnlineInput(){
     return {
-      left:!!keys.left,
-      right:!!keys.right,
-      jump:!!keys.jump,
-      punch:!!pressedThisFrame.punch,
-      kick:!!pressedThisFrame.kick,
-      special:!!pressedThisFrame.special,
-      ts:Date.now()
+      left: !!keys.left,
+      right: !!keys.right,
+      jump: !!keys.jump,
+      punch: !!pressedThisFrame.punch,
+      kick: !!pressedThisFrame.kick,
+      special: !!pressedThisFrame.special,
+      holdPunch: !!keys.punch,
+      holdKick: !!keys.kick,
+      holdSpecial: !!keys.special,
+      ts: Date.now()
     };
   }
 
@@ -2058,7 +2053,9 @@
         },
         hostInput:{},
         guestInput:{},
-        state:null
+        state:{
+          result:null
+        }
       });
 
       setOnlineStatus(`ルーム作成成功\nコード: ${code}\n参加待ち`);
@@ -2076,6 +2073,7 @@
       if (meta.status === "ready" && !gameRunning){
         gameMode = "online-host";
         musou.active = false;
+        gameOver = false;
         await enterFullscreenIfPossible();
         stageSelect.value = meta.stage || stageSelect.value;
         resetBattle(meta.guestChar || pickEnemyCharacter());
@@ -2168,6 +2166,7 @@
 
     gameMode = "online-guest";
     musou.active = false;
+    gameOver = false;
 
     await enterFullscreenIfPossible();
 
@@ -2190,6 +2189,14 @@
       if (!s) return;
 
       fitCanvas();
+
+      if (s.result && s.result.show) {
+        if (!gameOver) {
+          gameOver = true;
+          showResultScreen(s.result.title || "RESULT", s.result.sub || "試合終了");
+        }
+        return;
+      }
 
       if (s.roundTimer != null) roundTimer = s.roundTimer;
       if (s.combo != null) combo = s.combo;
@@ -2214,6 +2221,7 @@
     await onlineLeave(false);
     gameMode = "cpu";
     musou = { active:false, score:0, wins:0, wave:1 };
+    gameOver = false;
     await enterFullscreenIfPossible();
     resetBattle();
     clearScreens();
@@ -2232,6 +2240,7 @@
     await onlineLeave(false);
     gameMode = "musou";
     musou = { active:true, score:0, wins:0, wave:1 };
+    gameOver = false;
     await enterFullscreenIfPossible();
     resetBattle();
     clearScreens();
@@ -2250,15 +2259,39 @@
   async function rematchLastBattle(){
     if (gameMode === "musou") return startMusouGame();
     if (gameMode === "cpu") return startCpuGame();
+
+    if (gameMode === "online-host"){
+      gameOver = false;
+      if (online.stateRef){
+        try{
+          await online.stateRef.update({ result: null });
+        }catch(e){}
+      }
+      returnToMenu();
+      return;
+    }
+
+    if (gameMode === "online-guest"){
+      returnToMenu();
+      return;
+    }
   }
 
   async function returnToMenu(){
     stopGameVisualOnly();
+
+    try{
+      if (online.stateRef && gameMode === "online-host"){
+        await online.stateRef.update({ result: null });
+      }
+    }catch(e){}
+
     await onlineLeave(true);
     clearScreens();
     menuScreen.classList.add("show");
     gameMode = "cpu";
     musou.active = false;
+    gameOver = false;
   }
 
   function showResultScreen(title, sub){
@@ -2273,11 +2306,26 @@
     if (gameOver) return;
 
     if (gameMode === "online-guest"){
-      if (online.localInputRef) online.localInputRef.set(getOnlineInput()).catch(err => {
-        setOnlineStatus("送信失敗\n" + explainFirebaseError(err));
-      });
+      const inputPayload = {
+        left: !!keys.left,
+        right: !!keys.right,
+        jump: !!keys.jump,
+        punch: !!pressedThisFrame.punch,
+        kick: !!pressedThisFrame.kick,
+        special: !!pressedThisFrame.special,
+        holdPunch: !!keys.punch,
+        holdKick: !!keys.kick,
+        holdSpecial: !!keys.special,
+        ts: Date.now()
+      };
+
+      if (online.localInputRef) {
+        online.localInputRef.set(inputPayload).catch(err => {
+          setOnlineStatus("送信失敗\n" + explainFirebaseError(err));
+        });
+      }
+
       Object.keys(pressedThisFrame).forEach(k => pressedThisFrame[k] = false);
-      drawHud();
       return;
     }
 
@@ -2294,12 +2342,12 @@
 
     if (gameMode === "online-host"){
       updateFighterByInput(enemy, {
-        left:!!online.remoteInput.left,
-        right:!!online.remoteInput.right,
-        jump:!!online.remoteInput.jump,
-        punch:!!online.remoteInput.punch,
-        kick:!!online.remoteInput.kick,
-        special:!!online.remoteInput.special
+        left: !!online.remoteInput.left,
+        right: !!online.remoteInput.right,
+        jump: !!online.remoteInput.jump,
+        punch: !!online.remoteInput.punch || !!online.remoteInput.holdPunch,
+        kick: !!online.remoteInput.kick || !!online.remoteInput.holdKick,
+        special: !!online.remoteInput.special || !!online.remoteInput.holdSpecial
       }, dt, player);
     } else {
       updateEnemyAI(dt);
@@ -2333,7 +2381,8 @@
         leftName:leftName.textContent,
         rightName:rightName.textContent,
         player:exportFighter(player),
-        enemy:exportFighter(enemy)
+        enemy:exportFighter(enemy),
+        result: null
       }).catch(err => {
         setOnlineStatus("状態同期失敗\n" + explainFirebaseError(err));
       });
@@ -2626,23 +2675,33 @@
   window.addEventListener("keyup", (e) => setKeyFromCode(e.code, false));
 
   function bindTouchButton(el, keyName){
-    const on = (e) => {
-      e.preventDefault();
+    const press = (e) => {
+      if (e) e.preventDefault();
       keys[keyName] = true;
       if (keyName === "punch") pressedThisFrame.punch = true;
       if (keyName === "kick") pressedThisFrame.kick = true;
       if (keyName === "special") pressedThisFrame.special = true;
       el.classList.add("active");
     };
-    const off = (e) => {
-      e.preventDefault();
+
+    const release = (e) => {
+      if (e) e.preventDefault();
       keys[keyName] = false;
       el.classList.remove("active");
     };
-    el.addEventListener("pointerdown", on, { passive:false });
-    el.addEventListener("pointerup", off, { passive:false });
-    el.addEventListener("pointercancel", off, { passive:false });
-    el.addEventListener("pointerleave", off, { passive:false });
+
+    el.addEventListener("pointerdown", press, { passive:false });
+    el.addEventListener("pointerup", release, { passive:false });
+    el.addEventListener("pointercancel", release, { passive:false });
+    el.addEventListener("pointerleave", release, { passive:false });
+
+    el.addEventListener("touchstart", press, { passive:false });
+    el.addEventListener("touchend", release, { passive:false });
+    el.addEventListener("touchcancel", release, { passive:false });
+
+    el.addEventListener("mousedown", press, { passive:false });
+    el.addEventListener("mouseup", release, { passive:false });
+    el.addEventListener("mouseleave", release, { passive:false });
   }
 
   bindTouchButton(touchButtons.left, "left");
