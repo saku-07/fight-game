@@ -34,9 +34,9 @@
       --shadow:0 18px 50px rgba(0,0,0,.44);
       --gameScale:.86;
       --hudTop:6px;
-      --moveBtn:76px;
-      --actionBtn:84px;
-      --specialBtn:94px;
+      --moveBtn:70px;
+      --actionBtn:82px;
+      --specialBtn:92px;
       --mobileGap:8px;
     }
 
@@ -69,7 +69,6 @@
     }
 
     body.game-active{ touch-action:none; }
-
     button, select, input, .card, .touch-btn{ touch-action:manipulation; }
     canvas{ touch-action:none; }
 
@@ -116,8 +115,6 @@
 
     .panel{
       width:min(96vw,1180px);
-      max-height:none;
-      overflow:visible;
       background:var(--panel);
       border:1px solid var(--line);
       border-radius:24px;
@@ -141,12 +138,7 @@
         linear-gradient(180deg, rgba(18,28,56,.96), rgba(5,8,18,.96));
     }
 
-    .menu-head{
-      position:relative;
-      z-index:1;
-      margin-bottom:10px;
-      padding-top:4px;
-    }
+    .menu-head{ position:relative; z-index:1; margin-bottom:10px; padding-top:4px; }
 
     .menu-kicker{
       display:inline-block;
@@ -555,6 +547,14 @@
       pointer-events:auto;
     }
 
+    .dpad{
+      display:grid;
+      grid-template-columns:repeat(3,var(--moveBtn));
+      grid-template-rows:repeat(2,var(--moveBtn));
+      gap:var(--mobileGap);
+      align-items:center;
+    }
+
     .pad.right{ align-items:center; }
 
     .touch-btn{
@@ -588,6 +588,13 @@
       width:var(--specialBtn);
       height:var(--specialBtn);
       font-size:23px;
+    }
+
+    .touch-btn.empty{
+      background:transparent;
+      border:none;
+      box-shadow:none;
+      pointer-events:none;
     }
 
     .touch-btn.active, .touch-btn:active{
@@ -701,11 +708,7 @@
         linear-gradient(180deg, rgba(255,255,255,.10), transparent 45%);
     }
 
-    .cutin-text{
-      flex:1;
-      text-align:right;
-    }
-
+    .cutin-text{ flex:1; text-align:right; }
     .cutin-win{
       font-size:clamp(26px,5vw,62px);
       font-weight:1000;
@@ -754,9 +757,9 @@
     @media (max-width:700px){
       :root{
         --gameScale:.50;
-        --moveBtn:64px;
-        --actionBtn:76px;
-        --specialBtn:84px;
+        --moveBtn:58px;
+        --actionBtn:70px;
+        --specialBtn:78px;
         --mobileGap:6px;
       }
       .hero-badges{ display:none; }
@@ -774,9 +777,9 @@
     @media (max-width:480px){
       :root{
         --gameScale:.43;
-        --moveBtn:58px;
-        --actionBtn:68px;
-        --specialBtn:76px;
+        --moveBtn:52px;
+        --actionBtn:64px;
+        --specialBtn:72px;
         --mobileGap:5px;
       }
       .hero-sub{ display:none; }
@@ -807,17 +810,18 @@
   <div id="menuScreen" class="screen show">
     <div class="panel menu-panel">
       <div class="menu-head">
-        <div class="menu-kicker">FIGHT GAME v120 GOD COMPLETE FULL FIX</div>
+        <div class="menu-kicker">FIGHT GAME FULL COPY VERSION</div>
         <div class="hero-badges">
           <div class="hero-badge">CPU</div>
           <div class="hero-badge">MUSOU</div>
           <div class="hero-badge">ONLINE</div>
           <div class="hero-badge">AWAKENING</div>
-          <div class="hero-badge">BURST</div>
+          <div class="hero-badge">COMMAND</div>
           <div class="hero-badge">RANKING</div>
         </div>
         <div class="hero-title">格闘ゲーム</div>
         <div class="hero-sub">
+          方向キー＋攻撃でコマンド技が発動。PCは ↓ キー、スマホは新しく追加した ↓ ボタンでコマンド入力できます。
         </div>
       </div>
 
@@ -882,6 +886,13 @@
             <h3>現在のコマンド</h3>
             <div class="command-preview" id="menuCommandList"></div>
           </div>
+
+          <div class="mode-showcase">
+            <div class="mode-tile"><h4>操作追加</h4><p>↓ 入力を追加してコマンド技がちゃんと出せます。</p></div>
+            <div class="mode-tile"><h4>キャラ差別化</h4><p>頭部・体格・色・シルエット・必殺エフェクトを個別化。</p></div>
+            <div class="mode-tile"><h4>コマンド認識</h4><p>履歴入力を見て、固有技を優先発動します。</p></div>
+            <div class="mode-tile"><h4>軽量化</h4><p>重い処理を減らしつつ見た目の個性を強化。</p></div>
+          </div>
         </div>
       </div>
     </div>
@@ -900,7 +911,7 @@
   <div id="characterScreen" class="screen">
     <div class="panel">
       <h2>キャラクター選択</h2>
-      <p>キャラごとに性能と技が違います。</p>
+      <p>キャラごとに性能・体格・技・コマンドが違います。</p>
       <div class="pick-grid" id="characterGrid"></div>
       <div class="box" id="characterCommandBox" style="margin-top:10px;"></div>
       <div class="row">
@@ -974,11 +985,16 @@
   </div>
 
   <div id="mobileControls">
-    <div class="pad left">
-      <div class="touch-btn move" id="leftBtn">←</div>
+    <div class="pad left dpad">
+      <div class="touch-btn empty"></div>
       <div class="touch-btn move" id="jumpBtn">↑</div>
+      <div class="touch-btn empty"></div>
+
+      <div class="touch-btn move" id="leftBtn">←</div>
+      <div class="touch-btn move" id="downBtn">↓</div>
       <div class="touch-btn move" id="rightBtn">→</div>
     </div>
+
     <div class="pad right">
       <div class="touch-btn action" id="punchBtn">P</div>
       <div class="touch-btn action" id="kickBtn">K</div>
@@ -1026,12 +1042,138 @@
   }
 
   const CHARACTERS = {
-    ryu:{ key:"ryu", name:"RYU", style:"王道バランス", color:"#ff5a62", accent:"#ffd3d7", hair:"#2a2030", aura:"#ff7b89", scarf:"#ffffff", speed:4.9, jump:16.2, atk:1.00, def:1.00, superGain:1.00, specialName:"波動閃", burstName:"真・神龍波", commands:[["→→ + P","ダッシュ"],["↓→ + P","波動弾"],["→↓ + K","昇龍脚"],["S","波動閃"]] },
-    blade:{ key:"blade", name:"BLADE", style:"高速足技", color:"#4fa7ff", accent:"#d4e7ff", hair:"#d0f0ff", aura:"#74c3ff", scarf:"#79d2ff", speed:5.45, jump:17.0, atk:0.96, def:0.94, superGain:1.14, specialName:"ソニックラッシュ", burstName:"ゼロシフト", commands:[["→→ + K","フラッシュキック"],["←→ + P","シャドウステップ"],["↓↓ + P","分裂斬"],["S","ソニックラッシュ"]] },
-    titan:{ key:"titan", name:"TITAN", style:"重量打撃", color:"#ffb14d", accent:"#ffe0b2", hair:"#3d220f", aura:"#ffcf69", scarf:"#8b4e19", speed:4.0, jump:14.7, atk:1.18, def:1.12, superGain:0.92, specialName:"グランドブレイク", burstName:"大地轟壊", commands:[["↓↓ + P","グランドバースト"],["→→ + P","ハンマー突進"],["S","グランドブレイク"],["ゲージ100","大地轟壊"]] },
-    shadow:{ key:"shadow", name:"SHADOW", style:"奇襲特化", color:"#7d65ff", accent:"#e2d9ff", hair:"#111119", aura:"#b39cff", scarf:"#9d88ff", speed:5.15, jump:16.8, atk:1.03, def:0.95, superGain:1.08, specialName:"ナイトファントム", burstName:"黒影絶界", commands:[["←→ + P","瞬間移動"],["↓→ + P","ナイトショット"],["→→ + K","ダークスライド"],["S","ナイトファントム"]] },
-    valkyrie:{ key:"valkyrie", name:"VALKYRIE", style:"対空制圧", color:"#3fe0c7", accent:"#d7fff7", hair:"#f7f4ff", aura:"#79ffe7", scarf:"#6ff0d5", speed:4.85, jump:18.3, atk:0.99, def:1.00, superGain:1.05, specialName:"スカイランサー", burstName:"天槍終断", commands:[["→↓ + K","スカイランス"],["↓→ + P","ランサーショット"],["→→ + P","ランスダッシュ"],["S","スカイランサー"]] },
-    phoenix:{ key:"phoenix", name:"PHOENIX", style:"炎ラッシュ", color:"#ff7a3d", accent:"#ffe0c8", hair:"#7a1600", aura:"#ffb066", scarf:"#ffd27a", speed:5.1, jump:17.0, atk:1.07, def:0.95, superGain:1.08, specialName:"クリムゾンバースト", burstName:"焔皇爆界", commands:[["↓→ + P","フレイムショット"],["↓↓ + P","フレア噴火"],["→→ + K","ブレイズキック"],["S","クリムゾンバースト"]] }
+    ryu:{
+      key:"ryu",
+      name:"RYU",
+      style:"王道バランス / 道着",
+      color:"#f0f0f0",
+      accent:"#ff5a62",
+      hair:"#1f1b21",
+      aura:"#ff7b89",
+      scarf:"#ffffff",
+      skin:"#efc29a",
+      build:"athletic",
+      band:"#d92837",
+      specialName:"波動閃",
+      burstName:"真・神龍波",
+      speed:4.9, jump:16.2, atk:1.00, def:1.00, superGain:1.00,
+      commands:[
+        {text:"→→ + P", name:"ダッシュ掌打", pattern:["R","R","P"], action:"dashPalm"},
+        {text:"↓→ + P", name:"波動弾", pattern:["D","R","P"], action:"fireball"},
+        {text:"→↓ + K", name:"昇龍脚", pattern:["R","D","K"], action:"upperKick"},
+        {text:"S", name:"波動閃", pattern:["S"], action:"specialButton"}
+      ]
+    },
+    blade:{
+      key:"blade",
+      name:"BLADE",
+      style:"高速足技 / 近未来スーツ",
+      color:"#18395c",
+      accent:"#67b7ff",
+      hair:"#d9f3ff",
+      aura:"#74c3ff",
+      scarf:"#79d2ff",
+      skin:"#f4d1b5",
+      build:"slim",
+      band:"#6cd7ff",
+      specialName:"ソニックラッシュ",
+      burstName:"ゼロシフト",
+      speed:5.45, jump:17.0, atk:0.96, def:0.94, superGain:1.14,
+      commands:[
+        {text:"→→ + K", name:"フラッシュキック", pattern:["R","R","K"], action:"flashKick"},
+        {text:"←→ + P", name:"シャドウステップ", pattern:["L","R","P"], action:"teleportStrike"},
+        {text:"↓↓ + P", name:"分裂斬", pattern:["D","D","P"], action:"splitSlash"},
+        {text:"S", name:"ソニックラッシュ", pattern:["S"], action:"specialButton"}
+      ]
+    },
+    titan:{
+      key:"titan",
+      name:"TITAN",
+      style:"重量打撃 / 巨体ファイター",
+      color:"#6d3d16",
+      accent:"#ffb14d",
+      hair:"#2b1205",
+      aura:"#ffcf69",
+      scarf:"#8b4e19",
+      skin:"#d89a64",
+      build:"heavy",
+      band:"#c47a23",
+      specialName:"グランドブレイク",
+      burstName:"大地轟壊",
+      speed:4.0, jump:14.7, atk:1.18, def:1.12, superGain:0.92,
+      commands:[
+        {text:"↓↓ + P", name:"グランドバースト", pattern:["D","D","P"], action:"groundBurst"},
+        {text:"→→ + P", name:"ハンマー突進", pattern:["R","R","P"], action:"hammerRush"},
+        {text:"↓→ + K", name:"クラッシュニー", pattern:["D","R","K"], action:"crashKnee"},
+        {text:"S", name:"グランドブレイク", pattern:["S"], action:"specialButton"}
+      ]
+    },
+    shadow:{
+      key:"shadow",
+      name:"SHADOW",
+      style:"奇襲特化 / 忍装束",
+      color:"#1d1836",
+      accent:"#9b84ff",
+      hair:"#0b0b12",
+      aura:"#b39cff",
+      scarf:"#9d88ff",
+      skin:"#b48d6e",
+      build:"ninja",
+      band:"#7f47ff",
+      specialName:"ナイトファントム",
+      burstName:"黒影絶界",
+      speed:5.15, jump:16.8, atk:1.03, def:0.95, superGain:1.08,
+      commands:[
+        {text:"←→ + P", name:"瞬間移動", pattern:["L","R","P"], action:"teleportOnly"},
+        {text:"↓→ + P", name:"ナイトショット", pattern:["D","R","P"], action:"darkShot"},
+        {text:"→→ + K", name:"ダークスライド", pattern:["R","R","K"], action:"slideKick"},
+        {text:"S", name:"ナイトファントム", pattern:["S"], action:"specialButton"}
+      ]
+    },
+    valkyrie:{
+      key:"valkyrie",
+      name:"VALKYRIE",
+      style:"対空制圧 / 槍闘士",
+      color:"#dfe9f3",
+      accent:"#3fe0c7",
+      hair:"#f7f4ff",
+      aura:"#79ffe7",
+      scarf:"#6ff0d5",
+      skin:"#f3d1ba",
+      build:"lancer",
+      band:"#44d8b9",
+      specialName:"スカイランサー",
+      burstName:"天槍終断",
+      speed:4.85, jump:18.3, atk:0.99, def:1.00, superGain:1.05,
+      commands:[
+        {text:"→↓ + K", name:"スカイランス", pattern:["R","D","K"], action:"skyLance"},
+        {text:"↓→ + P", name:"ランサーショット", pattern:["D","R","P"], action:"lancerShot"},
+        {text:"→→ + P", name:"ランスダッシュ", pattern:["R","R","P"], action:"lanceDash"},
+        {text:"S", name:"スカイランサー", pattern:["S"], action:"specialButton"}
+      ]
+    },
+    phoenix:{
+      key:"phoenix",
+      name:"PHOENIX",
+      style:"炎ラッシュ / キック主体",
+      color:"#5a1404",
+      accent:"#ff7a3d",
+      hair:"#7a1600",
+      aura:"#ffb066",
+      scarf:"#ffd27a",
+      skin:"#efb189",
+      build:"agile",
+      band:"#ff9f43",
+      specialName:"クリムゾンバースト",
+      burstName:"焔皇爆界",
+      speed:5.1, jump:17.0, atk:1.07, def:0.95, superGain:1.08,
+      commands:[
+        {text:"↓→ + P", name:"フレイムショット", pattern:["D","R","P"], action:"flameShot"},
+        {text:"↓↓ + P", name:"フレア噴火", pattern:["D","D","P"], action:"flarePillar"},
+        {text:"→→ + K", name:"ブレイズキック", pattern:["R","R","K"], action:"blazeKick"},
+        {text:"S", name:"クリムゾンバースト", pattern:["S"], action:"specialButton"}
+      ]
+    }
   };
 
   const STAGES = {
@@ -1114,13 +1256,14 @@
   const touchButtons = {
     left: $("leftBtn"),
     right: $("rightBtn"),
+    down: $("downBtn"),
     jump: $("jumpBtn"),
     punch: $("punchBtn"),
     kick: $("kickBtn"),
     special: $("specialBtn")
   };
 
-  const keys = { left:false, right:false, jump:false, punch:false, kick:false, special:false };
+  const keys = { left:false, right:false, down:false, jump:false, punch:false, kick:false, special:false };
   const pressedThisFrame = { punch:false, kick:false, special:false };
 
   let selectedCharacter = "ryu";
@@ -1140,6 +1283,7 @@
   let transformLock = false;
   let cutinPlaying = false;
   let gameMode = "cpu";
+  let playerInputBuffer = [];
 
   const online = {
     code:"",
@@ -1158,6 +1302,8 @@
 
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
   function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
+  function groundY(){ return canvas.height - 126; }
+  function nowMs(){ return performance.now(); }
 
   function clearScreens(){
     menuScreen.classList.remove("show");
@@ -1166,8 +1312,6 @@
     rankingScreen.classList.remove("show");
     resultScreen.classList.remove("show");
   }
-
-  function groundY(){ return canvas.height - 126; }
 
   function rectsOverlap(a,b){
     return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
@@ -1202,16 +1346,16 @@
   }
 
   function saveNameLocal(){
-    localStorage.setItem("fight_v120_player_name_full_fix", getPlayerName());
+    localStorage.setItem("fight_game_player_name", getPlayerName());
   }
 
   function loadNameLocal(){
-    const saved = localStorage.getItem("fight_v120_player_name_full_fix");
+    const saved = localStorage.getItem("fight_game_player_name");
     if (saved) playerNameInput.value = saved;
   }
 
   function saveLocalRanking(score, mode){
-    const key = mode === "musou" ? "fight_v120_rank_musou_full_fix" : "fight_v120_rank_battle_full_fix";
+    const key = mode === "musou" ? "fight_rank_musou" : "fight_rank_battle";
     const list = JSON.parse(localStorage.getItem(key) || "[]");
     list.push({
       name:getPlayerName(),
@@ -1224,7 +1368,7 @@
   }
 
   function loadLocalRanking(){
-    const key = rankingModeFilter === "musou" ? "fight_v120_rank_musou_full_fix" : "fight_v120_rank_battle_full_fix";
+    const key = rankingModeFilter === "musou" ? "fight_rank_musou" : "fight_rank_battle";
     const list = JSON.parse(localStorage.getItem(key) || "[]");
     if (!list.length){
       rankingList.innerHTML = "<p>まだランキングがありません。</p>";
@@ -1241,8 +1385,8 @@
   }
 
   function resetLocalRanking(){
-    localStorage.removeItem("fight_v120_rank_battle_full_fix");
-    localStorage.removeItem("fight_v120_rank_musou_full_fix");
+    localStorage.removeItem("fight_rank_battle");
+    localStorage.removeItem("fight_rank_musou");
     loadLocalRanking();
   }
 
@@ -1251,8 +1395,8 @@
   function renderMenuCommands(){
     menuCommandList.innerHTML = getCharacterCommands(selectedCharacter).map(c => `
       <div class="command-row">
-        <strong>${c[0]}</strong>
-        <span>${c[1]}</span>
+        <strong>${c.text}</strong>
+        <span>${c.name}</span>
       </div>
     `).join("");
   }
@@ -1261,7 +1405,7 @@
     const ch = CHARACTERS[selectedCharacter];
     characterCommandBox.innerHTML = `
       <h3 style="margin:0 0 8px;">${ch.name} の固有コマンド</h3>
-      ${ch.commands.map(c => `<p><strong>${c[0]}</strong> : ${c[1]}</p>`).join("")}
+      ${ch.commands.map(c => `<p><strong>${c.text}</strong> : ${c.name}</p>`).join("")}
       <p><strong>BURST</strong> : ${ch.burstName}</p>
     `;
   }
@@ -1269,18 +1413,18 @@
   function setHelpText(){
     const isMobile = ("ontouchstart" in window || navigator.maxTouchPoints > 0);
     const common = isMobile
-      ? `← → : 移動 / ↑ : ジャンプ / P : パンチ / K : キック / S : 必殺技`
-      : `← → : 移動 / ↑ : ジャンプ / Z : パンチ / X : キック / C : 必殺技`;
+      ? `← → : 移動 / ↓ : しゃがみ・コマンド入力 / ↑ : ジャンプ / P : パンチ / K : キック / S : 必殺技`
+      : `← → : 移動 / ↓ : しゃがみ・コマンド入力 / ↑ : ジャンプ / Z : パンチ / X : キック / C : 必殺技`;
 
     helpContent.innerHTML = `
       <p><strong>${isMobile ? "スマホ操作" : "PC操作"}</strong></p>
       <p>${common}</p>
       <p>ゲージ100で超必殺、体力35%以下で覚醒します。</p>
+      <p>コマンドは素早く入力してください。例: ↓→ + P は、↓ を押してから → と P。</p>
       <p><strong>${CHARACTERS[selectedCharacter].name} 固有コマンド</strong></p>
-      ${getCharacterCommands(selectedCharacter).map(c => `<p>${c[0]} : ${c[1]}</p>`).join("")}
+      ${getCharacterCommands(selectedCharacter).map(c => `<p>${c.text} : ${c.name}</p>`).join("")}
       <p><strong>オンライン</strong></p>
       <p>作成側がルームを作り、参加側が同じルームコードで参加します。</p>
-      <p>参加側も結果画面が表示されます。</p>
     `;
   }
 
@@ -1365,13 +1509,14 @@
 
   function createFighter(characterKey, isPlayer){
     const ch = CHARACTERS[characterKey];
+    const buildScale = ch.build === "heavy" ? 1.10 : ch.build === "slim" ? 0.95 : 1;
     return {
       characterKey,
       name:ch.name,
       x:isPlayer ? 120 : canvas.width - 190,
       y:groundY() - 120,
-      w:64,
-      h:120,
+      w:Math.round(64 * buildScale),
+      h:Math.round(120 * (ch.build === "lancer" ? 1.02 : 1)),
       vx:0,
       vy:0,
       dir:isPlayer ? 1 : -1,
@@ -1391,7 +1536,11 @@
       hair:ch.hair,
       aura:ch.aura,
       scarf:ch.scarf,
+      skin:ch.skin,
+      band:ch.band,
+      build:ch.build,
       onGround:true,
+      crouching:false,
       dead:false,
       attackType:"",
       attackTimer:0,
@@ -1402,7 +1551,8 @@
       hasHit:false,
       isPlayer,
       animPhase:Math.random() * Math.PI * 2,
-      runPhase:0
+      runPhase:0,
+      commandData:null
     };
   }
 
@@ -1421,6 +1571,7 @@
     projectiles = [];
     cameraShake = 0;
     transformLock = false;
+    playerInputBuffer = [];
     leftName.textContent = gameMode === "online-guest" ? (online.remoteName || "HOST") : player.name;
     rightName.textContent = gameMode === "online-host" ? (online.remoteName || "GUEST") : (gameMode === "online-guest" ? online.localName : enemy.name);
     difficultyText.textContent = gameMode.startsWith("online")
@@ -1461,6 +1612,12 @@
   }
 
   function getAttackRect(f){
+    if (f.attackType === "command" && f.commandData){
+      const c = f.commandData;
+      if (f.dir === 1) return { x:f.x + f.w - 4, y:f.y + c.yOffset, w:c.range, h:c.height };
+      return { x:f.x - c.range + 4, y:f.y + c.yOffset, w:c.range, h:c.height };
+    }
+
     let range = 0, height = 0, yOffset = 0;
     if (f.attackType === "punch") { range = 32; height = 22; yOffset = 38; }
     if (f.attackType === "kick") { range = 52; height = 30; yOffset = 66; }
@@ -1470,11 +1627,15 @@
     return { x:f.x - range + 4, y:f.y + yOffset, w:range, h:height };
   }
 
-  function attackActiveFrame(type, timer){
-    if (type === "punch") return timer >= 5 && timer <= 7;
-    if (type === "kick") return timer >= 8 && timer <= 12;
-    if (type === "special") return timer >= 10 && timer <= 18;
-    if (type === "burst") return timer >= 12 && timer <= 26;
+  function attackActiveFrame(f){
+    if (f.attackType === "command" && f.commandData){
+      const elapsed = f.commandData.timer - f.attackTimer;
+      return elapsed >= f.commandData.activeStart && elapsed <= f.commandData.activeEnd;
+    }
+    if (f.attackType === "punch") return f.attackTimer >= 5 && f.attackTimer <= 7;
+    if (f.attackType === "kick") return f.attackTimer >= 8 && f.attackTimer <= 12;
+    if (f.attackType === "special") return f.attackTimer >= 10 && f.attackTimer <= 18;
+    if (f.attackType === "burst") return f.attackTimer >= 12 && f.attackTimer <= 26;
     return false;
   }
 
@@ -1496,40 +1657,69 @@
   }
 
   function spawnAuraBurst(x, y, color){
-    for (let i = 0; i < 18; i++){
+    for (let i = 0; i < 16; i++){
       particles.push({
         x, y,
-        vx:(Math.random()-0.5)*9,
-        vy:(Math.random()-0.5)*7 - 1,
-        life:22 + Math.random()*12,
-        size:3 + Math.random()*4,
+        vx:(Math.random()-0.5)*8,
+        vy:(Math.random()-0.5)*6 - 1,
+        life:18 + Math.random()*10,
+        size:2 + Math.random()*4,
         color
       });
     }
   }
 
-  function spawnProjectile(owner){
-    const spec = owner.characterKey === "phoenix"
+  function spawnProjectile(owner, options = {}){
+    const base = owner.characterKey === "phoenix"
       ? { color:"#ffb066", size:17, speed:7.5 }
       : owner.characterKey === "shadow"
         ? { color:"#b39cff", size:15, speed:7.2 }
         : owner.characterKey === "blade"
           ? { color:"#8dd7ff", size:15, speed:7.8 }
-          : { color:"#ffd07f", size:16, speed:7.0 };
+          : owner.characterKey === "valkyrie"
+            ? { color:"#7af2df", size:15, speed:7.4 }
+            : { color:"#ffd07f", size:16, speed:7.0 };
+
+    const spec = {
+      color: options.color || base.color,
+      size: options.size || base.size,
+      speed: options.speed || base.speed,
+      damage: options.damage || attackData("projectile").damage * owner.atkMul,
+      kb: options.kb || attackData("projectile").kb,
+      trail: options.trail || 1
+    };
 
     projectiles.push({
       owner: owner.isPlayer ? "player" : "enemy",
       x: owner.dir === 1 ? owner.x + owner.w + 6 : owner.x - 6,
-      y: owner.y + 44,
+      y: owner.y + (options.yOffset || 44),
       vx: spec.speed * owner.dir,
       r: spec.size,
-      damage: attackData("projectile").damage * owner.atkMul,
-      kb: attackData("projectile").kb,
+      damage: spec.damage,
+      kb: spec.kb,
       color: spec.color,
-      life: 130
+      life: options.life || 120,
+      trail: spec.trail
     });
 
     spawnAuraBurst(owner.x + owner.w/2, owner.y + 40, owner.aura);
+  }
+
+  function startCommandMove(f, cfg){
+    if (f.dead || f.hitstun > 0 || transformLock) return false;
+    if (f.attackTimer > 0 || f.attackCooldown > 0) return false;
+    f.attackType = "command";
+    f.commandData = Object.assign({}, cfg);
+    f.attackTimer = cfg.timer;
+    f.attackCooldown = cfg.cooldown;
+    f.hasHit = false;
+    if (cfg.vx) f.vx = cfg.vx * f.dir;
+    if (cfg.vy) {
+      f.vy = cfg.vy;
+      f.onGround = false;
+    }
+    spawnAuraBurst(f.x + f.w/2, f.y + 40, f.aura);
+    return true;
   }
 
   function tryStartAttack(f, type){
@@ -1544,6 +1734,7 @@
     }
 
     f.attackType = type;
+    f.commandData = null;
     f.attackTimer = data.timer;
     f.attackCooldown = data.cooldown;
     f.hasHit = false;
@@ -1563,7 +1754,7 @@
     transformLock = true;
     transformText.textContent = f.isPlayer ? "AWAKENING" : "ENEMY AWAKEN";
     transformOverlay.classList.add("show");
-    await delay(700);
+    await delay(650);
     transformOverlay.classList.remove("show");
     spawnAuraBurst(f.x + f.w/2, f.y + 36, f.aura);
     transformLock = false;
@@ -1581,7 +1772,6 @@
 
     gameOver = true;
     const winner = attackerIsPlayer ? player : enemy;
-
     showMessage(attackerIsPlayer ? "YOU WIN" : "YOU LOSE", 1200);
 
     if (gameMode === "online-host" && online.stateRef){
@@ -1622,19 +1812,19 @@
 
     target.hp = clamp(target.hp - damage, 0, target.maxHp);
     target.hurtFlash = 8;
-    target.hitstun = (type === "burst" || type === "special") ? 18 : 10;
-    target.invuln = (type === "burst" || type === "special") ? 14 : 8;
+    target.hitstun = (type === "burst" || type === "special" || type === "command") ? 18 : 10;
+    target.invuln = (type === "burst" || type === "special" || type === "command") ? 14 : 8;
     target.x += kb * (attacker.dir === 1 ? 1 : -1);
     target.vx = kb * 0.16 * (attacker.dir === 1 ? 1 : -1);
-    gainSuper(attacker, data.superGain || 0);
+    gainSuper(attacker, data.superGain || 5);
     gainSuper(target, 4);
     attacker.hasHit = true;
 
     spawnImpact(target.x + target.w/2, target.y + 38, "#ffffff", type === "burst" ? 16 : 8);
-    cameraShake = Math.max(cameraShake, type === "burst" ? 12 : type === "special" ? 9 : 4);
+    cameraShake = Math.max(cameraShake, type === "burst" ? 12 : (type === "special" || type === "command") ? 8 : 4);
 
     if (attacker.isPlayer){
-      const now = performance.now();
+      const now = nowMs();
       combo = (now - lastHitTime < 1200) ? combo + 1 : 1;
       lastHitTime = now;
       comboText.textContent = "COMBO " + combo;
@@ -1648,11 +1838,17 @@
 
   function resolveAttackHit(attacker, target){
     if (!attacker.attackType || attacker.hasHit) return;
-    if (!attackActiveFrame(attacker.attackType, attacker.attackTimer)) return;
+    if (!attackActiveFrame(attacker)) return;
     if (target.invuln > 0) return;
     const atk = getAttackRect(attacker);
     const body = { x:target.x, y:target.y, w:target.w, h:target.h };
-    if (rectsOverlap(atk, body)) applyDamage(attacker, target, attacker.attackType);
+    if (rectsOverlap(atk, body)){
+      if (attacker.attackType === "command" && attacker.commandData){
+        applyDamage(attacker, target, "command", attacker.commandData.damage * attacker.atkMul / target.defMul, attacker.commandData.kb);
+      } else {
+        applyDamage(attacker, target, attacker.attackType);
+      }
+    }
   }
 
   function resolveProjectiles(){
@@ -1693,14 +1889,213 @@
     if (f.hitstun > 0) f.hitstun--;
     if (f.attackCooldown > 0) f.attackCooldown--;
     if (f.hurtFlash > 0) f.hurtFlash--;
+    f.crouching = false;
 
     if (f.attackTimer > 0){
       f.attackTimer--;
       if (f.attackTimer === 0){
         f.attackType = "";
+        f.commandData = null;
         f.hasHit = false;
       }
     }
+  }
+
+  function recordPlayerToken(token){
+    const t = nowMs();
+    const last = playerInputBuffer[playerInputBuffer.length - 1];
+    if (!last || last.token !== token || t - last.time > 140){
+      playerInputBuffer.push({ token, time:t });
+    }
+    playerInputBuffer = playerInputBuffer.filter(v => t - v.time <= 900).slice(-12);
+  }
+
+  function matchBuffer(pattern){
+    const recent = playerInputBuffer.filter(v => nowMs() - v.time <= 900);
+    if (recent.length < pattern.length) return false;
+    const tail = recent.slice(-pattern.length).map(v => v.token);
+    for (let i = 0; i < pattern.length; i++){
+      if (tail[i] !== pattern[i]) return false;
+    }
+    return true;
+  }
+
+  function consumeBuffer(){
+    playerInputBuffer = [];
+  }
+
+  function performCharacterCommand(f, cmd, opponent){
+    if (!f.isPlayer) return false;
+    if (f.attackTimer > 0 || f.attackCooldown > 0 || f.hitstun > 0) return false;
+
+    switch (cmd.action){
+      case "fireball":
+        spawnProjectile(f, { color:"#ffd07f", damage:13 * f.atkMul, kb:20, speed:8.4, size:16 });
+        showMessage("波動弾", 500);
+        consumeBuffer();
+        return true;
+
+      case "upperKick":
+        if (startCommandMove(f, { timer:22, cooldown:26, activeStart:6, activeEnd:13, range:58, height:56, yOffset:14, damage:19, kb:26, vy:-15 })){
+          showMessage("昇龍脚", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "dashPalm":
+        if (startCommandMove(f, { timer:18, cooldown:22, activeStart:5, activeEnd:9, range:72, height:28, yOffset:26, damage:14, kb:20, vx:9.8 })){
+          showMessage("ダッシュ掌打", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "flashKick":
+        if (startCommandMove(f, { timer:22, cooldown:26, activeStart:6, activeEnd:13, range:52, height:58, yOffset:8, damage:18, kb:24, vy:-16 })){
+          showMessage("フラッシュキック", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "teleportStrike":
+        f.x = clamp(opponent.x - f.dir * 92, 16, canvas.width - f.w - 16);
+        if (startCommandMove(f, { timer:16, cooldown:20, activeStart:3, activeEnd:7, range:64, height:28, yOffset:32, damage:13, kb:16, vx:6.5 })){
+          showMessage("シャドウステップ", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "splitSlash":
+        if (startCommandMove(f, { timer:20, cooldown:24, activeStart:5, activeEnd:10, range:90, height:34, yOffset:26, damage:16, kb:18, vx:5.4 })){
+          spawnProjectile(f, { color:"#a7e5ff", damage:8 * f.atkMul, kb:10, speed:6.2, size:12, yOffset:32, life:55 });
+          showMessage("分裂斬", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "groundBurst":
+        if (startCommandMove(f, { timer:24, cooldown:28, activeStart:8, activeEnd:15, range:110, height:42, yOffset:64, damage:20, kb:22 })){
+          showMessage("グランドバースト", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "hammerRush":
+        if (startCommandMove(f, { timer:20, cooldown:24, activeStart:6, activeEnd:12, range:88, height:36, yOffset:26, damage:17, kb:24, vx:8.2 })){
+          showMessage("ハンマー突進", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "crashKnee":
+        if (startCommandMove(f, { timer:18, cooldown:22, activeStart:5, activeEnd:9, range:74, height:40, yOffset:40, damage:16, kb:21, vx:7.6 })){
+          showMessage("クラッシュニー", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "teleportOnly":
+        f.x = clamp(opponent.x - f.dir * 100, 16, canvas.width - f.w - 16);
+        spawnAuraBurst(f.x + f.w/2, f.y + 40, f.aura);
+        showMessage("瞬間移動", 500);
+        consumeBuffer();
+        return true;
+
+      case "darkShot":
+        spawnProjectile(f, { color:"#cbb9ff", damage:13 * f.atkMul, kb:18, speed:8.8, size:14 });
+        showMessage("ナイトショット", 500);
+        consumeBuffer();
+        return true;
+
+      case "slideKick":
+        if (startCommandMove(f, { timer:18, cooldown:22, activeStart:5, activeEnd:10, range:84, height:24, yOffset:72, damage:15, kb:22, vx:9.2 })){
+          showMessage("ダークスライド", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "skyLance":
+        if (startCommandMove(f, { timer:24, cooldown:28, activeStart:7, activeEnd:14, range:58, height:70, yOffset:4, damage:18, kb:24, vy:-17 })){
+          showMessage("スカイランス", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "lancerShot":
+        spawnProjectile(f, { color:"#84ffe8", damage:12 * f.atkMul, kb:17, speed:8.0, size:14 });
+        showMessage("ランサーショット", 500);
+        consumeBuffer();
+        return true;
+
+      case "lanceDash":
+        if (startCommandMove(f, { timer:18, cooldown:22, activeStart:5, activeEnd:10, range:96, height:30, yOffset:20, damage:15, kb:20, vx:9.0 })){
+          showMessage("ランスダッシュ", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "flameShot":
+        spawnProjectile(f, { color:"#ffb066", damage:14 * f.atkMul, kb:20, speed:8.6, size:16 });
+        showMessage("フレイムショット", 500);
+        consumeBuffer();
+        return true;
+
+      case "flarePillar":
+        if (startCommandMove(f, { timer:22, cooldown:26, activeStart:7, activeEnd:13, range:86, height:72, yOffset:10, damage:18, kb:18 })){
+          showMessage("フレア噴火", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "blazeKick":
+        if (startCommandMove(f, { timer:18, cooldown:22, activeStart:4, activeEnd:9, range:70, height:38, yOffset:46, damage:17, kb:22, vx:8.8 })){
+          showMessage("ブレイズキック", 500);
+          consumeBuffer();
+          return true;
+        }
+        break;
+
+      case "specialButton":
+        if (f.super >= 100){
+          if (tryStartAttack(f, "burst")){
+            consumeBuffer();
+            return true;
+          }
+        }else if (f.super >= 50){
+          if (tryStartAttack(f, "special")){
+            consumeBuffer();
+            return true;
+          }
+        }else{
+          spawnProjectile(f);
+          consumeBuffer();
+          return true;
+        }
+        break;
+    }
+    return false;
+  }
+
+  function checkPlayerCommandTrigger(opponent){
+    const cmds = CHARACTERS[player.characterKey].commands;
+    for (let i = 0; i < cmds.length; i++){
+      const c = cmds[i];
+      if (matchBuffer(c.pattern)){
+        if (performCharacterCommand(player, c, opponent)) return true;
+      }
+    }
+    return false;
   }
 
   function updateFighterByInput(f, input, dt, opponent){
@@ -1710,11 +2105,18 @@
     const spd = f.speed + (f.awakened ? 0.35 : 0);
 
     if (f.hitstun <= 0 && f.attackTimer <= 0 && !transformLock){
-      if (input.left && !input.right) f.vx = -spd;
-      else if (input.right && !input.left) f.vx = spd;
-      else f.vx *= 0.72;
+      if (input.down && f.onGround){
+        f.crouching = true;
+        f.vx *= 0.55;
+      } else if (input.left && !input.right) {
+        f.vx = -spd;
+      } else if (input.right && !input.left) {
+        f.vx = spd;
+      } else {
+        f.vx *= 0.72;
+      }
 
-      if (input.jump && f.onGround){
+      if (input.jump && f.onGround && !input.down){
         f.vy = -(f.jumpPower + (f.awakened ? 0.5 : 0));
         f.onGround = false;
       }
@@ -1746,9 +2148,11 @@
   }
 
   function updatePlayerOffline(dt){
+    checkPlayerCommandTrigger(enemy);
     updateFighterByInput(player, {
       left:keys.left,
       right:keys.right,
+      down:keys.down,
       jump:keys.jump,
       punch:pressedThisFrame.punch,
       kick:pressedThisFrame.kick,
@@ -1878,7 +2282,11 @@
       hair: f.hair,
       aura: f.aura,
       scarf: f.scarf,
+      skin: f.skin,
+      band: f.band,
+      build: f.build,
       onGround: f.onGround,
+      crouching: f.crouching,
       dead: f.dead,
       attackType: f.attackType,
       attackTimer: f.attackTimer,
@@ -1889,7 +2297,8 @@
       hasHit: f.hasHit,
       isPlayer: f.isPlayer,
       animPhase: f.animPhase,
-      runPhase: f.runPhase
+      runPhase: f.runPhase,
+      commandData: f.commandData
     };
   }
 
@@ -1928,7 +2337,11 @@
     target.hair = src.hair;
     target.aura = src.aura;
     target.scarf = src.scarf;
+    target.skin = src.skin;
+    target.band = src.band;
+    target.build = src.build;
     target.onGround = src.onGround;
+    target.crouching = !!src.crouching;
     target.dead = src.dead;
     target.attackType = src.attackType;
     target.attackTimer = src.attackTimer;
@@ -1940,6 +2353,7 @@
     target.isPlayer = src.isPlayer;
     target.animPhase = src.animPhase;
     target.runPhase = src.runPhase;
+    target.commandData = src.commandData || null;
 
     target.w = localW;
     target.h = localH;
@@ -1952,6 +2366,7 @@
     return {
       left: !!keys.left,
       right: !!keys.right,
+      down: !!keys.down,
       jump: !!keys.jump,
       punch: !!pressedThisFrame.punch,
       kick: !!pressedThisFrame.kick,
@@ -2030,7 +2445,7 @@
     online.role = "host";
     online.localName = name;
     online.remoteName = "GUEST";
-    online.roomRef = db.ref("fight_v120_rooms_fix/" + code);
+    online.roomRef = db.ref("fight_rooms/" + code);
     online.stateRef = online.roomRef.child("state");
     online.localInputRef = online.roomRef.child("hostInput");
     online.remoteInputRef = online.roomRef.child("guestInput");
@@ -2049,11 +2464,8 @@
         },
         hostInput:{},
         guestInput:{},
-        state:{
-          result:null
-        }
+        state:{ result:null }
       });
-
       setOnlineStatus(`ルーム作成成功\nコード: ${code}\n参加待ち`);
     }catch(err){
       console.error(err);
@@ -2115,7 +2527,7 @@
     setRoomCodeDisplay(code);
     setOnlineStatus("ルーム確認中...");
 
-    const roomRef = db.ref("fight_v120_rooms_fix/" + code);
+    const roomRef = db.ref("fight_rooms/" + code);
     let metaSnap;
     try{
       metaSnap = await roomRef.child("meta").get();
@@ -2189,15 +2601,12 @@
       if (s.result && s.result.show) {
         if (!gameOver) {
           gameOver = true;
-
           let title = s.result.title || "RESULT";
           const sub = s.result.sub || "試合終了";
-
           if (gameMode === "online-guest") {
             if (title === "YOU WIN") title = "YOU LOSE";
             else if (title === "YOU LOSE") title = "YOU WIN";
           }
-
           showResultScreen(title, sub);
         }
         return;
@@ -2268,9 +2677,7 @@
     if (gameMode === "online-host"){
       gameOver = false;
       if (online.stateRef){
-        try{
-          await online.stateRef.update({ result: null });
-        }catch(e){}
+        try{ await online.stateRef.update({ result: null }); }catch(e){}
       }
       returnToMenu();
       return;
@@ -2314,6 +2721,7 @@
       const inputPayload = {
         left: !!keys.left,
         right: !!keys.right,
+        down: !!keys.down,
         jump: !!keys.jump,
         punch: !!pressedThisFrame.punch,
         kick: !!pressedThisFrame.kick,
@@ -2349,6 +2757,7 @@
       updateFighterByInput(enemy, {
         left: !!online.remoteInput.left,
         right: !!online.remoteInput.right,
+        down: !!online.remoteInput.down,
         jump: !!online.remoteInput.jump,
         punch: !!online.remoteInput.punch || !!online.remoteInput.holdPunch,
         kick: !!online.remoteInput.kick || !!online.remoteInput.holdKick,
@@ -2452,22 +2861,92 @@
     if (!active) return;
     const pulse = 0.65 + Math.sin(performance.now() * 0.01 + f.animPhase) * 0.08;
     ctx.save();
-    ctx.globalAlpha = f.awakened ? 0.24 : 0.14;
+    ctx.globalAlpha = f.awakened ? 0.22 : 0.12;
     ctx.fillStyle = f.aura;
     ctx.beginPath();
-    ctx.ellipse(x + f.w/2, y + f.h/2, (f.awakened ? 36 : 28) * pulse, (f.awakened ? 66 : 54) * pulse, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + f.w/2, y + f.h/2, (f.awakened ? 34 : 26) * pulse, (f.awakened ? 64 : 52) * pulse, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
+  }
+
+  function drawCharacterHead(f, x, y, bounce){
+    const cx = x + f.w/2;
+    const headY = y + 16 + bounce;
+
+    ctx.fillStyle = f.skin;
+    ctx.beginPath();
+    ctx.arc(cx, headY, f.build === "heavy" ? 16 : 15, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = f.hair;
+    if (f.characterKey === "ryu"){
+      ctx.beginPath();
+      ctx.arc(cx, headY - 3, 15, Math.PI, 0);
+      ctx.fill();
+      ctx.fillStyle = f.band;
+      ctx.fillRect(cx - 16, headY - 2, 32, 4);
+    } else if (f.characterKey === "blade"){
+      ctx.beginPath();
+      ctx.moveTo(cx - 15, headY - 4);
+      ctx.lineTo(cx + 16, headY - 12);
+      ctx.lineTo(cx + 9, headY + 1);
+      ctx.lineTo(cx - 14, headY + 3);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = f.band;
+      ctx.fillRect(cx - 15, headY - 1, 30, 3);
+    } else if (f.characterKey === "titan"){
+      ctx.beginPath();
+      ctx.arc(cx, headY - 3, 16, Math.PI, 0);
+      ctx.fill();
+    } else if (f.characterKey === "shadow"){
+      ctx.beginPath();
+      ctx.arc(cx, headY - 4, 16, Math.PI, 0);
+      ctx.fill();
+      ctx.fillStyle = "#0a0a10";
+      ctx.fillRect(cx - 11, headY + 1, 22, 8);
+    } else if (f.characterKey === "valkyrie"){
+      ctx.beginPath();
+      ctx.moveTo(cx - 12, headY - 5);
+      ctx.lineTo(cx + 12, headY - 5);
+      ctx.lineTo(cx + 6, headY + 5);
+      ctx.lineTo(cx - 6, headY + 5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = f.band;
+      ctx.beginPath();
+      ctx.moveTo(cx, headY - 12);
+      ctx.lineTo(cx + 6, headY - 4);
+      ctx.lineTo(cx - 6, headY - 4);
+      ctx.closePath();
+      ctx.fill();
+    } else if (f.characterKey === "phoenix"){
+      ctx.beginPath();
+      ctx.moveTo(cx - 14, headY + 2);
+      ctx.lineTo(cx - 8, headY - 10);
+      ctx.lineTo(cx, headY - 4);
+      ctx.lineTo(cx + 8, headY - 12);
+      ctx.lineTo(cx + 14, headY + 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = f.band;
+      ctx.fillRect(cx - 14, headY - 1, 28, 3);
+    }
+
+    ctx.fillStyle = "#101624";
+    ctx.fillRect(cx - 7, headY - 1, 4, 2);
+    ctx.fillRect(cx + 3, headY - 1, 4, 2);
   }
 
   function drawFighter(f){
     const x = Math.round(f.x);
     const y = Math.round(f.y);
     const t = performance.now() * 0.01 + f.animPhase;
-    const breathe = Math.sin(t) * 1.4;
+    const breathe = Math.sin(t) * 1.2;
     const runSwing = Math.sin(f.runPhase) * 10;
     const runSwing2 = Math.sin(f.runPhase + Math.PI) * 10;
-    const moving = Math.abs(f.vx) > 0.5 && f.onGround;
+    const moving = Math.abs(f.vx) > 0.5 && f.onGround && !f.crouching;
+    const crouchOffset = f.crouching ? 10 : 0;
 
     ctx.save();
     drawAura(f, x, y);
@@ -2475,23 +2954,15 @@
 
     ctx.fillStyle = "rgba(0,0,0,.28)";
     ctx.beginPath();
-    ctx.ellipse(x + f.w / 2, groundY() - 3, 24, 7, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + f.w / 2, groundY() - 3, f.build === "heavy" ? 28 : 24, 7, 0, 0, Math.PI * 2);
     ctx.fill();
 
     const bodyX = x + 10;
-    const bodyY = y + 18 + breathe;
+    const bodyY = y + 26 + breathe + crouchOffset;
     const bodyW = f.w - 20;
-    const bodyH = f.h - 36;
+    const bodyH = f.h - 48 - crouchOffset;
 
-    ctx.fillStyle = f.scarf;
-    ctx.globalAlpha = 0.28;
-    ctx.beginPath();
-    ctx.moveTo(bodyX + bodyW/2, bodyY + 22);
-    ctx.quadraticCurveTo(bodyX + bodyW/2 - 16 * f.dir, bodyY + 38, bodyX + bodyW/2 - 6 * f.dir, bodyY + 58 + runSwing * 0.15);
-    ctx.lineTo(bodyX + bodyW/2 + 11 * f.dir, bodyY + 30);
-    ctx.closePath();
-    ctx.fill();
-    ctx.globalAlpha = 1;
+    drawCharacterHead(f, x, y, breathe + crouchOffset * 0.4);
 
     ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
     ctx.strokeStyle = f.accent;
@@ -2501,29 +2972,44 @@
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = "rgba(255,255,255,.18)";
-    ctx.fillRect(bodyX + 8, bodyY + 28, bodyW - 16, 7);
-    ctx.fillStyle = "rgba(0,0,0,.16)";
-    ctx.fillRect(bodyX + 8, bodyY + 58, bodyW - 16, 9);
-
-    ctx.fillStyle = f.hurtFlash > 0 ? "#ffffff" : f.color;
-    ctx.beginPath();
-    ctx.arc(x + f.w/2, y + 14 + breathe, 15, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = f.hair;
-    ctx.beginPath();
-    ctx.ellipse(x + f.w/2, y + 9 + breathe, 15, 8, 0, Math.PI, 0, true);
-    ctx.fill();
-
-    ctx.fillStyle = "#101624";
-    ctx.fillRect(x + f.w/2 - 6, y + 14 + breathe, 4, 2);
-    ctx.fillRect(x + f.w/2 + 2, y + 14 + breathe, 4, 2);
+    if (f.characterKey === "ryu"){
+      ctx.fillStyle = f.accent;
+      ctx.fillRect(bodyX + 4, bodyY + 34, bodyW - 8, 5);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(bodyX + bodyW/2 - 3, bodyY + 12, 6, bodyH - 18);
+    } else if (f.characterKey === "blade"){
+      ctx.fillStyle = "rgba(255,255,255,.20)";
+      ctx.fillRect(bodyX + 5, bodyY + 10, bodyW - 10, 4);
+      ctx.fillRect(bodyX + 8, bodyY + 28, bodyW - 16, 4);
+      ctx.fillRect(bodyX + 11, bodyY + 46, bodyW - 22, 4);
+    } else if (f.characterKey === "titan"){
+      ctx.fillStyle = f.accent;
+      ctx.fillRect(bodyX + 6, bodyY + 18, bodyW - 12, 10);
+      ctx.fillStyle = "#2d1808";
+      ctx.fillRect(bodyX + 6, bodyY + 44, bodyW - 12, 14);
+    } else if (f.characterKey === "shadow"){
+      ctx.fillStyle = "#0a0b14";
+      ctx.fillRect(bodyX + 8, bodyY + 14, bodyW - 16, 18);
+      ctx.fillStyle = f.accent;
+      ctx.fillRect(bodyX + bodyW/2 - 2, bodyY + 10, 4, bodyH - 20);
+    } else if (f.characterKey === "valkyrie"){
+      ctx.fillStyle = f.accent;
+      ctx.fillRect(bodyX + bodyW/2 - 2, bodyY + 8, 4, bodyH - 14);
+      ctx.fillStyle = "#f6fbff";
+      ctx.fillRect(bodyX + 8, bodyY + 18, bodyW - 16, 7);
+    } else if (f.characterKey === "phoenix"){
+      ctx.fillStyle = f.accent;
+      ctx.beginPath();
+      ctx.moveTo(bodyX + 8, bodyY + 14);
+      ctx.lineTo(bodyX + bodyW - 8, bodyY + 14);
+      ctx.lineTo(bodyX + bodyW/2, bodyY + 30);
+      ctx.closePath();
+      ctx.fill();
+    }
 
     const cx = x + f.w/2;
-    const armY = y + 44 + breathe;
-    const legY = y + f.h - 24;
+    const armY = y + 54 + breathe + crouchOffset;
+    const legY = y + f.h - 28;
     const footY = y + f.h - 2;
     const forward = f.dir === 1 ? 1 : -1;
     const backArmOffset = moving ? runSwing2 * 0.45 : 6;
@@ -2532,15 +3018,16 @@
     const backLegOffset = moving ? runSwing2 : 0;
 
     ctx.strokeStyle = f.accent;
-    ctx.lineWidth = 7;
+    ctx.lineWidth = f.build === "heavy" ? 9 : 7;
     ctx.lineCap = "round";
 
     ctx.beginPath();
     ctx.moveTo(cx, armY);
     if (f.attackTimer > 0){
       const len = f.attackType === "punch" ? 34 :
-        f.attackType === "kick" ? 18 :
-        f.attackType === "burst" ? 60 : 54;
+        f.attackType === "kick" ? 20 :
+        f.attackType === "burst" ? 62 :
+        f.attackType === "command" && f.commandData ? Math.min(70, f.commandData.range * 0.7) : 54;
       const rise = f.attackType === "special" ? -10 : f.attackType === "burst" ? -18 : -2;
       ctx.lineTo(cx + len * forward, armY + rise);
     } else {
@@ -2554,22 +3041,34 @@
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(cx, legY);
-    if (f.attackTimer > 0 && f.attackType === "kick") ctx.lineTo(cx + 42 * forward, legY + 4);
-    else ctx.lineTo(cx + 10 + frontLegOffset * 0.35, footY);
+    ctx.moveTo(cx, legY - crouchOffset);
+    if (f.attackTimer > 0 && (f.attackType === "kick" || (f.attackType === "command" && f.commandData && f.commandData.yOffset > 35))){
+      ctx.lineTo(cx + 42 * forward, legY + 2 - crouchOffset);
+    } else {
+      ctx.lineTo(cx + 10 + frontLegOffset * 0.35, footY);
+    }
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(cx, legY);
+    ctx.moveTo(cx, legY - crouchOffset);
     ctx.lineTo(cx - 10 + backLegOffset * 0.35, footY);
     ctx.stroke();
 
+    if (f.characterKey === "valkyrie"){
+      ctx.strokeStyle = "rgba(255,255,255,.85)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(cx + 12 * forward, armY - 6);
+      ctx.lineTo(cx + 12 * forward + 42 * forward, armY - 34);
+      ctx.stroke();
+    }
+
     if (f.attackTimer > 0){
       const atk = getAttackRect(f);
-      if (["special","burst"].includes(f.attackType)){
-        ctx.fillStyle = f.attackType === "burst" ? "rgba(255,255,255,.18)" : "rgba(255,210,77,.22)";
-        ctx.strokeStyle = f.attackType === "burst" ? "rgba(255,255,255,.92)" : "rgba(255,230,166,.82)";
-        ctx.lineWidth = 3;
+      if (["special","burst","command"].includes(f.attackType)){
+        ctx.fillStyle = f.attackType === "burst" ? "rgba(255,255,255,.18)" : f.attackType === "command" ? "rgba(255,255,255,.12)" : "rgba(255,210,77,.18)";
+        ctx.strokeStyle = f.attackType === "burst" ? "rgba(255,255,255,.92)" : "rgba(255,230,166,.72)";
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.roundRect(atk.x, atk.y, atk.w, atk.h, 18);
         ctx.fill();
@@ -2583,16 +3082,16 @@
   function drawProjectiles(){
     projectiles.forEach(p => {
       ctx.save();
-      ctx.globalAlpha = 0.35;
+      ctx.globalAlpha = 0.26;
       ctx.fillStyle = p.color;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r * 1.25, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, p.r * (p.trail ? 1.3 : 1.15), 0, Math.PI * 2);
       ctx.fill();
 
       ctx.globalAlpha = 1;
       ctx.fillStyle = p.color;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r * 0.5, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, p.r * 0.52, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.strokeStyle = "rgba(255,255,255,.35)";
@@ -2607,7 +3106,7 @@
 
   function drawParticles(){
     particles.forEach(p => {
-      ctx.globalAlpha = Math.max(0, p.life / 32);
+      ctx.globalAlpha = Math.max(0, p.life / 28);
       ctx.fillStyle = p.color;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -2655,37 +3154,60 @@
   }
 
   function setKeyFromCode(code, pressed){
-    if (code === "ArrowLeft") keys.left = pressed;
-    if (code === "ArrowRight") keys.right = pressed;
-    if (code === "ArrowUp") keys.jump = pressed;
+    if (code === "ArrowLeft"){
+      keys.left = pressed;
+      if (pressed) recordPlayerToken("L");
+    }
+    if (code === "ArrowRight"){
+      keys.right = pressed;
+      if (pressed) recordPlayerToken("R");
+    }
+    if (code === "ArrowDown"){
+      keys.down = pressed;
+      if (pressed) recordPlayerToken("D");
+    }
+    if (code === "ArrowUp"){
+      keys.jump = pressed;
+      if (pressed) recordPlayerToken("U");
+    }
     if (code === "KeyZ"){
-      if (pressed) pressedThisFrame.punch = true;
+      if (pressed){
+        pressedThisFrame.punch = true;
+        recordPlayerToken("P");
+      }
       keys.punch = pressed;
     }
     if (code === "KeyX"){
-      if (pressed) pressedThisFrame.kick = true;
+      if (pressed){
+        pressedThisFrame.kick = true;
+        recordPlayerToken("K");
+      }
       keys.kick = pressed;
     }
     if (code === "KeyC"){
-      if (pressed) pressedThisFrame.special = true;
+      if (pressed){
+        pressedThisFrame.special = true;
+        recordPlayerToken("S");
+      }
       keys.special = pressed;
     }
   }
 
   window.addEventListener("keydown", (e) => {
-    if (["ArrowLeft","ArrowRight","ArrowUp","KeyZ","KeyX","KeyC","Space"].includes(e.code)) e.preventDefault();
+    if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","KeyZ","KeyX","KeyC","Space"].includes(e.code)) e.preventDefault();
     setKeyFromCode(e.code, true);
   }, { passive:false });
 
   window.addEventListener("keyup", (e) => setKeyFromCode(e.code, false));
 
-  function bindTouchButton(el, keyName){
+  function bindTouchButton(el, keyName, token = null){
     const press = (e) => {
       if (e) e.preventDefault();
       keys[keyName] = true;
       if (keyName === "punch") pressedThisFrame.punch = true;
       if (keyName === "kick") pressedThisFrame.kick = true;
       if (keyName === "special") pressedThisFrame.special = true;
+      if (token) recordPlayerToken(token);
       el.classList.add("active");
     };
 
@@ -2709,12 +3231,13 @@
     el.addEventListener("mouseleave", release, { passive:false });
   }
 
-  bindTouchButton(touchButtons.left, "left");
-  bindTouchButton(touchButtons.right, "right");
-  bindTouchButton(touchButtons.jump, "jump");
-  bindTouchButton(touchButtons.punch, "punch");
-  bindTouchButton(touchButtons.kick, "kick");
-  bindTouchButton(touchButtons.special, "special");
+  bindTouchButton(touchButtons.left, "left", "L");
+  bindTouchButton(touchButtons.right, "right", "R");
+  bindTouchButton(touchButtons.down, "down", "D");
+  bindTouchButton(touchButtons.jump, "jump", "U");
+  bindTouchButton(touchButtons.punch, "punch", "P");
+  bindTouchButton(touchButtons.kick, "kick", "K");
+  bindTouchButton(touchButtons.special, "special", "S");
 
   startCpuBtn.onclick = startCpuGame;
   startMusouBtn.onclick = startMusouGame;
